@@ -124,7 +124,7 @@ function checkMemo(user) {
 
             if(Date.create(d.timestamp).isBefore('now')) {
                 db.run('DELETE FROM events WHERE i = ?', d.i);
-                var who = d.target == d.user ? you : d.user;
+                var who = d.target == d.user ? "you" : d.user;
                 client.say(channel, d.target+ ", " + who + " said " + d.message);
             }
 

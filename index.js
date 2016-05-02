@@ -240,9 +240,15 @@ client.addListener("message", function(from, to, text, message) {
 
                                 data.properties.dose && (resp += data.properties.dose + "\n");
 
-                                (resp += "onset: " + data.properties.onset + " duration: " + data.properties.onset + " after effects: " + data.properties["after-effects"] + "\n");
+                                if (data.properties.onset && data.properties.duration && data.properties["after-effects"]) {
+                                    resp += "onset: " + data.properties.onset + 
+                                        " duration: " + data.properties.duration + 
+                                        " after effects: " + data.properties["after-effects"] + "\n";
+                                }
 
                                 data.properties.summary && (resp += data.properties.summary + "\n");
+
+                                data.properties.categories && (resp += data.properties.categories.join(" ") + "\n");
 
                                 data.dose_note && (resp += data.dose_note + "\n");
 

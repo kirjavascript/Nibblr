@@ -2,7 +2,7 @@
 
 // TODO //
 
-// memo(time,user) / log / memes / stats / quotes
+// memo(user [,when]) / log / memes / stats / quotes
 // to: <from> msg
 
 // wolfram
@@ -104,8 +104,8 @@ function schedule() {
             r.forEach(d => {
 
                 if(Date.create(d.timestamp).isBefore('now')) {
-                    client.say(channel, irc.colors.wrap('light_magenta', d.user)+ " " + d.message);
-                    db.run('DELETE FROM events WHERE i = ?', d.i)
+                    db.run('DELETE FROM events WHERE i = ?', d.i);
+                    client.say(channel, d.user+ ": " + irc.colors.wrap('light_magenta', d.message));
                 }
 
             })
@@ -522,6 +522,26 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
+    else if (text.indexOf('~memo') == 0) {
+
+        var rgxp = /~remind\((.*?)\) (.*)/.exec(text);
+
+        if (rgxp && rgxp[1] && rgxp[2]) {
+            var user = rgxp[1];
+            var msg = rgxp[2];
+            var when = 'now';
+
+            if(~user.indexOf(',')) {
+                var when = user.split(',')[1];
+                user = user.split(',')[0];
+            }
+
+            // user, from said poo
+
+        }
+
+    }
+
     else if (text.indexOf('~eval ') == 0) {
 
         try {
@@ -539,7 +559,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~eval ~commands.[name] ~remind(when) ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~" + r.map(d => d.name).join(" ~");
+                var response = "~eval ~commands.[name] ~remind(when) ~memo(user [,when]) ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

@@ -2,11 +2,10 @@
 
 // TODO //
 
-// timer / remind(time) / memo(time,user) / log / memes / stats / quotes
+// memo(time,user) / log / memes / stats / quotes
 // to: <from> msg
-// moment.js remind chrono / set log expiration moment timezone
 
-// context: save/load instead of data (try sync loading?)
+// wolfram
 
 // bbcnews .buzzard html2txt
 
@@ -40,6 +39,7 @@ var loopProtect = require('./lib/loop-protect');
 var hide = {hide:1};
 try { var password = fs.readFileSync('./password', 'utf-8'); } 
 catch (e) { var password = null; }
+var channel = password?'#8bitvape':'#nibblr';
 var youtube_api = 'AIzaSyDWEWTDKnOqbEOij1ZENrGLpv4FIhtQ2eI';
 google.resultsPerPage = 3;
 irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400};
@@ -52,7 +52,6 @@ var db = new sqlite3.Database('data.db');
 // sandbox //
 
 var context = {
-    Date: Date,
     loopProtect: loopProtect,
     html2txt: (str, lines) => {
         if (lines) return html2txt.fromString(str).split("\n").splice(0,lines).join("\n");
@@ -97,12 +96,29 @@ var context = {
 
 // schedule loop //
 
+function schedule() {
+    setInterval(() => {
 
+        db.all('SELECT i,timestamp,user,message from events WHERE type = "remind"', (e,r) => {
+
+            r.forEach(d => {
+
+                if(Date.create(d.timestamp).isBefore('now')) {
+                    client.say(channel, irc.colors.wrap('light_magenta', d.user)+ " " + d.message);
+                    db.run('DELETE FROM events WHERE i = ?', d.i)
+                }
+
+            })
+
+        });
+
+    }, 1000)
+}
 
 // client //
 
 var client = new irc.Client('irc.rizon.net', 'Nibblr', {
-    channels: [password?'#8bitvape':'#nibblr'],
+    channels: [channel],
     userName: 'what',
     realName: 'hello',
     floodProtection: true,
@@ -113,6 +129,7 @@ var client = new irc.Client('irc.rizon.net', 'Nibblr', {
 client.addListener("registered", function(message) {
     console.log(message);
     client.say("nickserv", "identify " + password);
+    schedule();
 });
 
 client.addListener("message", function(from, to, text, message) {
@@ -478,10 +495,29 @@ client.addListener("message", function(from, to, text, message) {
         var rgxp = /~remind\((.*?)\) (.*)/.exec(text);
 
         if (rgxp && rgxp[1] && rgxp[2]) {
-            var when = rgxp[1];
-            var what = rgxp[2];
+            var when = Date.create(rgxp[1]);
+            var msg = rgxp[2];
 
-            console.log();
+            if (when.isBefore('now')) {
+                client.say(to, irc.colors.wrap('light_red', 'Epoch fail'));
+            }
+            else if (when == "Invalid Date") {
+                client.say(to, irc.colors.wrap('light_red', 'Error: Invalid Date'));
+            }
+            else {
+                var resp = "Reminder set for ";
+
+                resp += when.full();
+
+                db.run("INSERT INTO events(timestamp,type,user,message) VALUES (?,?,?,?)", [
+                    when.toISOString(),
+                    'remind',
+                    from,
+                    msg
+                ]);
+
+                client.say(to, irc.colors.wrap('cyan', resp));
+            }
         }
 
     }

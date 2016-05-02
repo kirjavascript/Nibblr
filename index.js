@@ -27,8 +27,8 @@ var tortuga = require('tortuga');
 var cheerio = require('cheerio');
 var weather = require('weather-js');
 var safeEval = require('safe-eval');
-var youtube = require('youtube-search');
 var html2txt = require('html-to-text');
+var youtube = require('youtube-search');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
@@ -112,7 +112,25 @@ function schedule() {
 
         });
 
-    }, 1000)
+    }, 5000)
+}
+
+// memo //
+
+function checkMemo(user) {
+    db.all('SELECT i,timestamp,user,target,message from events WHERE type = "memo" AND target = ?', user, (e,r) => {
+
+        r.forEach(d => {
+
+            if(Date.create(d.timestamp).isBefore('now')) {
+                db.run('DELETE FROM events WHERE i = ?', d.i);
+                var who = d.target == d.user ? you : d.user;
+                client.say(channel, d.target+ ", " + who + " said " + d.message);
+            }
+
+        })
+
+    });
 }
 
 // client //
@@ -137,6 +155,8 @@ client.addListener("message", function(from, to, text, message) {
     if(from=="VapeBot") return;
 
     context.client = {from, to, text, message};
+
+    checkMemo(from);
 
     var getUrl = text.match(/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
 
@@ -524,7 +544,7 @@ client.addListener("message", function(from, to, text, message) {
 
     else if (text.indexOf('~memo') == 0) {
 
-        var rgxp = /~remind\((.*?)\) (.*)/.exec(text);
+        var rgxp = /~memo\((.*?)\) (.*)/.exec(text);
 
         if (rgxp && rgxp[1] && rgxp[2]) {
             var user = rgxp[1];
@@ -536,7 +556,30 @@ client.addListener("message", function(from, to, text, message) {
                 user = user.split(',')[0];
             }
 
-            // user, from said poo
+            when = Date.create(when);
+
+            if (when == "Invalid Date") {
+                client.say(to, irc.colors.wrap('light_red', 'Error: Invalid Date'));
+            }
+            else if(user.length) {
+                var resp = "Saved message for ";
+
+                resp += user;
+
+                if(when.isAfter('now')) {
+                    resp += " delayed until " + when.full()
+                }
+
+                db.run("INSERT INTO events(timestamp,type,user,target,message) VALUES (?,?,?,?,?)", [
+                    when.toISOString(),
+                    'memo',
+                    from,
+                    user,
+                    msg
+                ]);
+
+                client.say(to, irc.colors.wrap('cyan', resp));
+            }
 
         }
 

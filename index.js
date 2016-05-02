@@ -236,7 +236,11 @@ client.addListener("message", function(from, to, text, message) {
 
                                 var data = json.data[0];
 
-                                var resp = irc.colors.wrap('light_magenta', data.pretty_name) + " (" + data.aliases.join(", ") + ")\n";
+                                var resp = irc.colors.wrap('light_magenta', data.pretty_name);
+
+                                data.aliases && " (" + data.aliases.join(", ") + ")";
+
+                                resp += "\n";
 
                                 data.properties.dose && (resp += data.properties.dose + "\n");
 
@@ -248,7 +252,7 @@ client.addListener("message", function(from, to, text, message) {
 
                                 data.properties.summary && (resp += data.properties.summary + "\n");
 
-                                data.properties.categories && (resp += data.properties.categories.join(" ") + "\n");
+                                data.properties.categories && (resp += "categories: " + data.properties.categories.join(" ") + "\n");
 
                                 data.dose_note && (resp += data.dose_note + "\n");
 

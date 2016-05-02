@@ -51,7 +51,10 @@ var db = new sqlite3.Database('data.db');
 
 var context = {
     loopProtect: loopProtect,
-    html2txt: str => html2txt.fromString(str),
+    html2txt: (str, lines) => {
+        if (lines) return html2txt.fromString(str).split("\n").splice(0,lines).join("\n");
+        else return html2txt.fromString(str);
+    },
     br2n: str => str.replace(/<br ?\/?>/g, "\n"),
     striptags: str => str.replace(/<(?:.|\n)*?>/gm, ''),
     client: {},

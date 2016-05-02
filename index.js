@@ -34,7 +34,8 @@ var loopProtect = require('./lib/loop-protect');
 // initconf //
 
 var hide = {hide:1};
-var password = fs.readFileSync('./password', 'utf-8');
+try { var password = fs.readFileSync('./password', 'utf-8'); } 
+catch (e) { var password = null; }
 var youtube_api = 'AIzaSyDWEWTDKnOqbEOij1ZENrGLpv4FIhtQ2eI';
 google.resultsPerPage = 3;
 irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400};
@@ -93,7 +94,7 @@ var context = {
 // client //
 
 var client = new irc.Client('irc.rizon.net', 'Nibblr', {
-    channels: ['#8bitvape2'],
+    channels: [password?'#8bitvape':'#nibblr'],
     userName: 'what',
     realName: 'hello',
     floodProtection: true,

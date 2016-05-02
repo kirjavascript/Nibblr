@@ -2,6 +2,8 @@
 
 // TODO //
 
+// notice module
+
 // seen (shreddy was last seen saying x) / log / stats / quotes
 // different log file
 
@@ -16,8 +18,10 @@ process.env.TZ = 'Europe/London';
 require('sugar-date');
 var fs = require('fs');
 var irc = require('irc');
+var url = require("url");
 var btoa = require('btoa');
 var atob = require('atob');
+var http = require("http");
 var urban = require('urban');
 var google = require('google');
 var request = require('request');
@@ -27,10 +31,9 @@ var weather = require('weather-js');
 var safeEval = require('safe-eval');
 var html2txt = require('html-to-text');
 var youtube = require('youtube-search');
+var loopProtect = require('./lib/loop-protect');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
-
-var loopProtect = require('./lib/loop-protect');
 
 // initconf //
 
@@ -92,6 +95,35 @@ var context = {
     writable:false
 }))
 
+// init //
+
+function init() {
+    notify();
+    schedule();
+}
+
+// http talk api //
+
+function notify() {
+
+    // http://kirjava.xyz:8888/?users=%238bitvape&message=test
+
+    var server = http.createServer((req, res) => {
+        req = url.parse(req.url, true);
+
+        if(req.query.users && req.query.message) {
+            res.end('sent ' + req.query.message + ' to ' + req.query.users);
+
+            req.query.users.split(',').forEach(d => {
+                client.say(d, req.query.message);
+            })
+        }
+        
+    });
+
+    server.listen(8888, () => console.log('notify server listening'))
+}
+
 // schedule loop //
 
 function schedule() {
@@ -145,7 +177,7 @@ var client = new irc.Client('irc.rizon.net', 'Nibblr', {
 client.addListener("registered", function(message) {
     console.log(message);
     client.say("nickserv", "identify " + password);
-    schedule();
+    init();
 });
 
 client.addListener("message", function(from, to, text, message) {

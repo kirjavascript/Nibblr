@@ -29,7 +29,7 @@ var html2txt = require('html-to-text');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
-var loopProtect = require('./loop-protect');
+var loopProtect = require('./lib/loop-protect');
 
 // initconf //
 

@@ -11,6 +11,8 @@
 
 // fulltext indexing on log
 
+process.env.TZ = 'Europe/London';
+
 // requires //
 
 var fs = require('fs');
@@ -482,7 +484,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~commands.[name] ~eval ~lenny ~flip ~truth ~" + r.map(d => d.name).join(" ~");
+                var response = "~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~commands.[name] ~eval ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

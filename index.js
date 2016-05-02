@@ -2,12 +2,10 @@
 
 // TODO //
 
-// memo(user [,when]) / log / memes / stats / quotes
-// to: <from> msg
+// seen (shreddy was last seen saying x) / log / stats / quotes
+// different log file
 
 // wolfram
-
-// bbcnews .buzzard html2txt
 
 // fulltext indexing on log
 
@@ -118,7 +116,7 @@ function schedule() {
 // memo //
 
 function checkMemo(user) {
-    db.all('SELECT i,timestamp,user,target,message from events WHERE type = "memo" AND target = ?', user, (e,r) => {
+    db.all('SELECT i,timestamp,user,target,message from events WHERE type = "memo" AND UPPER(target) = UPPER(?)', user, (e,r) => {
 
         r.forEach(d => {
 

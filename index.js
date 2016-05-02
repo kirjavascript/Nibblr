@@ -2,7 +2,8 @@
 
 // TODO //
 
-// timer / remind(time) / memo / log / memes / stats / quotes
+// timer / remind(time) / memo(time,user) / log / memes / stats / quotes
+// to: <from> msg
 // moment.js remind chrono / set log expiration moment timezone
 
 // context: save/load instead of data (try sync loading?)
@@ -15,6 +16,7 @@ process.env.TZ = 'Europe/London';
 
 // requires //
 
+require('sugar-date');
 var fs = require('fs');
 var irc = require('irc');
 var btoa = require('btoa');
@@ -50,6 +52,7 @@ var db = new sqlite3.Database('data.db');
 // sandbox //
 
 var context = {
+    Date: Date,
     loopProtect: loopProtect,
     html2txt: (str, lines) => {
         if (lines) return html2txt.fromString(str).split("\n").splice(0,lines).join("\n");
@@ -470,6 +473,19 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
+    else if (text.indexOf('~remind') == 0) {
+
+        var rgxp = /~remind\((.*?)\) (.*)/.exec(text);
+
+        if (rgxp && rgxp[1] && rgxp[2]) {
+            var when = rgxp[1];
+            var what = rgxp[2];
+
+            console.log();
+        }
+
+    }
+
     else if (text.indexOf('~eval ') == 0) {
 
         try {
@@ -487,7 +503,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~commands.[name] ~eval ~" + r.map(d => d.name).join(" ~");
+                var response = "~eval ~commands.[name] ~remind(when) ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

@@ -185,7 +185,7 @@ client.addListener("message", function(from, to, text, message) {
 
     else if (text.indexOf('~pornhub ') == 0) {
 
-        var query = text.substring(7);
+        var query = text.substring(9);
 
         if(query.length) {
 
@@ -206,6 +206,45 @@ client.addListener("message", function(from, to, text, message) {
                                 var tags = video.tags.map(d => d.tag_name).join(" ");
 
                                 resp += irc.colors.wrap('light_magenta', tags)
+
+                                client.say(to, resp)
+                            }
+
+                        }
+                    })
+
+                }
+                catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
+        }
+
+    }
+
+    else if (text.indexOf('~drug ') == 0) {
+
+        var query = text.substring(6);
+
+        if(query.length) {
+
+                try {
+
+                    request("http://tripbot.tripsit.me/api/tripsit/getDrug?name=" + query, function (error, response, body) {
+                        if (!error && response.statusCode == 200) {
+
+                            var json = JSON.parse(body);
+
+                            if (json.err == null && json.data) {
+
+                                var data = json.data[0];
+
+                                var resp = irc.colors.wrap('light_magenta', data.pretty_name) + " (" + data.aliases.join(", ") + ")\n";
+
+                                data.properties.dose && (resp += data.properties.dose + "\n");
+
+                                (resp += "onset: " + data.properties.onset + " duration: " + data.properties.onset + " after effects: " + data.properties["after-effects"] + "\n");
+
+                                data.properties.summary && (resp += data.properties.summary + "\n");
+
+                                data.dose_note && (resp += data.dose_note + "\n");
 
                                 client.say(to, resp)
                             }
@@ -433,7 +472,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~weather ~joke ~8ball ~commands.[name] ~eval ~lenny ~flip ~truth ~" + r.map(d => d.name).join(" ~");
+                var response = "~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~commands.[name] ~eval ~lenny ~flip ~truth ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

@@ -129,8 +129,10 @@ function notify() {
         if(req.query.users && req.query.message) {
             res.end('sent ' + req.query.message + ' to ' + req.query.users);
 
+            var action = req.query.say ? 'say' : 'notify';
+
             req.query.users.split(',').forEach(d => {
-                client.say(d, req.query.message);
+                client[action](d, req.query.message);
             })
         }
 

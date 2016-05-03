@@ -21,6 +21,10 @@
 // 19:14 <&Nibblr> Kirjava, you said fix multiline colour
 // 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
+// ftp sync
+
+// _db admin option ~ops
+
 
 // wolfram
 
@@ -121,7 +125,7 @@ function init() {
 
 function notify() {
 
-    // http://kirjava.xyz:8888/?users=%238bitvape&message=test
+    // http://kirjava.xyz:8888/?say=1&users=%238bitvape&message=test
 
     var server = http.createServer((req, res) => {
         req = url.parse(req.url, true);
@@ -129,7 +133,7 @@ function notify() {
         if(req.query.users && req.query.message) {
             res.end('sent ' + req.query.message + ' to ' + req.query.users);
 
-            var action = req.query.say ? 'say' : 'notify';
+            var action = req.query.say ? 'say' : 'notice';
 
             req.query.users.split(',').forEach(d => {
                 client[action](d, req.query.message);

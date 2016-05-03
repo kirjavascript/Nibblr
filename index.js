@@ -7,6 +7,9 @@
 // check for config.json
 // requires forever
 // change http to notify
+// convert modules to data.db
+// for more help, see config.json.example
+// config.json http module en/disable
 
 // notice module
 

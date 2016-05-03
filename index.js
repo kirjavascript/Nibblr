@@ -2,7 +2,6 @@
 
 // TODO //
 
-
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes
 
 // modularize - make more generic?
@@ -220,6 +219,7 @@ client.addListener("message", function(from, to, text, message) {
         catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
 
     }
+
 
     else if (text.indexOf('~example ') == 0) {
 

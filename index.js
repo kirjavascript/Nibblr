@@ -7,10 +7,8 @@
 
 // modularize - make more generic?
 // convert modules to data.db
-// config.json http module en/disable
 
 // 19:14 <&Nibblr> Kirjava, you said do prep for mencjs
-// 19:14 <&Nibblr> Kirjava, you said fix ~fib
 // 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
 // _db admin option ~ops
@@ -220,20 +218,6 @@ client.addListener("message", function(from, to, text, message) {
             });
         }
         catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
-
-    }
-
-    else if (text.indexOf('~8ball ') == 0) {
-
-        var words = text.substring(7);
-
-        if(words.length) {
-            var hashValue = words.split("").map(d => d.charCodeAt(0)).reduce((a,b) => a+b);
-
-            var response = ["It is certain","It is decidedly so","Without a doubt","Yes, definitely","You may rely on it","As I see it, yes","Most likely","Outlook good","Yes","Signs point to yes","Reply hazy try again","Ask again later","Better not tell you now","Cannot predict now","Concentrate and ask again","Don't count on it","My reply is no","My sources say no","Outlook not so good","Very doubtful"][hashValue%20|0];
-
-            client.say(to, irc.colors.wrap("light_green", response));
-        }
 
     }
 
@@ -508,27 +492,6 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
-    else if (text.indexOf('~joke') == 0) {
-
-        try {
-
-            request("https://www.reddit.com/r/Jokes/random/.json", function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-
-                    var post = JSON.parse(body)[0].data.children[0].data;
-
-                    var joke = post.title + " " + post.selftext;
-
-                    client.say(to, randomcolour(entities.decode(joke)));
-
-                }
-            })
-
-        }
-        catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
-
-    }
-
 
     else if (text.indexOf('~torrent ') == 0) {
 
@@ -637,7 +600,12 @@ client.addListener("message", function(from, to, text, message) {
         try {
             var resp = safeEval(text.substring(6), context);
 
-            if (resp!==hide) client.say(to, context.colour("yellow", resp));
+            if (resp!==hide) 
+                client.say(to, 
+                    typeof resp == "string" ? context.colour("yellow", resp) :
+                    typeof resp == "function" ? irc.colors.wrap('light_magenta', resp) :
+                    irc.colors.wrap('light_red', resp)
+                );
         }
         catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
 
@@ -649,7 +617,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~eval ~commands.[name] ~remind(when) ~memo(user [,when]) ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~joke ~8ball ~" + r.map(d => d.name).join(" ~");
+                var response = "~eval ~commands.[name] ~remind(when) ~memo(user [,when]) ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

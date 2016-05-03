@@ -2,10 +2,13 @@
 
 // TODO //
 
-// notice module
-
-// seen (shreddy was last seen saying x) / log / stats / quotes
+// log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes
 // different log file
+
+// 19:14 <&Nibblr> Kirjava, you said do prep for mencjs
+// 19:14 <&Nibblr> Kirjava, you said fix ~fib
+// 19:14 <&Nibblr> Kirjava, you said fix multiline colour
+
 
 // wolfram
 

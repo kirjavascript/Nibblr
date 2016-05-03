@@ -5,25 +5,16 @@
 
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes
 
-// make http notice
-
-// config.json.example < password, db, channelname (.gitignore)
 // modularize - make more generic?
-// check for config.json
-// requires forever
-// change http to notify
 // convert modules to data.db
-// for more help, see config.json.example
 // config.json http module en/disable
 
 // 19:14 <&Nibblr> Kirjava, you said do prep for mencjs
 // 19:14 <&Nibblr> Kirjava, you said fix ~fib
-// 19:14 <&Nibblr> Kirjava, you said fix multiline colour
 // 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
-// ftp sync
-
 // _db admin option ~ops
+// remind/memo/linkparsing 
 
 
 // wolfram
@@ -31,6 +22,14 @@
 // fulltext indexing on log
 
 process.env.TZ = 'Europe/London';
+
+try { 
+    var config = require('./config.json');
+}
+catch (e) { 
+    console.log('config.json missing');
+    process.exit();
+}   
 
 // requires //
 
@@ -57,9 +56,6 @@ var entities = new Entities();
 // initconf //
 
 var hide = {hide:1};
-try { var password = fs.readFileSync('./password', 'utf-8'); }
-catch (e) { var password = null; }
-var channel = password?'#8bitvape':'#nibblr';
 var youtube_api = 'AIzaSyDWEWTDKnOqbEOij1ZENrGLpv4FIhtQ2eI';
 google.resultsPerPage = 3;
 irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400};
@@ -81,7 +77,7 @@ var context = {
     striptags: str => str.replace(/<(?:.|\n)*?>/gm, ''),
     client: {},
     data: {},
-    colour: irc.colors.wrap,
+    colour: (a,b) => b.split('\n').map(d => irc.colors.wrap(a,d)).join("\n"),
     randomcolour: function(str) {
         var colours = ['light_red', 'magenta', 'orange', 'yellow', 'light_green', 'cyan', 'light_cyan', 'light_blue', 'light_magenta', 'light_gray'];
         return irc.colors.wrap(colours[(Math.random()*colours.length)|0], str);
@@ -156,7 +152,7 @@ function schedule() {
 
                 if(Date.create(d.timestamp).isBefore('now')) {
                     db.run('DELETE FROM events WHERE i = ?', d.i);
-                    client.say(channel, d.user+ ": " + irc.colors.wrap('light_magenta', d.message));
+                    client.say(config.channel, d.user+ ": " + irc.colors.wrap('light_magenta', d.message));
                 }
 
             })
@@ -176,7 +172,7 @@ function checkMemo(user) {
             if(Date.create(d.timestamp).isBefore('now')) {
                 db.run('DELETE FROM events WHERE i = ?', d.i);
                 var who = d.target == d.user ? "you" : d.user;
-                client.say(channel, d.target+ ", " + who + " said " + d.message);
+                client.say(config.channel, d.target+ ", " + who + " said " + d.message);
             }
 
         })
@@ -186,10 +182,10 @@ function checkMemo(user) {
 
 // client //
 
-var client = new irc.Client('irc.rizon.net', 'Nibblr', {
-    channels: [channel],
-    userName: 'what',
-    realName: 'hello',
+var client = new irc.Client(config.server, config.username, {
+    channels: [config.channel],
+    userName: 'squiggle',
+    realName: 'none',
     floodProtection: true,
     floodProtectionDelay: 250,
     autoRejoin: true
@@ -197,7 +193,7 @@ var client = new irc.Client('irc.rizon.net', 'Nibblr', {
 
 client.addListener("registered", function(message) {
     console.log(message);
-    client.say("nickserv", "identify " + password);
+    client.say("nickserv", "identify " + config.password);
     init();
 });
 
@@ -641,7 +637,7 @@ client.addListener("message", function(from, to, text, message) {
         try {
             var resp = safeEval(text.substring(6), context);
 
-            if (resp!==hide) client.say(to, irc.colors.wrap("yellow", resp));
+            if (resp!==hide) client.say(to, context.colour("yellow", resp));
         }
         catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
 
@@ -724,7 +720,7 @@ client.addListener("message", function(from, to, text, message) {
 
                     var loopNuke = loopProtect(r.command);
 
-                    var response, command = safeEval(loopNuke, context);
+                    var response, command = safeEval(loopNuke, context)
 
                     if(typeof command == "function"){
                         response = command.apply(context, params);
@@ -733,7 +729,7 @@ client.addListener("message", function(from, to, text, message) {
                         response = command;
                     }
 
-                    if(response!=hide) client.say(to, entities.decode(response));
+                    if(response!=hide) client.say(to, response);
 
                 }
                 catch (e) {client.say(to, irc.colors.wrap('light_red', e))}

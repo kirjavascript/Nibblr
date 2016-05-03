@@ -2,12 +2,24 @@
 
 // TODO //
 
+
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes
-// different log file
+
+// make http notice
+
+// config.json.example < password, db, channelname (.gitignore)
+// modularize - make more generic?
+// check for config.json
+// requires forever
+// change http to notify
+// convert modules to data.db
+// for more help, see config.json.example
+// config.json http module en/disable
 
 // 19:14 <&Nibblr> Kirjava, you said do prep for mencjs
 // 19:14 <&Nibblr> Kirjava, you said fix ~fib
 // 19:14 <&Nibblr> Kirjava, you said fix multiline colour
+// 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
 
 // wolfram
@@ -41,7 +53,7 @@ var entities = new Entities();
 // initconf //
 
 var hide = {hide:1};
-try { var password = fs.readFileSync('./password', 'utf-8'); } 
+try { var password = fs.readFileSync('./password', 'utf-8'); }
 catch (e) { var password = null; }
 var channel = password?'#8bitvape':'#nibblr';
 var youtube_api = 'AIzaSyDWEWTDKnOqbEOij1ZENrGLpv4FIhtQ2eI';
@@ -73,7 +85,7 @@ var context = {
     wget: function(url, funk) {
 
         if (typeof funk == "function") {
-            
+
             request(url, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
 
@@ -121,7 +133,7 @@ function notify() {
                 client.say(d, req.query.message);
             })
         }
-        
+
     });
 
     server.listen(8888, () => console.log('notify server listening'))
@@ -323,8 +335,8 @@ client.addListener("message", function(from, to, text, message) {
                                 data.properties.dose && (resp += data.properties.dose + "\n");
 
                                 if (data.properties.onset && data.properties.duration && data.properties["after-effects"]) {
-                                    resp += "onset: " + data.properties.onset + 
-                                        " duration: " + data.properties.duration + 
+                                    resp += "onset: " + data.properties.onset +
+                                        " duration: " + data.properties.duration +
                                         " after effects: " + data.properties["after-effects"] + "\n";
                                 }
 
@@ -720,7 +732,7 @@ client.addListener("message", function(from, to, text, message) {
                 }
                 catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
             }
-        })        
+        })
 
     }
     else if (getUrl && getUrl[0]) {

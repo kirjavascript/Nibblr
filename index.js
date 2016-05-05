@@ -4,11 +4,13 @@
 
 // finx command argument input
 
-// backend admin panel!
+// backend admin panel! template.html
 
 // 16:57 <&cr0sis> something for http://www.uavforecast.com/#/ this like ~canifly? 
                // and it pulls the next few hours of 
 
+// live programmable HTTP API
+// IRC bot framework
 
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes
 
@@ -18,7 +20,10 @@
 // 19:14 <&Nibblr> Kirjava, you said do prep for mencjs
 // 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
-// _db admin option ~ops
+// explain api
+// add libraries/apis to API?
+
+// _db admin option ~ops  
 // remind/memo/linkparsing 
 
 
@@ -80,7 +85,6 @@ var context = {
     },
     br2n: str => str.replace(/<br ?\/?>/g, "\n"),
     striptags: str => str.replace(/<(?:.|\n)*?>/gm, ''),
-    client: {},
     data: {},
     colour: (a,b) => b.split('\n').map(d => irc.colors.wrap(a,d)).join("\n"),
     randomcolour: function(str) {
@@ -95,12 +99,12 @@ var context = {
                 if (!error && response.statusCode == 200) {
 
                     try {
-                        client.say(context.client.to, entities.decode(funk(cheerio.load(body), body)));
+                        client.say(config.channel, entities.decode(funk(cheerio.load(body), body)));
                     }
-                    catch (e) {client.say(context.client.to, irc.colors.wrap('light_red', e))}
+                    catch (e) {client.say(config.channel, irc.colors.wrap('light_red', e))}
 
                 }
-                else {client.say(context.client.to, irc.colors.wrap('light_red', error))}
+                else {client.say(config.channel, irc.colors.wrap('light_red', error))}
             })
         }
 
@@ -205,8 +209,6 @@ client.addListener("registered", function(message) {
 client.addListener("message", function(from, to, text, message) {
 
     if(from=="VapeBot") return;
-
-    context.client = {from, to, text, message};
 
     checkMemo(from);
 
@@ -677,6 +679,7 @@ client.addListener("message", function(from, to, text, message) {
         }
 
     }
+    
 
     else if (text[0] == '~') {
 
@@ -690,6 +693,8 @@ client.addListener("message", function(from, to, text, message) {
             params.shift();
         }
 
+        var input = text.substring(text.indexOf(' ')+1);
+
         db.get('select command from commands where name = ?', name, (e,r) => {
             if(r) {
                 try {
@@ -699,7 +704,7 @@ client.addListener("message", function(from, to, text, message) {
                     var response, command = safeEval(loopNuke, context)
 
                     if(typeof command == "function"){
-                        response = command.apply(context, params);
+                        response = command.call(context, input, params, {from, to, text, message});
                     }
                     else {
                         response = command;

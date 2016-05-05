@@ -2,6 +2,14 @@
 
 // TODO //
 
+// finx command argument input
+
+// backend admin panel!
+
+// 16:57 <&cr0sis> something for http://www.uavforecast.com/#/ this like ~canifly? 
+               // and it pulls the next few hours of 
+
+
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes
 
 // modularize - make more generic?

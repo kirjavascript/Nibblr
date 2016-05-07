@@ -2,9 +2,12 @@
 
 // TODO //
 
-// finx command argument input
+// backend admin panel! template.html -> express / d3
+// nibblr ascii / admin login
 
-// backend admin panel! template.html
+// add command wizard
+
+// admin ui uplaod to imgur
 
 // 16:57 <&cr0sis> something for http://www.uavforecast.com/#/ this like ~canifly? 
                // and it pulls the next few hours of 
@@ -12,12 +15,14 @@
 // live programmable HTTP API
 // IRC bot framework
 
-// log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes
+// log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
 
 // modularize - make more generic?
 // convert modules to data.db
 
-// 19:14 <&Nibblr> Kirjava, you said do prep for mencjs
+// rss("item", "description", 3)
+// say() ?!
+
 // 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
 // explain api
@@ -62,6 +67,8 @@ var youtube = require('youtube-search');
 var loopProtect = require('./lib/loop-protect');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
+
+
 
 // initconf //
 
@@ -627,7 +634,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~eval ~commands.[name] ~remind(when) ~memo(user [,when]) ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~" + r.map(d => d.name).join(" ~");
+                var response = "~eval ~commands.[name] ~remind(when) ~memo(user [,when]) ~reset ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

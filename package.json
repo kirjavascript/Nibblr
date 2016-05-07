@@ -19,6 +19,7 @@
   "devDependencies": {
     "atob": "^2.0.3",
     "btoa": "^1.1.2",
+    "express": "^4.13.4",
     "fs": "0.0.2",
     "google": "^2.0.0",
     "html-entities": "^1.2.0",

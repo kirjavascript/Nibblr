@@ -6,7 +6,7 @@
   "scripts": {
     "start": "forever start index.js -e err.log",
     "stop": "forever stop index.js",
-    "push": "git add . && git commit -m \"npm run push\" && git push origin master",
+    "push": "git add . && git commit -m \"`date`\" && git push origin master",
     "pull": "git pull origin master"
   },
   "repository": {

@@ -18,6 +18,24 @@ module.exports = function(obj) {
 
     app.use('/', express.static('./web/public'));
 
+    app.get('/commands', (req,res) => {
+        obj.db.all('SELECT * from commands', (e,r) => {
+
+            var out = `<table>
+                <tr><th>Name</th><th>Command</th><th>Locked</th></tr>
+                `+r.map(d => `<tr>
+                    <td>${d.name}</td>
+                    <td>${d.command}</td>
+                    <td>${d.locked}</td>
+                </tr>
+                `).join("")+`
+            </table>
+            `;
+
+            res.send(out);
+        })
+    })
+
 }
 
 function api(obj) {

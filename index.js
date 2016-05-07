@@ -7,11 +7,12 @@
 
 // sarah blake
 
-// backend admin panel! template.html -> express / d3
-// nibblr ascii / admin login
-// edit config.json 
+// sessions, webpack, socket.io for chat, commands interface
+
 // add command wizard
 // admin ui uplaod to imgur
+
+// logging, stats
 
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
 
@@ -70,7 +71,7 @@ irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400
 
 // db //
 
-var sqlite3 = require("sqlite3").verbose();
+var sqlite3 = require("sqlite3");
 var db = new sqlite3.Database('data.db');
 
 // sandbox //

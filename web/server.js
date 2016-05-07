@@ -5,14 +5,15 @@ var config = require('../config.json');
 var express = require('express');
 var app = express();
 
-config = config.webInterface;
+// app.use(express.cookieParser());
+// app.use(express.session({secret: 'Welivelongandarecelebratedpoopers'}));
 
 app.engine('html', require('hogan-express'))
     .set('view engine', 'html')
     .set('views', __dirname + '/templates')
-    //.set('partials', __dirname + '/templates/partials')
-    .listen(config.port, function () {
-        console.log('Web server listening on ' + config.port);
+    .set('layout', 'layout')
+    .listen(config.webInterface.port, function () {
+        console.log('Web server listening on ' + config.webInterface.port);
     });
 
 module.exports = function(obj) {
@@ -26,20 +27,32 @@ module.exports = function(obj) {
     app.use('/', express.static('./web/static'));
 
     app.get('/', (req,res) => {
-        res.render('index.html', {
-            // partials: {
-            //     header: 'header'
-            // },
-        })
+        res.render('index', conf({config}))
     })
 
+    app.get('/login', (req,res) => {
+
+    })
+
+}
+
+function conf(extra) {
+
+    extra = extra || {};
+
+    return Object.assign({
+        user: 'test',
+        // partials: {
+        //     header: 'partials/header'
+        // }
+    }, extra)
 }
 
 function api(obj) {
 
     app.get('/commands', (req,res) => {
         obj.db.all('SELECT * from commands', (e,r) => {
-            res.render('commands', {commands: r})
+            res.render('commands', conf({commands: r}))
         })
     })
 

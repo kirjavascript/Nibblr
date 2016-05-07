@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>nibblr</title>
+</head>
+<link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,700' rel='stylesheet' type='text/css'>
+<link href='style.css' rel='stylesheet' type='text/css'>
+    <body>
+        <div class="header">
+
+            <div class="menu">
+                <div>
+                    <a href="/">home</a> /
+                    <a href="/commands">commands</a> /
+                    <a href="/logs">logs</a> /
+                    <a href="/stats">stats</a> /
+                    <a href="/README.md">help</a>
+                </div>
+
+                <div class="auth clear">
+                    <input type="password" id="password" placeholder="password..." /><a href="#" id="login">admin login</a>
+                </div>
+            </div>
+
+            <pre class="logo">
+       __ __    __    __      
+.-----|__|  |--|  |--|  .----.
+|     |  |  _  |  _  |  |   _|
+|__|__|__|_____|_____|__|__|
+            </pre>
+
+        </div>
+
+        <div class="clear"></div>
+
+        {{{yield}}}
+
+        <script src="client.js"></script>
+    </body>
+</html>

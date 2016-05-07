@@ -1,0 +1,64 @@
+html{
+    font-size:20px;
+    background-color:black;
+    color:#0D0;
+    font-family: 'Roboto Mono',monospace,verdana;
+    font-weight: 400;
+}
+
+input {
+    border: none;
+    outline: 1px solid #0A0;
+    background: black;
+    color: #0D0;
+    padding: 5px;
+}
+
+a, a:visited, a:active {
+    color:#080;
+}
+
+a:hover {
+    color:#0A0;
+}
+
+
+
+.header {
+    text-shadow: rgb(0, 221, 0) 0px 0px 20px;
+
+    .logo {
+        text-shadow: rgb(0, 221, 0) 7px 7px 15px;
+    }
+
+    .menu {
+        float:right;
+    }
+
+    .auth {
+        display: inline-block;
+        float: right;
+        padding: 20px;
+    }
+
+    #login {
+        margin-left: -85px;
+        font-size: 12px;
+        width: 0px;
+    }
+    
+}
+
+
+
+.clear {
+    clear:both;
+}
+
+.center {
+    text-align: center;
+}
+
+.bold {
+    font-weight:700;
+}

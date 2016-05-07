@@ -1,27 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>nibblr</title>
-</head>
-<link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
-<link href='style.css' rel='stylesheet' type='text/css'>
-    <body>
-        {{header}}
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Command</th>
-                <th>Locked</th>
-            </tr>
-            {{#commands}}
-            <tr>
-                <td>{{name}}</td>
-                <td>{{command}}</td>
-                <td>{{locked}}</td>
-            </tr>
-            {{/commands}}
-        </table>
-        <script src="client.js"></script>
-    </body>
-</html>
+{{commands.length}} Total commands
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Command</th>
+        <th>Locked</th>
+    </tr>
+    {{#commands}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{command}}</td>
+        <td>{{locked}}</td>
+    </tr>
+    {{/commands}}
+</table>

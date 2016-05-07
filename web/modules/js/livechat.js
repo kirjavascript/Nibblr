@@ -7,7 +7,7 @@ if (!channel.empty()) {
 
     var socket = io.connect(location.origin);
 
-    socket.on('message', o => addLine);
+    socket.on('message', o => addLine(o));
 
     socket.on('viewers', o => {
         d3.select('.viewers')
@@ -38,5 +38,9 @@ function sendMsg() {
     var msg = msgEl.property('value');
         msgEl.property('value', '');
 
-    d3.json(location.origin+'/api/say?message='+msg+'&key='+secretKey, (e,r) => {console.log(r)})
+    d3.json(location.origin+'/api/say?message='+msg+'&key='+secretKey, (e,r) => {
+        console.log(r)
+        addLine({from:'(server)', text:msg})
+    })
+
 }

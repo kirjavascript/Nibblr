@@ -106,7 +106,7 @@
 	    var socket = _socket2.default.connect(location.origin);
 
 	    socket.on('message', function (o) {
-	        return addLine;
+	        return addLine(o);
 	    });
 
 	    socket.on('viewers', function (o) {
@@ -135,6 +135,7 @@
 
 	    d3.json(location.origin + '/api/say?message=' + msg + '&key=' + secretKey, function (e, r) {
 	        console.log(r);
+	        addLine({ from: '(server)', text: msg });
 	    });
 	}
 

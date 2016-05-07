@@ -1,15 +1,12 @@
-{{commands.length}} Total commands
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Command</th>
-        <th>Locked</th>
-    </tr>
-    {{#commands}}
-    <tr>
-        <td>{{name}}</td>
-        <td>{{command}}</td>
-        <td>{{locked}}</td>
-    </tr>
-    {{/commands}}
-</table>
+<script src="http://ajaxorg.github.io/ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+<div class="commands">
+
+    <div class="list"></div>
+    <div class="code">
+        <div id="editor"></div>
+    </div>
+
+</div>
+

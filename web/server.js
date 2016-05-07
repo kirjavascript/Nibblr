@@ -50,16 +50,10 @@ function conf(extra = {}, req) {
     let session = req.session;
 
     let obj = {
-        admin: session.admin
+        admin: session.admin ? session.admin : false,
+        secretKey: session.admin ? `'${config.webInterface.secretKey}'` : false,
     }
-
-    if(session.admin) {
-        obj.secretKey = `'${config.webInterface.secretKey}'`;
-    }
-    else {
-        obj.secretKey = false;
-    }
-
+    
     return Object.assign(obj, extra);
 }
 
@@ -73,6 +67,11 @@ function site(obj) {
         else {
             res.json({success:false})
         }
+    })
+
+    app.get('/logout', (req,res) => {
+        req.session.admin = false;
+        res.json({success:true})
     })
 
     app.get('/help', (req,res) => {
@@ -89,9 +88,7 @@ function site(obj) {
     })
 
     app.get('/commands', (req,res) => {
-        obj.db.all('SELECT * from commands', (e,r) => {
-            res.render('commands', conf({commands: r}, req))
-        })
+        res.render('commands', conf({}, req))
     })
 
 }
@@ -106,6 +103,14 @@ function api(obj) {
 
             res.json(r);
         })
+    })
+
+    app.get('/api/commands', (req,res) => {
+
+        obj.db.all('SELECT * from commands', (e,r) => {
+            res.json(r)
+        })
+
     })
 
     app.get('/api/say', (req,res) => {

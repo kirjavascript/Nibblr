@@ -7,7 +7,7 @@
 
 // sarah blake
 
-// sessions, webpack, socket.io for chat, commands interface
+// socket.io for chat, commands interface
 
 // add command wizard
 // admin ui uplaod to imgur
@@ -60,7 +60,7 @@ var loopProtect = require('./lib/loop-protect');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
-var frontend = require('./web/server.js');
+var webInterface = require('./web/server.js');
 
 // initconf //
 
@@ -122,7 +122,8 @@ var context = {
 
 function init() {
     if(config.webInterface.enabled) {
-        frontend({client, db});
+        var options = {client, db}
+        webInterface(options);
     }
     schedule();
 }

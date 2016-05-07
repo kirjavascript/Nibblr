@@ -1,58 +1,93 @@
 // http://expressjs.com/en/4x/api.html#req
 
+var fs = require('fs');
 var url = require("url");
-var config = require('../config.json');
 var express = require('express');
+var session = require('express-session');
+var Markdown = require('markdown-to-html').Markdown;
 var app = express();
 
-// app.use(express.cookieParser());
-// app.use(express.session({secret: 'Welivelongandarecelebratedpoopers'}));
-
-app.engine('html', require('hogan-express'))
-    .set('view engine', 'html')
-    .set('views', __dirname + '/templates')
-    .set('layout', 'layout')
-    .listen(config.webInterface.port, function () {
-        console.log('Web server listening on ' + config.webInterface.port);
-    });
+var config = require('../config.json');
+var socket = require('./socket.js');
+    
 
 module.exports = function(obj) {
+
+    // config
+
+    var server = app.engine('html', require('hogan-express'))
+            .set('view engine', 'html')
+            .set('views', __dirname + '/templates')
+            .set('layout', 'layout')
+            .use(session({
+                secret: 'Welivelongandarecelebratedpoopers',
+                cookie: { maxAge: 60000 },
+                resave: true,
+                saveUninitialized: true
+            }))
+            .listen(config.webInterface.port, function () {
+            console.log('Web server listening on ' + config.webInterface.port)
+        })
 
     // init
 
     api(obj);
+    site(obj);
+    socket({server, client: obj.client})
 
     // root
 
-    app.use('/', express.static('./web/static'));
+    app.use('/', express.static('./web/static'))
 
     app.get('/', (req,res) => {
-        res.render('index', conf({config}))
-    })
-
-    app.get('/login', (req,res) => {
-
-    })
+        res.render('index', conf({config}, req))
+    })    
 
 }
 
-function conf(extra) {
+function conf(extra = {}, req) {
 
-    extra = extra || {};
+    let session = req.session
 
     return Object.assign({
-        user: 'test',
-        // partials: {
-        //     header: 'partials/header'
-        // }
+
+        admin: session.admin,
+
     }, extra)
+}
+
+function site(obj) {
+
+    app.get('/login', (req,res) => {
+        if(req.query.pass == config.webInterface.password) {
+            req.session.admin = true;
+            res.json({success:true})
+        }
+        else {
+            res.json({success:false})
+        }
+    })
+
+    app.get('/help', (req,res) => {
+
+        var md = new Markdown();
+        md.bufmax = 2048;
+        var fileName = __dirname + '/../README.md';
+
+        md.render(fileName, {}, function(err) {
+            if (!err) {
+                res.render('help', conf({help:md.html}, req))
+            }
+        });
+    })
+
 }
 
 function api(obj) {
 
     app.get('/commands', (req,res) => {
         obj.db.all('SELECT * from commands', (e,r) => {
-            res.render('commands', conf({commands: r}))
+            res.render('commands', conf({commands: r}, req))
         })
     })
 

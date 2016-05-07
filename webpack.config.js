@@ -16,7 +16,7 @@ module.exports = {
             {
                 test:   /\.js/,
                 loader: 'babel',
-                include: __dirname + '/src',
+                include: __dirname + '/web/modules',
                 query: {
                     presets: ['es2015'],
                 }

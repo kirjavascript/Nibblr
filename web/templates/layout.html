@@ -4,23 +4,27 @@
     <meta charset="utf-8" />
     <title>nibblr</title>
 </head>
-<link href='https://fonts.googleapis.com/css?family=Roboto+Mono:400,700' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Roboto+Mono:200,400,700' rel='stylesheet' type='text/css'>
 <link href='style.css' rel='stylesheet' type='text/css'>
     <body>
         <div class="header">
-
             <div class="menu">
                 <div>
                     <a href="/">home</a> /
                     <a href="/commands">commands</a> /
                     <a href="/logs">logs</a> /
                     <a href="/stats">stats</a> /
-                    <a href="/README.md">help</a>
+                    {{#admin}}
+                        <a href="/config">config</a> /
+                    {{/admin}}
+                    <a href="/help">help</a>
                 </div>
 
-                <div class="auth clear">
-                    <input type="password" id="password" placeholder="password..." /><a href="#" id="login">admin login</a>
-                </div>
+                {{^admin}}
+                    <div class="auth clear">
+                        <input type="password" id="password" placeholder="password..." /><a href="#" id="login">admin login</a>
+                    </div>
+                {{/admin}}
             </div>
 
             <pre class="logo">

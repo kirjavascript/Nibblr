@@ -5,7 +5,7 @@ html {
   font-family: 'Roboto Mono',monospace,verdana;
   font-weight: 400; }
 
-input {
+input, button {
   border: none;
   outline: 1px solid #0A0;
   background: black;
@@ -17,6 +17,15 @@ a, a:visited, a:active {
 
 a:hover {
   color: #0A0; }
+
+.clear {
+  clear: both; }
+
+.center {
+  text-align: center; }
+
+.bold {
+  font-weight: 700; }
 
 .header {
   text-shadow: #00dd00 0px 0px 20px; }
@@ -33,11 +42,27 @@ a:hover {
     font-size: 12px;
     width: 0px; }
 
-.clear {
-  clear: both; }
+.channel {
+  margin: 0 auto;
+  outline: 1px solid #0A0;
+  height: 500px;
+  position: relative; }
+  .channel .message {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 95%;
+    height: 20px; }
+  .channel .send {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100px;
+    height: 30px; }
 
-.center {
-  text-align: center; }
-
-.bold {
-  font-weight: 700; }
+.help code {
+  background-color: #222;
+  padding: 5px;
+  font-weight: 200;
+  font-size: 14px; }

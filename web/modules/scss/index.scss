@@ -6,7 +6,7 @@ html{
     font-weight: 400;
 }
 
-input {
+input, button {
     border: none;
     outline: 1px solid #0A0;
     background: black;
@@ -22,7 +22,19 @@ a:hover {
     color:#0A0;
 }
 
+.clear {
+    clear:both;
+}
 
+.center {
+    text-align: center;
+}
+
+.bold {
+    font-weight:700;
+}
+
+// header
 
 .header {
     text-shadow: rgb(0, 221, 0) 0px 0px 20px;
@@ -46,19 +58,43 @@ a:hover {
         font-size: 12px;
         width: 0px;
     }
-    
+
+}
+
+// home
+
+.channel {
+    margin: 0 auto;
+    outline: 1px solid #0A0;
+    height: 500px;
+    position: relative;
+
+    .message {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        width: 95%;
+        height: 20px;
+    }
+
+    .send {
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        width: 100px;
+        height: 30px;
+    }
 }
 
 
+// help
 
-.clear {
-    clear:both;
-}
-
-.center {
-    text-align: center;
-}
-
-.bold {
-    font-weight:700;
+.help {
+    code {
+        background-color: #222;
+        padding: 5px;
+        font-weight:200;
+        font-size: 14px;
+    }
 }

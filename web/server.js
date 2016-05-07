@@ -5,11 +5,14 @@ var config = require('../config.json');
 var express = require('express');
 var app = express();
 
+config = config.webInterface;
+
 app.engine('html', require('hogan-express'))
     .set('view engine', 'html')
     .set('views', __dirname + '/templates')
-    .listen(config.serverport, function () {
-        console.log('Web server listening on ' + config.serverport);
+    //.set('partials', __dirname + '/templates/partials')
+    .listen(config.port, function () {
+        console.log('Web server listening on ' + config.port);
     });
 
 module.exports = function(obj) {
@@ -23,7 +26,11 @@ module.exports = function(obj) {
     app.use('/', express.static('./web/static'));
 
     app.get('/', (req,res) => {
-        res.render('index', {user: "poop"})
+        res.render('index.html', {
+            // partials: {
+            //     header: 'header'
+            // },
+        })
     })
 
 }
@@ -32,13 +39,7 @@ function api(obj) {
 
     app.get('/commands', (req,res) => {
         obj.db.all('SELECT * from commands', (e,r) => {
-
-            res.render('commands', {commands: r.map(d => `<tr>
-                    <td>${d.name}</td>
-                    <td>${d.command}</td>
-                    <td>${d.locked}</td>
-                </tr>
-                `).join("")})
+            res.render('commands', {commands: r})
         })
     })
 

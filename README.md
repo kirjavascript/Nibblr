@@ -21,4 +21,6 @@ There are a few built in commands, like `~remind(time) message` and `~memo(user 
 
 All the code is run in a sandboxed environment with various failsafes.
 
+Before running, rename `config.json.example` to `config.json` and configure your settings.
+
 For further documentation, read the source code.

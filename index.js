@@ -5,8 +5,11 @@
 
 // TODO //
 
+// sarah blake
+
 // backend admin panel! template.html -> express / d3
 // nibblr ascii / admin login
+// edit config.json 
 // add command wizard
 // admin ui uplaod to imgur
 
@@ -33,7 +36,7 @@ try {
     var config = require('./config.json');
 }
 catch (e) { 
-    console.log('config.json missing');
+    console.log('config.json missing, see config.json.example');
     process.exit();
 }   
 
@@ -117,7 +120,9 @@ var context = {
 // init //
 
 function init() {
-    frontend({client, db});
+    if(config.webInterface.enabled) {
+        frontend({client, db});
+    }
     schedule();
 }
 

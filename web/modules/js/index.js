@@ -1,5 +1,6 @@
-import './livechat';
 import * as d3 from './d3';
+import './livechat';
+import './commands';
 
 let passEl = d3.select('#password')
     .on('keydown', () => {
@@ -25,3 +26,16 @@ function login() {
             }
         });
     }
+
+d3.select('#logout')
+    .on('click', () => d3.json('/logout', (e,r) => {
+        if(r.success) {
+            d3.select(document.body)
+                .style('opacity', 1)
+                .transition()
+                .duration(250)
+                .style('opacity', 0)
+                .on('end', d => location.reload())
+        }
+        
+    }));

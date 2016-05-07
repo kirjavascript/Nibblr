@@ -5,7 +5,7 @@ Nibblr is an on the fly programmable IRC bot.
 
 It comes with a built in javascript interpreter in the form of `~eval` which exposes a few APIs (which you can find with `~eval Object.keys(this)`).
 
-New commands can be dynamically added to the bot on the fly with `~commands.[name] function(){}` and are stored in a database (the one in this repo is the live one from #8bitvape with various examples). `~commands.[name]` alone will show the source for the command.
+New commands can be dynamically added to the bot on the fly with `~commands.[name] function(){}` and are stored in a database (the one in this repo contains many examples). `~commands.[name]` alone will show the source for the command.
 
 If you pass a function as a command, it will be called with the parameters (command, tokens, {from, to, text, message}), where command is the full text of the parameters used to call the command, tokens is an array of the parameters (split by spaces) and the third param contains an object of client data.
 

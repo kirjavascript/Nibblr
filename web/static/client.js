@@ -54,11 +54,13 @@
 
 	'use strict';
 
-	__webpack_require__(2);
-
 	var _d = __webpack_require__(3);
 
 	var d3 = _interopRequireWildcard(_d);
+
+	__webpack_require__(2);
+
+	__webpack_require__(66);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -80,6 +82,16 @@
 	        }
 	    });
 	}
+
+	d3.select('#logout').on('click', function () {
+	    return d3.json('/logout', function (e, r) {
+	        if (r.success) {
+	            d3.select(document.body).style('opacity', 1).transition().duration(250).style('opacity', 0).on('end', function (d) {
+	                return location.reload();
+	            });
+	        }
+	    });
+	});
 
 /***/ },
 /* 2 */
@@ -11580,6 +11592,90 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _d = __webpack_require__(3);
+
+	var d3 = _interopRequireWildcard(_d);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var commandList = {};
+
+	var commands = d3.select('.commands');
+
+	if (!commands.empty()) {
+
+	    var editor = ace.edit("editor");
+
+	    editor.$blockScrolling = Infinity;
+	    editor.getSession().setUseWorker(false);
+	    editor.setTheme("ace/theme/tomorrow_night_bright");
+	    editor.getSession().setMode("ace/mode/javascript");
+	    editor.setOptions({ fontSize: "12pt", wrap: true });
+
+	    update();
+	}
+
+	function update() {
+	    d3.json(location.origin + '/api/commands', function (e, r) {
+	        commandList = r;
+	        makeList();
+	    });
+	}
+
+	function makeList() {
+
+	    var list = d3.select('.list');
+
+	    list.html('');
+
+	    list.selectAll('.command').data(commandList).enter().append('div').classed('command', true).attr('data-name', function (d) {
+	        return d.name;
+	    }).html(function (d) {
+	        var lockState = d.locked == 'true' ? 'unlock' : 'lock';
+	        return '~' + d.name + ' \n            ' + (d.locked == 'true' ? '<i class="fa fa-lock red" aria-hidden="true"></i>' : '') + '\n\n            <i data-tooltip="delete" \n                class="delete fa fa-ban  action" aria-hidden="true"></i>\n            <i data-tooltip="' + lockState + '" \n                class="' + lockState + ' fa fa-' + lockState + ' action" aria-hidden="true"></i>\n            <i data-tooltip="edit" \n                class="edit fa fa-code action" aria-hidden="true"></i>\n            <i data-tooltip="rename" \n                class="rename fa fa-pencil action" aria-hidden="true"></i>\n\n            <span class="tooltip"></span>\n        <hr />';
+	    });
+
+	    // actions
+
+	    list.selectAll('.edit').on('click', function () {
+	        var name = d3.select(this.parentNode).attr('data-name');
+
+	        var command = commandList.find(function (d) {
+	            return d.name == name;
+	        });
+
+	        write(command.command);
+	    });
+
+	    // tooltips
+
+	    list.selectAll('.action').on('mouseenter', function () {
+	        d3.select(this.parentNode).select('.tooltip').html(d3.select(this).attr('data-tooltip'));
+	    }).on('mouseleave', function () {
+	        d3.select(this.parentNode).select('.tooltip').html('');
+	    });
+
+	    // tick for save
+	}
+
+	function read() {
+	    return ace.edit("editor").getValue();
+	}
+
+	function write(str) {
+	    ace.edit("editor").setValue(str);
+	}
 
 /***/ }
 /******/ ]);

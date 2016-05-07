@@ -632,7 +632,7 @@ client.addListener("message", function(from, to, text, message) {
             db.get('select locked from commands where name = ?', name, (e,r) => {
 
                 if(r && r.locked == "true") {
-                    client.say(to, irc.colors.wrap('light_red', '~' + name + ' is immutable'))
+                    client.say(to, irc.colors.wrap('light_red', '~' + name + ' is locked'))
                 }
                 else {
                     if (r) { // exists

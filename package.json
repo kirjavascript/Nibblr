@@ -6,6 +6,7 @@
   "scripts": {
     "start": "forever start index.js -e err.log",
     "stop": "forever stop index.js",
+    "daemon": "nodemon index.js",
     "push": "git add . --all && git commit -m \"`date`\" && git push origin master",
     "pull": "git pull origin master"
   },

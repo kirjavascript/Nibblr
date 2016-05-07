@@ -3,7 +3,8 @@ html {
   background-color: black;
   color: #0D0;
   font-family: 'Roboto Mono',monospace,verdana;
-  font-weight: 400; }
+  font-weight: 400;
+  height: 100%; }
 
 input, button {
   border: none;
@@ -27,20 +28,24 @@ a:hover {
 .bold {
   font-weight: 700; }
 
-.header {
+.header * {
   text-shadow: #00dd00 0px 0px 20px; }
-  .header .logo {
-    text-shadow: #00dd00 7px 7px 15px; }
-  .header .menu {
-    float: right; }
-  .header .auth {
-    display: inline-block;
-    float: right;
-    padding: 20px; }
-  .header #login {
-    margin-left: -85px;
-    font-size: 12px;
-    width: 0px; }
+
+.header .logo {
+  text-shadow: #00dd00 7px 7px 15px; }
+
+.header .menu {
+  float: right; }
+
+.header .auth {
+  display: inline-block;
+  float: right;
+  padding: 20px; }
+
+.header #login {
+  margin-left: -85px;
+  font-size: 12px;
+  width: 0px; }
 
 .channel {
   margin: 0 auto;
@@ -70,6 +75,40 @@ a:hover {
 
 .viewers {
   padding: 20px; }
+
+.commands {
+  position: absolute;
+  top: 150px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px; }
+  .commands #editor {
+    width: 100%;
+    height: 100%; }
+  .commands .list {
+    float: left;
+    width: 40%;
+    height: 100%;
+    overflow-y: auto; }
+    .commands .list .command {
+      width: 95%;
+      margin: 0 auto; }
+      .commands .list .command hr {
+        border: 1px solid #0A0; }
+      .commands .list .command .red {
+        color: red; }
+      .commands .list .command .tooltip {
+        float: right;
+        padding: 0px 15px;
+        color: #060; }
+      .commands .list .command .action {
+        float: right;
+        width: 30px;
+        cursor: pointer; }
+  .commands .code {
+    float: left;
+    width: 60%;
+    height: 100%; }
 
 .help code {
   background-color: #222;

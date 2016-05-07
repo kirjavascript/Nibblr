@@ -5,21 +5,21 @@ var channel = d3.select('.channel');
 
 if (!channel.empty()) {
 
-    var socket = io.connect('http://127.0.0.1:1337');
+    // add to config
+    var socket = io.connect('http://127.0.0.1:8888');
 
     socket.on('connect', () => {
 
-        debug("connect");
 
     });
 
     socket.on('disconnect', function(){ 
 
-        debug("disco");
 
     });
 
-    socket.on('ack', function(obj){ debug(JSON.stringify(obj))});
-    socket.emit('syn', "test");
+    socket.on('init', o => {
+        console.log(o)
+    });
 
 }

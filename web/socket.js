@@ -2,7 +2,10 @@ var io = require('socket.io');
 
 module.exports = function(obj) {
 
-    io.listen(obj.server)
+    var socket = io.listen(obj.server);
 
+    socket.on('connection', client => 
+        client.emit('init', {status:'connected'})
+    );
 
 }

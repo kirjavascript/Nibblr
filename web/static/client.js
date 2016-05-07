@@ -103,22 +103,16 @@
 
 	if (!channel.empty()) {
 
-	    var socket = _socket2.default.connect('http://127.0.0.1:1337');
+	    // add to config
+	    var socket = _socket2.default.connect('http://127.0.0.1:8888');
 
-	    socket.on('connect', function () {
+	    socket.on('connect', function () {});
 
-	        debug("connect");
+	    socket.on('disconnect', function () {});
+
+	    socket.on('init', function (o) {
+	        console.log(o);
 	    });
-
-	    socket.on('disconnect', function () {
-
-	        debug("disco");
-	    });
-
-	    socket.on('ack', function (obj) {
-	        debug(JSON.stringify(obj));
-	    });
-	    socket.emit('syn', "test");
 	}
 
 /***/ },

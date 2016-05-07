@@ -117,7 +117,7 @@ var context = {
 // init //
 
 function init() {
-    frontend({client, db, config});
+    frontend({client, db});
     schedule();
 }
 

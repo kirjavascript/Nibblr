@@ -1,8 +1,16 @@
 // http://expressjs.com/en/4x/api.html#req
 
 var url = require("url");
+var config = require('../config.json');
 var express = require('express');
 var app = express();
+
+app.engine('html', require('hogan-express'))
+    .set('view engine', 'html')
+    .set('views', __dirname + '/templates')
+    .listen(config.serverport, function () {
+        console.log('Web server listening on ' + config.serverport);
+    });
 
 module.exports = function(obj) {
 
@@ -10,35 +18,29 @@ module.exports = function(obj) {
 
     api(obj);
 
-    app.listen(obj.config.serverport, function () {
-        console.log('Web server listening on ' + obj.config.serverport);
-    });
-
     // root
 
-    app.use('/', express.static('./web/public'));
+    app.use('/', express.static('./web/static'));
 
-    app.get('/commands', (req,res) => {
-        obj.db.all('SELECT * from commands', (e,r) => {
-
-            var out = `<table>
-                <tr><th>Name</th><th>Command</th><th>Locked</th></tr>
-                `+r.map(d => `<tr>
-                    <td>${d.name}</td>
-                    <td>${d.command}</td>
-                    <td>${d.locked}</td>
-                </tr>
-                `).join("")+`
-            </table>
-            `;
-
-            res.send(out);
-        })
+    app.get('/', (req,res) => {
+        res.render('index', {user: "poop"})
     })
 
 }
 
 function api(obj) {
+
+    app.get('/commands', (req,res) => {
+        obj.db.all('SELECT * from commands', (e,r) => {
+
+            res.render('commands', {commands: r.map(d => `<tr>
+                    <td>${d.name}</td>
+                    <td>${d.command}</td>
+                    <td>${d.locked}</td>
+                </tr>
+                `).join("")})
+        })
+    })
 
     app.get(/\/api\/command\/(.*)/, (req,res) => {
 

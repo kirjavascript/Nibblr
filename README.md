@@ -13,7 +13,7 @@ One particularly useful function available is `wget(url, callback(jQuery, body))
 
 For example, to add a command for currency conversion you can type: `~commands.xe (b,a) => {if(a.length<3) return "~xe AMOUNT FROM TO";else return wget("http://www.xe.com/currencyconverter/convert/?Amount="+a[0]+"&From="+a[1]+"&To="+a[2],a => html2txt(a('.uccRes').html()))}`
 
-Calling `~xe 1 GBP USD` will result in an output of `1.00 GBP = 1.44301 USD`
+Then, calling `~xe 1 GBP USD` will result in an output of `1.00 GBP = 1.44301 USD`
 
 There are a few built in commands, like `~remind(time) message` and `~memo(user [,time]) message`. A full list of commands can be seen with `~commands.list`
 

@@ -3,5 +3,6 @@
     "channel":"#8BitVape",
     "username":"Nibblr",
     "password":"",
+    "serverport":"8888",
     "logfile":""
 }

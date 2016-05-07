@@ -51,10 +51,7 @@ catch (e) {
 require('sugar-date');
 var fs = require('fs');
 var irc = require('irc');
-var url = require("url");
-var btoa = require('btoa');
 var atob = require('atob');
-var http = require("http");
 var urban = require('urban');
 var google = require('google');
 var request = require('request');
@@ -68,7 +65,7 @@ var loopProtect = require('./lib/loop-protect');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
-
+var frontend = require('./web/server.js');
 
 // initconf //
 
@@ -129,32 +126,8 @@ var context = {
 // init //
 
 function init() {
-    notify();
+    frontend(client, db, config);
     schedule();
-}
-
-// http talk api //
-
-function notify() {
-
-    // http://kirjava.xyz:8888/?say=1&users=%238bitvape&message=test
-
-    var server = http.createServer((req, res) => {
-        req = url.parse(req.url, true);
-
-        if(req.query.users && req.query.message) {
-            res.end('sent ' + req.query.message + ' to ' + req.query.users);
-
-            var action = req.query.say ? 'say' : 'notice';
-
-            req.query.users.split(',').forEach(d => {
-                client[action](d, req.query.message);
-            })
-        }
-
-    });
-
-    server.listen(8888, () => console.log('notify server listening'))
 }
 
 // schedule loop //
@@ -612,7 +585,7 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
-    
+
 
     else if (text == '~reset') {process.exit();}
 

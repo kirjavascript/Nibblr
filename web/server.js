@@ -20,7 +20,7 @@ module.exports = function(obj) {
             .set('views', __dirname + '/templates')
             .set('layout', 'layout')
             .use(session({
-                secret: 'Welivelongandarecelebratedpoopers',
+                secret: config.webInterface.secretKey,
                 cookie: { maxAge: 60000 },
                 resave: true,
                 saveUninitialized: true
@@ -47,13 +47,20 @@ module.exports = function(obj) {
 
 function conf(extra = {}, req) {
 
-    let session = req.session
+    let session = req.session;
 
-    return Object.assign({
+    let obj = {
+        admin: session.admin
+    }
 
-        admin: session.admin,
+    if(session.admin) {
+        obj.secretKey = `'${config.webInterface.secretKey}'`;
+    }
+    else {
+        obj.secretKey = false;
+    }
 
-    }, extra)
+    return Object.assign(obj, extra);
 }
 
 function site(obj) {
@@ -81,15 +88,15 @@ function site(obj) {
         });
     })
 
-}
-
-function api(obj) {
-
     app.get('/commands', (req,res) => {
         obj.db.all('SELECT * from commands', (e,r) => {
             res.render('commands', conf({commands: r}, req))
         })
     })
+
+}
+
+function api(obj) {
 
     app.get(/\/api\/command\/(.*)/, (req,res) => {
 
@@ -104,7 +111,7 @@ function api(obj) {
     app.get('/api/say', (req,res) => {
         req = url.parse(req.url, true);
 
-        if(req.query.user && req.query.message) {
+        if(checkKey(req) && req.query.user && req.query.message) {
             res.json({
                 status:"success",
                 type:"message",
@@ -119,7 +126,7 @@ function api(obj) {
         else {
             res.json({
                 status: "error",
-                error: "malformed input, syntax is ?user=username&message=hello"
+                error: "malformed input, syntax is ?user=username&message=hello&key=[key]"
             });
         }
     })
@@ -127,7 +134,7 @@ function api(obj) {
     app.get('/api/notice', (req,res) => {
         req = url.parse(req.url, true);
 
-        if(req.query.user && req.query.message) {
+        if(checkKey(req) && req.query.user && req.query.message) {
             res.json({
                 status:"success",
                 type:"notice",
@@ -140,8 +147,15 @@ function api(obj) {
             })
         }
         else {
-            res.json('?user=username&message=hello');
+            res.json('?user=username&message=hello&key=[key]');
         }
     })
 
+}
+
+function checkKey(req) {
+    if(req.query.key && req.query.key == config.webInterface.secretKey)
+        return true;
+    else 
+        return false;
 }

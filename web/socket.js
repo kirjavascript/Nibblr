@@ -27,11 +27,4 @@ module.exports = function(obj) {
 
 function connected(client, socket) {
     clients.push(client);
-
-    socket.on('disconnected', client => {
-
-        clients.splice(i, clients.indexOf(client));
-
-    });
-
 }

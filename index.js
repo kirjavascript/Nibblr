@@ -7,10 +7,12 @@
 
 // sarah blake
 
-// socket.io for chat, commands interface
+// commands interface
 
 // add command wizard
 // admin ui uplaod to imgur
+
+// set secret key to client for api requests
 
 // logging, stats
 

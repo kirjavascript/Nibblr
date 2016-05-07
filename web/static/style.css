@@ -46,7 +46,8 @@ a:hover {
   margin: 0 auto;
   outline: 1px solid #0A0;
   height: 500px;
-  position: relative; }
+  position: relative;
+  padding: 20px; }
   .channel .message {
     position: absolute;
     bottom: 0px;
@@ -60,6 +61,9 @@ a:hover {
     right: 0px;
     width: 100px;
     height: 30px; }
+
+.viewers {
+  padding: 20px; }
 
 .help code {
   background-color: #222;

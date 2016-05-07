@@ -24,7 +24,8 @@ module.exports = {
             {
                 test: /\.scss/,
                 loader: ExtractText.extract('style', 'css!sass')
-            }
+            },
+            { test: /\.json$/, loader: 'json' },
         ],
     },
     plugins: [

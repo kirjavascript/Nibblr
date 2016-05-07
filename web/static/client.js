@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(11);
+	module.exports = __webpack_require__(61);
 
 
 /***/ },
@@ -91,9 +91,13 @@
 
 	var d3 = _interopRequireWildcard(_d);
 
-	var _socket = __webpack_require__(18);
+	var _socket = __webpack_require__(14);
 
 	var _socket2 = _interopRequireDefault(_socket);
+
+	var _config = __webpack_require__(65);
+
+	var _config2 = _interopRequireDefault(_config);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -103,15 +107,14 @@
 
 	if (!channel.empty()) {
 
-	    // add to config
-	    var socket = _socket2.default.connect('http://127.0.0.1:8888');
+	    var socket = _socket2.default.connect('http://' + _config2.default.webInterface.ip + ':' + _config2.default.webInterface.port);
 
-	    socket.on('connect', function () {});
+	    socket.on('message', function (o) {
+	        channel.append('div').html('&lt;' + o.from + '&gt; ' + o.text);
+	    });
 
-	    socket.on('disconnect', function () {});
-
-	    socket.on('init', function (o) {
-	        console.log(o);
+	    socket.on('viewers', function (o) {
+	        d3.select('.viewers').html(o + ' user' + (o > 1 ? 's' : '') + ' viewing');
 	    });
 	}
 
@@ -125,7 +128,7 @@
 	  value: true
 	});
 
-	var _d3Request = __webpack_require__(15);
+	var _d3Request = __webpack_require__(4);
 
 	Object.defineProperty(exports, "request", {
 	  enumerable: true,
@@ -170,7 +173,7 @@
 	  }
 	});
 
-	var _d3Selection = __webpack_require__(4);
+	var _d3Selection = __webpack_require__(8);
 
 	Object.defineProperty(exports, "mouse", {
 	  enumerable: true,
@@ -227,7 +230,7 @@
 	  }
 	});
 
-	var _d3Transition = __webpack_require__(5);
+	var _d3Transition = __webpack_require__(9);
 
 	Object.defineProperty(exports, "active", {
 	  enumerable: true,
@@ -244,6 +247,722 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function (global, factory) {
+	   true ? factory(exports, __webpack_require__(5), __webpack_require__(6), __webpack_require__(7)) :
+	  typeof define === 'function' && define.amd ? define(['exports', 'd3-collection', 'd3-dispatch', 'd3-dsv'], factory) :
+	  (factory((global.d3_request = global.d3_request || {}),global.d3_collection,global.d3_dispatch,global.d3_dsv));
+	}(this, function (exports,d3Collection,d3Dispatch,d3Dsv) { 'use strict';
+
+	  var version = "0.4.6";
+
+	  function request(url, callback) {
+	    var request,
+	        event = d3Dispatch.dispatch("beforesend", "progress", "load", "error"),
+	        mimeType,
+	        headers = d3Collection.map(),
+	        xhr = new XMLHttpRequest,
+	        user = null,
+	        password = null,
+	        response,
+	        responseType,
+	        timeout = 0;
+
+	    // If IE does not support CORS, use XDomainRequest.
+	    if (typeof XDomainRequest !== "undefined"
+	        && !("withCredentials" in xhr)
+	        && /^(http(s)?:)?\/\//.test(url)) xhr = new XDomainRequest;
+
+	    "onload" in xhr
+	        ? xhr.onload = xhr.onerror = xhr.ontimeout = respond
+	        : xhr.onreadystatechange = function(o) { xhr.readyState > 3 && respond(o); };
+
+	    function respond(o) {
+	      var status = xhr.status, result;
+	      if (!status && hasResponse(xhr)
+	          || status >= 200 && status < 300
+	          || status === 304) {
+	        if (response) {
+	          try {
+	            result = response.call(request, xhr);
+	          } catch (e) {
+	            event.call("error", request, e);
+	            return;
+	          }
+	        } else {
+	          result = xhr;
+	        }
+	        event.call("load", request, result);
+	      } else {
+	        event.call("error", request, o);
+	      }
+	    }
+
+	    xhr.onprogress = function(e) {
+	      event.call("progress", request, e);
+	    };
+
+	    request = {
+	      header: function(name, value) {
+	        name = (name + "").toLowerCase();
+	        if (arguments.length < 2) return headers.get(name);
+	        if (value == null) headers.remove(name);
+	        else headers.set(name, value + "");
+	        return request;
+	      },
+
+	      // If mimeType is non-null and no Accept header is set, a default is used.
+	      mimeType: function(value) {
+	        if (!arguments.length) return mimeType;
+	        mimeType = value == null ? null : value + "";
+	        return request;
+	      },
+
+	      // Specifies what type the response value should take;
+	      // for instance, arraybuffer, blob, document, or text.
+	      responseType: function(value) {
+	        if (!arguments.length) return responseType;
+	        responseType = value;
+	        return request;
+	      },
+
+	      timeout: function(value) {
+	        if (!arguments.length) return timeout;
+	        timeout = +value;
+	        return request;
+	      },
+
+	      user: function(value) {
+	        return arguments.length < 1 ? user : (user = value == null ? null : value + "", request);
+	      },
+
+	      password: function(value) {
+	        return arguments.length < 1 ? password : (password = value == null ? null : value + "", request);
+	      },
+
+	      // Specify how to convert the response content to a specific type;
+	      // changes the callback value on "load" events.
+	      response: function(value) {
+	        response = value;
+	        return request;
+	      },
+
+	      // Alias for send("GET", …).
+	      get: function(data, callback) {
+	        return request.send("GET", data, callback);
+	      },
+
+	      // Alias for send("POST", …).
+	      post: function(data, callback) {
+	        return request.send("POST", data, callback);
+	      },
+
+	      // If callback is non-null, it will be used for error and load events.
+	      send: function(method, data, callback) {
+	        if (!callback && typeof data === "function") callback = data, data = null;
+	        if (callback && callback.length === 1) callback = fixCallback(callback);
+	        xhr.open(method, url, true, user, password);
+	        if (mimeType != null && !headers.has("accept")) headers.set("accept", mimeType + ",*/*");
+	        if (xhr.setRequestHeader) headers.each(function(value, name) { xhr.setRequestHeader(name, value); });
+	        if (mimeType != null && xhr.overrideMimeType) xhr.overrideMimeType(mimeType);
+	        if (responseType != null) xhr.responseType = responseType;
+	        if (timeout > 0) xhr.timeout = timeout;
+	        if (callback) request.on("error", callback).on("load", function(xhr) { callback(null, xhr); });
+	        event.call("beforesend", request, xhr);
+	        xhr.send(data == null ? null : data);
+	        return request;
+	      },
+
+	      abort: function() {
+	        xhr.abort();
+	        return request;
+	      },
+
+	      on: function() {
+	        var value = event.on.apply(event, arguments);
+	        return value === event ? request : value;
+	      }
+	    };
+
+	    return callback
+	        ? request.get(callback)
+	        : request;
+	  }
+
+	  function fixCallback(callback) {
+	    return function(error, xhr) {
+	      callback(error == null ? xhr : null);
+	    };
+	  }
+
+	  function hasResponse(xhr) {
+	    var type = xhr.responseType;
+	    return type && type !== "text"
+	        ? xhr.response // null on error
+	        : xhr.responseText; // "" on error
+	  }
+
+	  function type(defaultMimeType, response) {
+	    return function(url, callback) {
+	      var r = request(url).mimeType(defaultMimeType).response(response);
+	      return callback ? r.get(callback) : r;
+	    };
+	  }
+
+	  var html = type("text/html", function(xhr) {
+	    return document.createRange().createContextualFragment(xhr.responseText);
+	  });
+
+	  var json = type("application/json", function(xhr) {
+	    return JSON.parse(xhr.responseText);
+	  });
+
+	  var text = type("text/plain", function(xhr) {
+	    return xhr.responseText;
+	  });
+
+	  var xml = type("application/xml", function(xhr) {
+	    var xml = xhr.responseXML;
+	    if (!xml) throw new Error("parse error");
+	    return xml;
+	  });
+
+	  function dsv(defaultMimeType, parse) {
+	    return function(url, row, callback) {
+	      if (arguments.length < 3) callback = row, row = null;
+	      var r = request(url).mimeType(defaultMimeType);
+	      r.row = function(_) { return arguments.length ? r.response(responseOf(parse, row = _)) : row; };
+	      r.row(row);
+	      return callback ? r.get(callback) : r;
+	    };
+	  }
+
+	  function responseOf(parse, row) {
+	    return function(request) {
+	      return parse(request.responseText, row);
+	    };
+	  }
+
+	  var csv = dsv("text/csv", d3Dsv.csvParse);
+
+	  var tsv = dsv("text/tab-separated-values", d3Dsv.tsvParse);
+
+	  exports.version = version;
+	  exports.request = request;
+	  exports.html = html;
+	  exports.json = json;
+	  exports.text = text;
+	  exports.xml = xml;
+	  exports.csv = csv;
+	  exports.tsv = tsv;
+
+	}));
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function (global, factory) {
+	   true ? factory(exports) :
+	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	  (factory((global.d3_collection = global.d3_collection || {})));
+	}(this, function (exports) { 'use strict';
+
+	  var prefix = "$";
+
+	  function Map() {}
+
+	  Map.prototype = map.prototype = {
+	    constructor: Map,
+	    has: function(key) {
+	      return (prefix + key) in this;
+	    },
+	    get: function(key) {
+	      return this[prefix + key];
+	    },
+	    set: function(key, value) {
+	      this[prefix + key] = value;
+	      return this;
+	    },
+	    remove: function(key) {
+	      var property = prefix + key;
+	      return property in this && delete this[property];
+	    },
+	    clear: function() {
+	      for (var property in this) if (property[0] === prefix) delete this[property];
+	    },
+	    keys: function() {
+	      var keys = [];
+	      for (var property in this) if (property[0] === prefix) keys.push(property.slice(1));
+	      return keys;
+	    },
+	    values: function() {
+	      var values = [];
+	      for (var property in this) if (property[0] === prefix) values.push(this[property]);
+	      return values;
+	    },
+	    entries: function() {
+	      var entries = [];
+	      for (var property in this) if (property[0] === prefix) entries.push({key: property.slice(1), value: this[property]});
+	      return entries;
+	    },
+	    size: function() {
+	      var size = 0;
+	      for (var property in this) if (property[0] === prefix) ++size;
+	      return size;
+	    },
+	    empty: function() {
+	      for (var property in this) if (property[0] === prefix) return false;
+	      return true;
+	    },
+	    each: function(f) {
+	      for (var property in this) if (property[0] === prefix) f(this[property], property.slice(1), this);
+	    }
+	  };
+
+	  function map(object, f) {
+	    var map = new Map;
+
+	    // Copy constructor.
+	    if (object instanceof Map) object.each(function(value, key) { map.set(key, value); });
+
+	    // Index array by numeric index or specified key function.
+	    else if (Array.isArray(object)) {
+	      var i = -1,
+	          n = object.length,
+	          o;
+
+	      if (f == null) while (++i < n) map.set(i, object[i]);
+	      else while (++i < n) map.set(f(o = object[i], i, object), o);
+	    }
+
+	    // Convert object to map.
+	    else if (object) for (var key in object) map.set(key, object[key]);
+
+	    return map;
+	  }
+
+	  function nest() {
+	    var keys = [],
+	        sortKeys = [],
+	        sortValues,
+	        rollup,
+	        nest;
+
+	    function apply(array, depth, createResult, setResult) {
+	      if (depth >= keys.length) return rollup
+	          ? rollup(array) : (sortValues
+	          ? array.sort(sortValues)
+	          : array);
+
+	      var i = -1,
+	          n = array.length,
+	          key = keys[depth++],
+	          keyValue,
+	          value,
+	          valuesByKey = map(),
+	          values,
+	          result = createResult();
+
+	      while (++i < n) {
+	        if (values = valuesByKey.get(keyValue = key(value = array[i]) + "")) {
+	          values.push(value);
+	        } else {
+	          valuesByKey.set(keyValue, [value]);
+	        }
+	      }
+
+	      valuesByKey.each(function(values, key) {
+	        setResult(result, key, apply(values, depth, createResult, setResult));
+	      });
+
+	      return result;
+	    }
+
+	    function entries(map, depth) {
+	      if (depth >= keys.length) return map;
+
+	      var array = [],
+	          sortKey = sortKeys[depth++];
+
+	      map.each(function(value, key) {
+	        array.push({key: key, values: entries(value, depth)});
+	      });
+
+	      return sortKey
+	          ? array.sort(function(a, b) { return sortKey(a.key, b.key); })
+	          : array;
+	    }
+
+	    return nest = {
+	      object: function(array) { return apply(array, 0, createObject, setObject); },
+	      map: function(array) { return apply(array, 0, createMap, setMap); },
+	      entries: function(array) { return entries(apply(array, 0, createMap, setMap), 0); },
+	      key: function(d) { keys.push(d); return nest; },
+	      sortKeys: function(order) { sortKeys[keys.length - 1] = order; return nest; },
+	      sortValues: function(order) { sortValues = order; return nest; },
+	      rollup: function(f) { rollup = f; return nest; }
+	    };
+	  }
+
+	  function createObject() {
+	    return {};
+	  }
+
+	  function setObject(object, key, value) {
+	    object[key] = value;
+	  }
+
+	  function createMap() {
+	    return map();
+	  }
+
+	  function setMap(map, key, value) {
+	    map.set(key, value);
+	  }
+
+	  function Set() {}
+
+	  var proto = map.prototype;
+
+	  Set.prototype = set.prototype = {
+	    constructor: Set,
+	    has: proto.has,
+	    add: function(value) {
+	      value += "";
+	      this[prefix + value] = value;
+	      return this;
+	    },
+	    remove: proto.remove,
+	    clear: proto.clear,
+	    values: proto.keys,
+	    size: proto.size,
+	    empty: proto.empty,
+	    each: proto.each
+	  };
+
+	  function set(object, f) {
+	    var set = new Set;
+
+	    // Copy constructor.
+	    if (object instanceof Set) object.each(function(value) { set.add(value); });
+
+	    // Otherwise, assume it’s an array.
+	    else if (object) {
+	      var i = -1, n = object.length;
+	      if (f == null) while (++i < n) set.add(object[i]);
+	      else while (++i < n) set.add(f(object[i], i, object));
+	    }
+
+	    return set;
+	  }
+
+	  function keys(map) {
+	    var keys = [];
+	    for (var key in map) keys.push(key);
+	    return keys;
+	  }
+
+	  function values(map) {
+	    var values = [];
+	    for (var key in map) values.push(map[key]);
+	    return values;
+	  }
+
+	  function entries(map) {
+	    var entries = [];
+	    for (var key in map) entries.push({key: key, value: map[key]});
+	    return entries;
+	  }
+
+	  var version = "0.1.2";
+
+	  exports.version = version;
+	  exports.nest = nest;
+	  exports.set = set;
+	  exports.map = map;
+	  exports.keys = keys;
+	  exports.values = values;
+	  exports.entries = entries;
+
+	}));
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function (global, factory) {
+	   true ? factory(exports) :
+	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	  (factory((global.d3_dispatch = global.d3_dispatch || {})));
+	}(this, function (exports) { 'use strict';
+
+	  var version = "0.4.3";
+
+	  var noop = {value: function() {}};
+
+	  function dispatch() {
+	    for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
+	      if (!(t = arguments[i] + "") || (t in _)) throw new Error;
+	      _[t] = [];
+	    }
+	    return new Dispatch(_);
+	  }
+
+	  function Dispatch(_) {
+	    this._ = _;
+	  }
+
+	  function parseTypenames(typenames, types) {
+	    return typenames.trim().split(/^|\s+/).map(function(t) {
+	      var name = "", i = t.indexOf(".");
+	      if (i >= 0) name = t.slice(i + 1), t = t.slice(0, i);
+	      if (t && !types.hasOwnProperty(t)) throw new Error;
+	      return {type: t, name: name};
+	    });
+	  }
+
+	  Dispatch.prototype = dispatch.prototype = {
+	    constructor: Dispatch,
+	    on: function(typename, callback) {
+	      var _ = this._,
+	          T = parseTypenames(typename + "", _),
+	          t,
+	          i = -1,
+	          n = T.length;
+
+	      // If no callback was specified, return the callback of the given type and name.
+	      if (arguments.length < 2) {
+	        while (++i < n) if ((t = (typename = T[i]).type) && (t = get(_[t], typename.name))) return t;
+	        return;
+	      }
+
+	      // If a type was specified, set the callback for the given type and name.
+	      // Otherwise, if a null callback was specified, remove callbacks of the given name.
+	      if (callback != null && typeof callback !== "function") throw new Error;
+	      while (++i < n) {
+	        if (t = (typename = T[i]).type) _[t] = set(_[t], typename.name, callback);
+	        else if (callback == null) for (t in _) _[t] = set(_[t], typename.name, null);
+	      }
+
+	      return this;
+	    },
+	    copy: function() {
+	      var copy = {}, _ = this._;
+	      for (var t in _) copy[t] = _[t].slice();
+	      return new Dispatch(copy);
+	    },
+	    call: function(type, that) {
+	      if ((n = arguments.length - 2) > 0) for (var args = new Array(n), i = 0, n; i < n; ++i) args[i] = arguments[i + 2];
+	      this.apply(type, that, args);
+	    },
+	    apply: function(type, that, args) {
+	      if (!this._.hasOwnProperty(type)) throw new Error;
+	      for (var t = this._[type], i = 0, n = t.length; i < n; ++i) t[i].value.apply(that, args);
+	    }
+	  };
+
+	  function get(type, name) {
+	    for (var i = 0, n = type.length, c; i < n; ++i) {
+	      if ((c = type[i]).name === name) {
+	        return c.value;
+	      }
+	    }
+	  }
+
+	  function set(type, name, callback) {
+	    for (var i = 0, n = type.length; i < n; ++i) {
+	      if (type[i].name === name) {
+	        type[i] = noop, type = type.slice(0, i).concat(type.slice(i + 1));
+	        break;
+	      }
+	    }
+	    if (callback != null) type.push({name: name, value: callback});
+	    return type;
+	  }
+
+	  exports.version = version;
+	  exports.dispatch = dispatch;
+
+	}));
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function (global, factory) {
+	   true ? factory(exports) :
+	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	  (factory((global.d3_dsv = global.d3_dsv || {})));
+	}(this, function (exports) { 'use strict';
+
+	  var version = "0.3.2";
+
+	  function objectConverter(columns) {
+	    return new Function("d", "return {" + columns.map(function(name, i) {
+	      return JSON.stringify(name) + ": d[" + i + "]";
+	    }).join(",") + "}");
+	  }
+
+	  function customConverter(columns, f) {
+	    var object = objectConverter(columns);
+	    return function(row, i) {
+	      return f(object(row), i, columns);
+	    };
+	  }
+
+	  // Compute unique columns in order of discovery.
+	  function inferColumns(rows) {
+	    var columnSet = Object.create(null),
+	        columns = [];
+
+	    rows.forEach(function(row) {
+	      for (var column in row) {
+	        if (!(column in columnSet)) {
+	          columns.push(columnSet[column] = column);
+	        }
+	      }
+	    });
+
+	    return columns;
+	  }
+
+	  function dsv(delimiter) {
+	    var reFormat = new RegExp("[\"" + delimiter + "\n]"),
+	        delimiterCode = delimiter.charCodeAt(0);
+
+	    function parse(text, f) {
+	      var convert, columns, rows = parseRows(text, function(row, i) {
+	        if (convert) return convert(row, i - 1);
+	        columns = row, convert = f ? customConverter(row, f) : objectConverter(row);
+	      });
+	      rows.columns = columns;
+	      return rows;
+	    }
+
+	    function parseRows(text, f) {
+	      var EOL = {}, // sentinel value for end-of-line
+	          EOF = {}, // sentinel value for end-of-file
+	          rows = [], // output rows
+	          N = text.length,
+	          I = 0, // current character index
+	          n = 0, // the current line number
+	          t, // the current token
+	          eol; // is the current token followed by EOL?
+
+	      function token() {
+	        if (I >= N) return EOF; // special case: end of file
+	        if (eol) return eol = false, EOL; // special case: end of line
+
+	        // special case: quotes
+	        var j = I, c;
+	        if (text.charCodeAt(j) === 34) {
+	          var i = j;
+	          while (i++ < N) {
+	            if (text.charCodeAt(i) === 34) {
+	              if (text.charCodeAt(i + 1) !== 34) break;
+	              ++i;
+	            }
+	          }
+	          I = i + 2;
+	          c = text.charCodeAt(i + 1);
+	          if (c === 13) {
+	            eol = true;
+	            if (text.charCodeAt(i + 2) === 10) ++I;
+	          } else if (c === 10) {
+	            eol = true;
+	          }
+	          return text.slice(j + 1, i).replace(/""/g, "\"");
+	        }
+
+	        // common case: find next delimiter or newline
+	        while (I < N) {
+	          var k = 1;
+	          c = text.charCodeAt(I++);
+	          if (c === 10) eol = true; // \n
+	          else if (c === 13) { eol = true; if (text.charCodeAt(I) === 10) ++I, ++k; } // \r|\r\n
+	          else if (c !== delimiterCode) continue;
+	          return text.slice(j, I - k);
+	        }
+
+	        // special case: last token before EOF
+	        return text.slice(j);
+	      }
+
+	      while ((t = token()) !== EOF) {
+	        var a = [];
+	        while (t !== EOL && t !== EOF) {
+	          a.push(t);
+	          t = token();
+	        }
+	        if (f && (a = f(a, n++)) == null) continue;
+	        rows.push(a);
+	      }
+
+	      return rows;
+	    }
+
+	    function format(rows, columns) {
+	      if (columns == null) columns = inferColumns(rows);
+	      return [columns.map(formatValue).join(delimiter)].concat(rows.map(function(row) {
+	        return columns.map(function(column) {
+	          return formatValue(row[column]);
+	        }).join(delimiter);
+	      })).join("\n");
+	    }
+
+	    function formatRows(rows) {
+	      return rows.map(formatRow).join("\n");
+	    }
+
+	    function formatRow(row) {
+	      return row.map(formatValue).join(delimiter);
+	    }
+
+	    function formatValue(text) {
+	      return text == null ? ""
+	          : reFormat.test(text += "") ? "\"" + text.replace(/\"/g, "\"\"") + "\""
+	          : text;
+	    }
+
+	    return {
+	      parse: parse,
+	      parseRows: parseRows,
+	      format: format,
+	      formatRows: formatRows
+	    };
+	  }
+
+	  var csv = dsv(",");
+
+	  var csvParse = csv.parse;
+	  var csvParseRows = csv.parseRows;
+	  var csvFormat = csv.format;
+	  var csvFormatRows = csv.formatRows;
+
+	  var tsv = dsv("\t");
+
+	  var tsvParse = tsv.parse;
+	  var tsvParseRows = tsv.parseRows;
+	  var tsvFormat = tsv.format;
+	  var tsvFormatRows = tsv.formatRows;
+
+	  exports.version = version;
+	  exports.dsvFormat = dsv;
+	  exports.csvParse = csvParse;
+	  exports.csvParseRows = csvParseRows;
+	  exports.csvFormat = csvFormat;
+	  exports.csvFormatRows = csvFormatRows;
+	  exports.tsvParse = tsvParse;
+	  exports.tsvParseRows = tsvParseRows;
+	  exports.tsvFormat = tsvFormat;
+	  exports.tsvFormatRows = tsvFormatRows;
+
+	}));
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -1188,11 +1907,11 @@
 	}));
 
 /***/ },
-/* 5 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(4), __webpack_require__(6), __webpack_require__(7), __webpack_require__(8), __webpack_require__(9), __webpack_require__(10)) :
+	   true ? factory(exports, __webpack_require__(8), __webpack_require__(6), __webpack_require__(10), __webpack_require__(11), __webpack_require__(12), __webpack_require__(13)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-selection', 'd3-dispatch', 'd3-timer', 'd3-interpolate', 'd3-color', 'd3-ease'], factory) :
 	  (factory((global.d3_transition = global.d3_transition || {}),global.d3_selection,global.d3_dispatch,global.d3_timer,global.d3_interpolate,global.d3_color,global.d3_ease));
 	}(this, function (exports,d3Selection,d3Dispatch,d3Timer,d3Interpolate,d3Color,d3Ease) { 'use strict';
@@ -1961,106 +2680,7 @@
 	}));
 
 /***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function (global, factory) {
-	   true ? factory(exports) :
-	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	  (factory((global.d3_dispatch = global.d3_dispatch || {})));
-	}(this, function (exports) { 'use strict';
-
-	  var version = "0.4.3";
-
-	  var noop = {value: function() {}};
-
-	  function dispatch() {
-	    for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
-	      if (!(t = arguments[i] + "") || (t in _)) throw new Error;
-	      _[t] = [];
-	    }
-	    return new Dispatch(_);
-	  }
-
-	  function Dispatch(_) {
-	    this._ = _;
-	  }
-
-	  function parseTypenames(typenames, types) {
-	    return typenames.trim().split(/^|\s+/).map(function(t) {
-	      var name = "", i = t.indexOf(".");
-	      if (i >= 0) name = t.slice(i + 1), t = t.slice(0, i);
-	      if (t && !types.hasOwnProperty(t)) throw new Error;
-	      return {type: t, name: name};
-	    });
-	  }
-
-	  Dispatch.prototype = dispatch.prototype = {
-	    constructor: Dispatch,
-	    on: function(typename, callback) {
-	      var _ = this._,
-	          T = parseTypenames(typename + "", _),
-	          t,
-	          i = -1,
-	          n = T.length;
-
-	      // If no callback was specified, return the callback of the given type and name.
-	      if (arguments.length < 2) {
-	        while (++i < n) if ((t = (typename = T[i]).type) && (t = get(_[t], typename.name))) return t;
-	        return;
-	      }
-
-	      // If a type was specified, set the callback for the given type and name.
-	      // Otherwise, if a null callback was specified, remove callbacks of the given name.
-	      if (callback != null && typeof callback !== "function") throw new Error;
-	      while (++i < n) {
-	        if (t = (typename = T[i]).type) _[t] = set(_[t], typename.name, callback);
-	        else if (callback == null) for (t in _) _[t] = set(_[t], typename.name, null);
-	      }
-
-	      return this;
-	    },
-	    copy: function() {
-	      var copy = {}, _ = this._;
-	      for (var t in _) copy[t] = _[t].slice();
-	      return new Dispatch(copy);
-	    },
-	    call: function(type, that) {
-	      if ((n = arguments.length - 2) > 0) for (var args = new Array(n), i = 0, n; i < n; ++i) args[i] = arguments[i + 2];
-	      this.apply(type, that, args);
-	    },
-	    apply: function(type, that, args) {
-	      if (!this._.hasOwnProperty(type)) throw new Error;
-	      for (var t = this._[type], i = 0, n = t.length; i < n; ++i) t[i].value.apply(that, args);
-	    }
-	  };
-
-	  function get(type, name) {
-	    for (var i = 0, n = type.length, c; i < n; ++i) {
-	      if ((c = type[i]).name === name) {
-	        return c.value;
-	      }
-	    }
-	  }
-
-	  function set(type, name, callback) {
-	    for (var i = 0, n = type.length; i < n; ++i) {
-	      if (type[i].name === name) {
-	        type[i] = noop, type = type.slice(0, i).concat(type.slice(i + 1));
-	        break;
-	      }
-	    }
-	    if (callback != null) type.push({name: name, value: callback});
-	    return type;
-	  }
-
-	  exports.version = version;
-	  exports.dispatch = dispatch;
-
-	}));
-
-/***/ },
-/* 7 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -2212,11 +2832,11 @@
 	}));
 
 /***/ },
-/* 8 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(9)) :
+	   true ? factory(exports, __webpack_require__(12)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-color'], factory) :
 	  (factory((global.d3_interpolate = global.d3_interpolate || {}),global.d3_color));
 	}(this, function (exports,d3Color) { 'use strict';
@@ -2727,7 +3347,7 @@
 	}));
 
 /***/ },
-/* 9 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -3249,7 +3869,7 @@
 	}));
 
 /***/ },
-/* 10 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -3510,633 +4130,7 @@
 	}));
 
 /***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(16), __webpack_require__(6), __webpack_require__(17)) :
-	  typeof define === 'function' && define.amd ? define(['exports', 'd3-collection', 'd3-dispatch', 'd3-dsv'], factory) :
-	  (factory((global.d3_request = global.d3_request || {}),global.d3_collection,global.d3_dispatch,global.d3_dsv));
-	}(this, function (exports,d3Collection,d3Dispatch,d3Dsv) { 'use strict';
-
-	  var version = "0.4.6";
-
-	  function request(url, callback) {
-	    var request,
-	        event = d3Dispatch.dispatch("beforesend", "progress", "load", "error"),
-	        mimeType,
-	        headers = d3Collection.map(),
-	        xhr = new XMLHttpRequest,
-	        user = null,
-	        password = null,
-	        response,
-	        responseType,
-	        timeout = 0;
-
-	    // If IE does not support CORS, use XDomainRequest.
-	    if (typeof XDomainRequest !== "undefined"
-	        && !("withCredentials" in xhr)
-	        && /^(http(s)?:)?\/\//.test(url)) xhr = new XDomainRequest;
-
-	    "onload" in xhr
-	        ? xhr.onload = xhr.onerror = xhr.ontimeout = respond
-	        : xhr.onreadystatechange = function(o) { xhr.readyState > 3 && respond(o); };
-
-	    function respond(o) {
-	      var status = xhr.status, result;
-	      if (!status && hasResponse(xhr)
-	          || status >= 200 && status < 300
-	          || status === 304) {
-	        if (response) {
-	          try {
-	            result = response.call(request, xhr);
-	          } catch (e) {
-	            event.call("error", request, e);
-	            return;
-	          }
-	        } else {
-	          result = xhr;
-	        }
-	        event.call("load", request, result);
-	      } else {
-	        event.call("error", request, o);
-	      }
-	    }
-
-	    xhr.onprogress = function(e) {
-	      event.call("progress", request, e);
-	    };
-
-	    request = {
-	      header: function(name, value) {
-	        name = (name + "").toLowerCase();
-	        if (arguments.length < 2) return headers.get(name);
-	        if (value == null) headers.remove(name);
-	        else headers.set(name, value + "");
-	        return request;
-	      },
-
-	      // If mimeType is non-null and no Accept header is set, a default is used.
-	      mimeType: function(value) {
-	        if (!arguments.length) return mimeType;
-	        mimeType = value == null ? null : value + "";
-	        return request;
-	      },
-
-	      // Specifies what type the response value should take;
-	      // for instance, arraybuffer, blob, document, or text.
-	      responseType: function(value) {
-	        if (!arguments.length) return responseType;
-	        responseType = value;
-	        return request;
-	      },
-
-	      timeout: function(value) {
-	        if (!arguments.length) return timeout;
-	        timeout = +value;
-	        return request;
-	      },
-
-	      user: function(value) {
-	        return arguments.length < 1 ? user : (user = value == null ? null : value + "", request);
-	      },
-
-	      password: function(value) {
-	        return arguments.length < 1 ? password : (password = value == null ? null : value + "", request);
-	      },
-
-	      // Specify how to convert the response content to a specific type;
-	      // changes the callback value on "load" events.
-	      response: function(value) {
-	        response = value;
-	        return request;
-	      },
-
-	      // Alias for send("GET", …).
-	      get: function(data, callback) {
-	        return request.send("GET", data, callback);
-	      },
-
-	      // Alias for send("POST", …).
-	      post: function(data, callback) {
-	        return request.send("POST", data, callback);
-	      },
-
-	      // If callback is non-null, it will be used for error and load events.
-	      send: function(method, data, callback) {
-	        if (!callback && typeof data === "function") callback = data, data = null;
-	        if (callback && callback.length === 1) callback = fixCallback(callback);
-	        xhr.open(method, url, true, user, password);
-	        if (mimeType != null && !headers.has("accept")) headers.set("accept", mimeType + ",*/*");
-	        if (xhr.setRequestHeader) headers.each(function(value, name) { xhr.setRequestHeader(name, value); });
-	        if (mimeType != null && xhr.overrideMimeType) xhr.overrideMimeType(mimeType);
-	        if (responseType != null) xhr.responseType = responseType;
-	        if (timeout > 0) xhr.timeout = timeout;
-	        if (callback) request.on("error", callback).on("load", function(xhr) { callback(null, xhr); });
-	        event.call("beforesend", request, xhr);
-	        xhr.send(data == null ? null : data);
-	        return request;
-	      },
-
-	      abort: function() {
-	        xhr.abort();
-	        return request;
-	      },
-
-	      on: function() {
-	        var value = event.on.apply(event, arguments);
-	        return value === event ? request : value;
-	      }
-	    };
-
-	    return callback
-	        ? request.get(callback)
-	        : request;
-	  }
-
-	  function fixCallback(callback) {
-	    return function(error, xhr) {
-	      callback(error == null ? xhr : null);
-	    };
-	  }
-
-	  function hasResponse(xhr) {
-	    var type = xhr.responseType;
-	    return type && type !== "text"
-	        ? xhr.response // null on error
-	        : xhr.responseText; // "" on error
-	  }
-
-	  function type(defaultMimeType, response) {
-	    return function(url, callback) {
-	      var r = request(url).mimeType(defaultMimeType).response(response);
-	      return callback ? r.get(callback) : r;
-	    };
-	  }
-
-	  var html = type("text/html", function(xhr) {
-	    return document.createRange().createContextualFragment(xhr.responseText);
-	  });
-
-	  var json = type("application/json", function(xhr) {
-	    return JSON.parse(xhr.responseText);
-	  });
-
-	  var text = type("text/plain", function(xhr) {
-	    return xhr.responseText;
-	  });
-
-	  var xml = type("application/xml", function(xhr) {
-	    var xml = xhr.responseXML;
-	    if (!xml) throw new Error("parse error");
-	    return xml;
-	  });
-
-	  function dsv(defaultMimeType, parse) {
-	    return function(url, row, callback) {
-	      if (arguments.length < 3) callback = row, row = null;
-	      var r = request(url).mimeType(defaultMimeType);
-	      r.row = function(_) { return arguments.length ? r.response(responseOf(parse, row = _)) : row; };
-	      r.row(row);
-	      return callback ? r.get(callback) : r;
-	    };
-	  }
-
-	  function responseOf(parse, row) {
-	    return function(request) {
-	      return parse(request.responseText, row);
-	    };
-	  }
-
-	  var csv = dsv("text/csv", d3Dsv.csvParse);
-
-	  var tsv = dsv("text/tab-separated-values", d3Dsv.tsvParse);
-
-	  exports.version = version;
-	  exports.request = request;
-	  exports.html = html;
-	  exports.json = json;
-	  exports.text = text;
-	  exports.xml = xml;
-	  exports.csv = csv;
-	  exports.tsv = tsv;
-
-	}));
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function (global, factory) {
-	   true ? factory(exports) :
-	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	  (factory((global.d3_collection = global.d3_collection || {})));
-	}(this, function (exports) { 'use strict';
-
-	  var prefix = "$";
-
-	  function Map() {}
-
-	  Map.prototype = map.prototype = {
-	    constructor: Map,
-	    has: function(key) {
-	      return (prefix + key) in this;
-	    },
-	    get: function(key) {
-	      return this[prefix + key];
-	    },
-	    set: function(key, value) {
-	      this[prefix + key] = value;
-	      return this;
-	    },
-	    remove: function(key) {
-	      var property = prefix + key;
-	      return property in this && delete this[property];
-	    },
-	    clear: function() {
-	      for (var property in this) if (property[0] === prefix) delete this[property];
-	    },
-	    keys: function() {
-	      var keys = [];
-	      for (var property in this) if (property[0] === prefix) keys.push(property.slice(1));
-	      return keys;
-	    },
-	    values: function() {
-	      var values = [];
-	      for (var property in this) if (property[0] === prefix) values.push(this[property]);
-	      return values;
-	    },
-	    entries: function() {
-	      var entries = [];
-	      for (var property in this) if (property[0] === prefix) entries.push({key: property.slice(1), value: this[property]});
-	      return entries;
-	    },
-	    size: function() {
-	      var size = 0;
-	      for (var property in this) if (property[0] === prefix) ++size;
-	      return size;
-	    },
-	    empty: function() {
-	      for (var property in this) if (property[0] === prefix) return false;
-	      return true;
-	    },
-	    each: function(f) {
-	      for (var property in this) if (property[0] === prefix) f(this[property], property.slice(1), this);
-	    }
-	  };
-
-	  function map(object, f) {
-	    var map = new Map;
-
-	    // Copy constructor.
-	    if (object instanceof Map) object.each(function(value, key) { map.set(key, value); });
-
-	    // Index array by numeric index or specified key function.
-	    else if (Array.isArray(object)) {
-	      var i = -1,
-	          n = object.length,
-	          o;
-
-	      if (f == null) while (++i < n) map.set(i, object[i]);
-	      else while (++i < n) map.set(f(o = object[i], i, object), o);
-	    }
-
-	    // Convert object to map.
-	    else if (object) for (var key in object) map.set(key, object[key]);
-
-	    return map;
-	  }
-
-	  function nest() {
-	    var keys = [],
-	        sortKeys = [],
-	        sortValues,
-	        rollup,
-	        nest;
-
-	    function apply(array, depth, createResult, setResult) {
-	      if (depth >= keys.length) return rollup
-	          ? rollup(array) : (sortValues
-	          ? array.sort(sortValues)
-	          : array);
-
-	      var i = -1,
-	          n = array.length,
-	          key = keys[depth++],
-	          keyValue,
-	          value,
-	          valuesByKey = map(),
-	          values,
-	          result = createResult();
-
-	      while (++i < n) {
-	        if (values = valuesByKey.get(keyValue = key(value = array[i]) + "")) {
-	          values.push(value);
-	        } else {
-	          valuesByKey.set(keyValue, [value]);
-	        }
-	      }
-
-	      valuesByKey.each(function(values, key) {
-	        setResult(result, key, apply(values, depth, createResult, setResult));
-	      });
-
-	      return result;
-	    }
-
-	    function entries(map, depth) {
-	      if (depth >= keys.length) return map;
-
-	      var array = [],
-	          sortKey = sortKeys[depth++];
-
-	      map.each(function(value, key) {
-	        array.push({key: key, values: entries(value, depth)});
-	      });
-
-	      return sortKey
-	          ? array.sort(function(a, b) { return sortKey(a.key, b.key); })
-	          : array;
-	    }
-
-	    return nest = {
-	      object: function(array) { return apply(array, 0, createObject, setObject); },
-	      map: function(array) { return apply(array, 0, createMap, setMap); },
-	      entries: function(array) { return entries(apply(array, 0, createMap, setMap), 0); },
-	      key: function(d) { keys.push(d); return nest; },
-	      sortKeys: function(order) { sortKeys[keys.length - 1] = order; return nest; },
-	      sortValues: function(order) { sortValues = order; return nest; },
-	      rollup: function(f) { rollup = f; return nest; }
-	    };
-	  }
-
-	  function createObject() {
-	    return {};
-	  }
-
-	  function setObject(object, key, value) {
-	    object[key] = value;
-	  }
-
-	  function createMap() {
-	    return map();
-	  }
-
-	  function setMap(map, key, value) {
-	    map.set(key, value);
-	  }
-
-	  function Set() {}
-
-	  var proto = map.prototype;
-
-	  Set.prototype = set.prototype = {
-	    constructor: Set,
-	    has: proto.has,
-	    add: function(value) {
-	      value += "";
-	      this[prefix + value] = value;
-	      return this;
-	    },
-	    remove: proto.remove,
-	    clear: proto.clear,
-	    values: proto.keys,
-	    size: proto.size,
-	    empty: proto.empty,
-	    each: proto.each
-	  };
-
-	  function set(object, f) {
-	    var set = new Set;
-
-	    // Copy constructor.
-	    if (object instanceof Set) object.each(function(value) { set.add(value); });
-
-	    // Otherwise, assume it’s an array.
-	    else if (object) {
-	      var i = -1, n = object.length;
-	      if (f == null) while (++i < n) set.add(object[i]);
-	      else while (++i < n) set.add(f(object[i], i, object));
-	    }
-
-	    return set;
-	  }
-
-	  function keys(map) {
-	    var keys = [];
-	    for (var key in map) keys.push(key);
-	    return keys;
-	  }
-
-	  function values(map) {
-	    var values = [];
-	    for (var key in map) values.push(map[key]);
-	    return values;
-	  }
-
-	  function entries(map) {
-	    var entries = [];
-	    for (var key in map) entries.push({key: key, value: map[key]});
-	    return entries;
-	  }
-
-	  var version = "0.1.2";
-
-	  exports.version = version;
-	  exports.nest = nest;
-	  exports.set = set;
-	  exports.map = map;
-	  exports.keys = keys;
-	  exports.values = values;
-	  exports.entries = entries;
-
-	}));
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function (global, factory) {
-	   true ? factory(exports) :
-	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	  (factory((global.d3_dsv = global.d3_dsv || {})));
-	}(this, function (exports) { 'use strict';
-
-	  var version = "0.3.2";
-
-	  function objectConverter(columns) {
-	    return new Function("d", "return {" + columns.map(function(name, i) {
-	      return JSON.stringify(name) + ": d[" + i + "]";
-	    }).join(",") + "}");
-	  }
-
-	  function customConverter(columns, f) {
-	    var object = objectConverter(columns);
-	    return function(row, i) {
-	      return f(object(row), i, columns);
-	    };
-	  }
-
-	  // Compute unique columns in order of discovery.
-	  function inferColumns(rows) {
-	    var columnSet = Object.create(null),
-	        columns = [];
-
-	    rows.forEach(function(row) {
-	      for (var column in row) {
-	        if (!(column in columnSet)) {
-	          columns.push(columnSet[column] = column);
-	        }
-	      }
-	    });
-
-	    return columns;
-	  }
-
-	  function dsv(delimiter) {
-	    var reFormat = new RegExp("[\"" + delimiter + "\n]"),
-	        delimiterCode = delimiter.charCodeAt(0);
-
-	    function parse(text, f) {
-	      var convert, columns, rows = parseRows(text, function(row, i) {
-	        if (convert) return convert(row, i - 1);
-	        columns = row, convert = f ? customConverter(row, f) : objectConverter(row);
-	      });
-	      rows.columns = columns;
-	      return rows;
-	    }
-
-	    function parseRows(text, f) {
-	      var EOL = {}, // sentinel value for end-of-line
-	          EOF = {}, // sentinel value for end-of-file
-	          rows = [], // output rows
-	          N = text.length,
-	          I = 0, // current character index
-	          n = 0, // the current line number
-	          t, // the current token
-	          eol; // is the current token followed by EOL?
-
-	      function token() {
-	        if (I >= N) return EOF; // special case: end of file
-	        if (eol) return eol = false, EOL; // special case: end of line
-
-	        // special case: quotes
-	        var j = I, c;
-	        if (text.charCodeAt(j) === 34) {
-	          var i = j;
-	          while (i++ < N) {
-	            if (text.charCodeAt(i) === 34) {
-	              if (text.charCodeAt(i + 1) !== 34) break;
-	              ++i;
-	            }
-	          }
-	          I = i + 2;
-	          c = text.charCodeAt(i + 1);
-	          if (c === 13) {
-	            eol = true;
-	            if (text.charCodeAt(i + 2) === 10) ++I;
-	          } else if (c === 10) {
-	            eol = true;
-	          }
-	          return text.slice(j + 1, i).replace(/""/g, "\"");
-	        }
-
-	        // common case: find next delimiter or newline
-	        while (I < N) {
-	          var k = 1;
-	          c = text.charCodeAt(I++);
-	          if (c === 10) eol = true; // \n
-	          else if (c === 13) { eol = true; if (text.charCodeAt(I) === 10) ++I, ++k; } // \r|\r\n
-	          else if (c !== delimiterCode) continue;
-	          return text.slice(j, I - k);
-	        }
-
-	        // special case: last token before EOF
-	        return text.slice(j);
-	      }
-
-	      while ((t = token()) !== EOF) {
-	        var a = [];
-	        while (t !== EOL && t !== EOF) {
-	          a.push(t);
-	          t = token();
-	        }
-	        if (f && (a = f(a, n++)) == null) continue;
-	        rows.push(a);
-	      }
-
-	      return rows;
-	    }
-
-	    function format(rows, columns) {
-	      if (columns == null) columns = inferColumns(rows);
-	      return [columns.map(formatValue).join(delimiter)].concat(rows.map(function(row) {
-	        return columns.map(function(column) {
-	          return formatValue(row[column]);
-	        }).join(delimiter);
-	      })).join("\n");
-	    }
-
-	    function formatRows(rows) {
-	      return rows.map(formatRow).join("\n");
-	    }
-
-	    function formatRow(row) {
-	      return row.map(formatValue).join(delimiter);
-	    }
-
-	    function formatValue(text) {
-	      return text == null ? ""
-	          : reFormat.test(text += "") ? "\"" + text.replace(/\"/g, "\"\"") + "\""
-	          : text;
-	    }
-
-	    return {
-	      parse: parse,
-	      parseRows: parseRows,
-	      format: format,
-	      formatRows: formatRows
-	    };
-	  }
-
-	  var csv = dsv(",");
-
-	  var csvParse = csv.parse;
-	  var csvParseRows = csv.parseRows;
-	  var csvFormat = csv.format;
-	  var csvFormatRows = csv.formatRows;
-
-	  var tsv = dsv("\t");
-
-	  var tsvParse = tsv.parse;
-	  var tsvParseRows = tsv.parseRows;
-	  var tsvFormat = tsv.format;
-	  var tsvFormatRows = tsv.formatRows;
-
-	  exports.version = version;
-	  exports.dsvFormat = dsv;
-	  exports.csvParse = csvParse;
-	  exports.csvParseRows = csvParseRows;
-	  exports.csvFormat = csvFormat;
-	  exports.csvFormatRows = csvFormatRows;
-	  exports.tsvParse = tsvParse;
-	  exports.tsvParseRows = tsvParseRows;
-	  exports.tsvFormat = tsvFormat;
-	  exports.tsvFormatRows = tsvFormatRows;
-
-	}));
-
-/***/ },
-/* 18 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4144,10 +4138,10 @@
 	 * Module dependencies.
 	 */
 
-	var url = __webpack_require__(19);
-	var parser = __webpack_require__(24);
-	var Manager = __webpack_require__(32);
-	var debug = __webpack_require__(21)('socket.io-client');
+	var url = __webpack_require__(15);
+	var parser = __webpack_require__(20);
+	var Manager = __webpack_require__(28);
+	var debug = __webpack_require__(17)('socket.io-client');
 
 	/**
 	 * Module exports.
@@ -4229,12 +4223,12 @@
 	 * @api public
 	 */
 
-	exports.Manager = __webpack_require__(32);
-	exports.Socket = __webpack_require__(58);
+	exports.Manager = __webpack_require__(28);
+	exports.Socket = __webpack_require__(54);
 
 
 /***/ },
-/* 19 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -4242,8 +4236,8 @@
 	 * Module dependencies.
 	 */
 
-	var parseuri = __webpack_require__(20);
-	var debug = __webpack_require__(21)('socket.io-client:url');
+	var parseuri = __webpack_require__(16);
+	var debug = __webpack_require__(17)('socket.io-client:url');
 
 	/**
 	 * Module exports.
@@ -4317,7 +4311,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 20 */
+/* 16 */
 /***/ function(module, exports) {
 
 	/**
@@ -4362,7 +4356,7 @@
 
 
 /***/ },
-/* 21 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4372,7 +4366,7 @@
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = __webpack_require__(22);
+	exports = module.exports = __webpack_require__(18);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -4536,7 +4530,7 @@
 
 
 /***/ },
-/* 22 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4552,7 +4546,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(23);
+	exports.humanize = __webpack_require__(19);
 
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -4739,7 +4733,7 @@
 
 
 /***/ },
-/* 23 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/**
@@ -4870,7 +4864,7 @@
 
 
 /***/ },
-/* 24 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4878,12 +4872,12 @@
 	 * Module dependencies.
 	 */
 
-	var debug = __webpack_require__(21)('socket.io-parser');
-	var json = __webpack_require__(25);
-	var isArray = __webpack_require__(28);
-	var Emitter = __webpack_require__(29);
-	var binary = __webpack_require__(30);
-	var isBuf = __webpack_require__(31);
+	var debug = __webpack_require__(17)('socket.io-parser');
+	var json = __webpack_require__(21);
+	var isArray = __webpack_require__(24);
+	var Emitter = __webpack_require__(25);
+	var binary = __webpack_require__(26);
+	var isBuf = __webpack_require__(27);
 
 	/**
 	 * Protocol version.
@@ -5276,14 +5270,14 @@
 
 
 /***/ },
-/* 25 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! JSON v3.3.2 | http://bestiejs.github.io/json3 | Copyright 2012-2014, Kit Cambridge | http://kit.mit-license.org */
 	;(function () {
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(27);
+	  var isLoader = "function" === "function" && __webpack_require__(23);
 
 	  // A set of types used to distinguish objects from primitives.
 	  var objectTypes = {
@@ -6182,10 +6176,10 @@
 	  }
 	}).call(this);
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)(module), (function() { return this; }())))
 
 /***/ },
-/* 26 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -6201,7 +6195,7 @@
 
 
 /***/ },
-/* 27 */
+/* 23 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -6209,7 +6203,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 28 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -6218,7 +6212,7 @@
 
 
 /***/ },
-/* 29 */
+/* 25 */
 /***/ function(module, exports) {
 
 	
@@ -6388,7 +6382,7 @@
 
 
 /***/ },
-/* 30 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -6397,8 +6391,8 @@
 	 * Module requirements
 	 */
 
-	var isArray = __webpack_require__(28);
-	var isBuf = __webpack_require__(31);
+	var isArray = __webpack_require__(24);
+	var isBuf = __webpack_require__(27);
 
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -6536,7 +6530,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 31 */
+/* 27 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -6556,7 +6550,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 32 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -6564,15 +6558,15 @@
 	 * Module dependencies.
 	 */
 
-	var eio = __webpack_require__(33);
-	var Socket = __webpack_require__(58);
-	var Emitter = __webpack_require__(59);
-	var parser = __webpack_require__(24);
-	var on = __webpack_require__(61);
-	var bind = __webpack_require__(62);
-	var debug = __webpack_require__(21)('socket.io-client:manager');
-	var indexOf = __webpack_require__(56);
-	var Backoff = __webpack_require__(64);
+	var eio = __webpack_require__(29);
+	var Socket = __webpack_require__(54);
+	var Emitter = __webpack_require__(55);
+	var parser = __webpack_require__(20);
+	var on = __webpack_require__(57);
+	var bind = __webpack_require__(58);
+	var debug = __webpack_require__(17)('socket.io-client:manager');
+	var indexOf = __webpack_require__(52);
+	var Backoff = __webpack_require__(60);
 
 	/**
 	 * IE6+ hasOwnProperty
@@ -7119,19 +7113,19 @@
 
 
 /***/ },
-/* 33 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports =  __webpack_require__(34);
+	module.exports =  __webpack_require__(30);
 
 
 /***/ },
-/* 34 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(35);
+	module.exports = __webpack_require__(31);
 
 	/**
 	 * Exports parser
@@ -7139,25 +7133,25 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(42);
+	module.exports.parser = __webpack_require__(38);
 
 
 /***/ },
-/* 35 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var transports = __webpack_require__(36);
-	var Emitter = __webpack_require__(29);
-	var debug = __webpack_require__(21)('engine.io-client:socket');
-	var index = __webpack_require__(56);
-	var parser = __webpack_require__(42);
-	var parseuri = __webpack_require__(20);
-	var parsejson = __webpack_require__(57);
-	var parseqs = __webpack_require__(50);
+	var transports = __webpack_require__(32);
+	var Emitter = __webpack_require__(25);
+	var debug = __webpack_require__(17)('engine.io-client:socket');
+	var index = __webpack_require__(52);
+	var parser = __webpack_require__(38);
+	var parseuri = __webpack_require__(16);
+	var parsejson = __webpack_require__(53);
+	var parseqs = __webpack_require__(46);
 
 	/**
 	 * Module exports.
@@ -7281,9 +7275,9 @@
 	 */
 
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(41);
-	Socket.transports = __webpack_require__(36);
-	Socket.parser = __webpack_require__(42);
+	Socket.Transport = __webpack_require__(37);
+	Socket.transports = __webpack_require__(32);
+	Socket.parser = __webpack_require__(38);
 
 	/**
 	 * Creates transport of the given type.
@@ -7878,17 +7872,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 36 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 
-	var XMLHttpRequest = __webpack_require__(37);
-	var XHR = __webpack_require__(39);
-	var JSONP = __webpack_require__(53);
-	var websocket = __webpack_require__(54);
+	var XMLHttpRequest = __webpack_require__(33);
+	var XHR = __webpack_require__(35);
+	var JSONP = __webpack_require__(49);
+	var websocket = __webpack_require__(50);
 
 	/**
 	 * Export transports.
@@ -7938,11 +7932,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 37 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(38);
+	var hasCORS = __webpack_require__(34);
 
 	module.exports = function(opts) {
 	  var xdomain = opts.xdomain;
@@ -7980,7 +7974,7 @@
 
 
 /***/ },
-/* 38 */
+/* 34 */
 /***/ function(module, exports) {
 
 	
@@ -8003,18 +7997,18 @@
 
 
 /***/ },
-/* 39 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 
-	var XMLHttpRequest = __webpack_require__(37);
-	var Polling = __webpack_require__(40);
-	var Emitter = __webpack_require__(29);
-	var inherit = __webpack_require__(51);
-	var debug = __webpack_require__(21)('engine.io-client:polling-xhr');
+	var XMLHttpRequest = __webpack_require__(33);
+	var Polling = __webpack_require__(36);
+	var Emitter = __webpack_require__(25);
+	var inherit = __webpack_require__(47);
+	var debug = __webpack_require__(17)('engine.io-client:polling-xhr');
 
 	/**
 	 * Module exports.
@@ -8422,19 +8416,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 40 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(41);
-	var parseqs = __webpack_require__(50);
-	var parser = __webpack_require__(42);
-	var inherit = __webpack_require__(51);
-	var yeast = __webpack_require__(52);
-	var debug = __webpack_require__(21)('engine.io-client:polling');
+	var Transport = __webpack_require__(37);
+	var parseqs = __webpack_require__(46);
+	var parser = __webpack_require__(38);
+	var inherit = __webpack_require__(47);
+	var yeast = __webpack_require__(48);
+	var debug = __webpack_require__(17)('engine.io-client:polling');
 
 	/**
 	 * Module exports.
@@ -8447,7 +8441,7 @@
 	 */
 
 	var hasXHR2 = (function() {
-	  var XMLHttpRequest = __webpack_require__(37);
+	  var XMLHttpRequest = __webpack_require__(33);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -8675,15 +8669,15 @@
 
 
 /***/ },
-/* 41 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(42);
-	var Emitter = __webpack_require__(29);
+	var parser = __webpack_require__(38);
+	var Emitter = __webpack_require__(25);
 
 	/**
 	 * Module exports.
@@ -8836,19 +8830,19 @@
 
 
 /***/ },
-/* 42 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var keys = __webpack_require__(43);
-	var hasBinary = __webpack_require__(44);
-	var sliceBuffer = __webpack_require__(45);
-	var base64encoder = __webpack_require__(46);
-	var after = __webpack_require__(47);
-	var utf8 = __webpack_require__(48);
+	var keys = __webpack_require__(39);
+	var hasBinary = __webpack_require__(40);
+	var sliceBuffer = __webpack_require__(41);
+	var base64encoder = __webpack_require__(42);
+	var after = __webpack_require__(43);
+	var utf8 = __webpack_require__(44);
 
 	/**
 	 * Check if we are running an android browser. That requires us to use
@@ -8905,7 +8899,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 
-	var Blob = __webpack_require__(49);
+	var Blob = __webpack_require__(45);
 
 	/**
 	 * Encodes a packet.
@@ -9437,7 +9431,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 43 */
+/* 39 */
 /***/ function(module, exports) {
 
 	
@@ -9462,7 +9456,7 @@
 
 
 /***/ },
-/* 44 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -9470,7 +9464,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(28);
+	var isArray = __webpack_require__(24);
 
 	/**
 	 * Module exports.
@@ -9527,7 +9521,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 45 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/**
@@ -9562,7 +9556,7 @@
 
 
 /***/ },
-/* 46 */
+/* 42 */
 /***/ function(module, exports) {
 
 	/*
@@ -9627,7 +9621,7 @@
 
 
 /***/ },
-/* 47 */
+/* 43 */
 /***/ function(module, exports) {
 
 	module.exports = after
@@ -9661,7 +9655,7 @@
 
 
 /***/ },
-/* 48 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/utf8js v2.0.0 by @mathias */
@@ -9907,10 +9901,10 @@
 
 	}(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)(module), (function() { return this; }())))
 
 /***/ },
-/* 49 */
+/* 45 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10013,7 +10007,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 50 */
+/* 46 */
 /***/ function(module, exports) {
 
 	/**
@@ -10056,7 +10050,7 @@
 
 
 /***/ },
-/* 51 */
+/* 47 */
 /***/ function(module, exports) {
 
 	
@@ -10068,7 +10062,7 @@
 	};
 
 /***/ },
-/* 52 */
+/* 48 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -10142,7 +10136,7 @@
 
 
 /***/ },
-/* 53 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -10150,8 +10144,8 @@
 	 * Module requirements.
 	 */
 
-	var Polling = __webpack_require__(40);
-	var inherit = __webpack_require__(51);
+	var Polling = __webpack_require__(36);
+	var inherit = __webpack_require__(47);
 
 	/**
 	 * Module exports.
@@ -10387,19 +10381,19 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 54 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(41);
-	var parser = __webpack_require__(42);
-	var parseqs = __webpack_require__(50);
-	var inherit = __webpack_require__(51);
-	var yeast = __webpack_require__(52);
-	var debug = __webpack_require__(21)('engine.io-client:websocket');
+	var Transport = __webpack_require__(37);
+	var parser = __webpack_require__(38);
+	var parseqs = __webpack_require__(46);
+	var inherit = __webpack_require__(47);
+	var yeast = __webpack_require__(48);
+	var debug = __webpack_require__(17)('engine.io-client:websocket');
 	var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
 
 	/**
@@ -10411,7 +10405,7 @@
 	var WebSocket = BrowserWebSocket;
 	if (!WebSocket && typeof window === 'undefined') {
 	  try {
-	    WebSocket = __webpack_require__(55);
+	    WebSocket = __webpack_require__(51);
 	  } catch (e) { }
 	}
 
@@ -10682,13 +10676,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 55 */
+/* 51 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
 
 /***/ },
-/* 56 */
+/* 52 */
 /***/ function(module, exports) {
 
 	
@@ -10703,7 +10697,7 @@
 	};
 
 /***/ },
-/* 57 */
+/* 53 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -10741,7 +10735,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 58 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -10749,13 +10743,13 @@
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(24);
-	var Emitter = __webpack_require__(59);
-	var toArray = __webpack_require__(60);
-	var on = __webpack_require__(61);
-	var bind = __webpack_require__(62);
-	var debug = __webpack_require__(21)('socket.io-client:socket');
-	var hasBin = __webpack_require__(63);
+	var parser = __webpack_require__(20);
+	var Emitter = __webpack_require__(55);
+	var toArray = __webpack_require__(56);
+	var on = __webpack_require__(57);
+	var bind = __webpack_require__(58);
+	var debug = __webpack_require__(17)('socket.io-client:socket');
+	var hasBin = __webpack_require__(59);
 
 	/**
 	 * Module exports.
@@ -11159,7 +11153,7 @@
 
 
 /***/ },
-/* 59 */
+/* 55 */
 /***/ function(module, exports) {
 
 	
@@ -11326,7 +11320,7 @@
 
 
 /***/ },
-/* 60 */
+/* 56 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -11345,7 +11339,7 @@
 
 
 /***/ },
-/* 61 */
+/* 57 */
 /***/ function(module, exports) {
 
 	
@@ -11375,7 +11369,7 @@
 
 
 /***/ },
-/* 62 */
+/* 58 */
 /***/ function(module, exports) {
 
 	/**
@@ -11404,7 +11398,7 @@
 
 
 /***/ },
-/* 63 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -11412,7 +11406,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(28);
+	var isArray = __webpack_require__(24);
 
 	/**
 	 * Module exports.
@@ -11470,7 +11464,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 64 */
+/* 60 */
 /***/ function(module, exports) {
 
 	
@@ -11559,6 +11553,33 @@
 	};
 
 
+
+/***/ },
+/* 61 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"server": "irc.rizon.net",
+		"channel": "#Nibblr",
+		"username": "Nibblr",
+		"password": "password",
+		"files": {},
+		"webInterface": {
+			"enabled": true,
+			"ip": "127.0.0.1",
+			"port": 8888,
+			"password": "horseporn"
+		}
+	};
 
 /***/ }
 /******/ ]);

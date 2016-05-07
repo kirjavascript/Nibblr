@@ -1,19 +1,21 @@
 // https://node-irc.readthedocs.org/en/latest/API.html
 
+// live programmable HTTP API
+// IRC bot framework
+
 // TODO //
 
 // backend admin panel! template.html -> express / d3
 // nibblr ascii / admin login
-
 // add command wizard
-
 // admin ui uplaod to imgur
+
+
 
 // 16:57 <&cr0sis> something for http://www.uavforecast.com/#/ this like ~canifly? 
                // and it pulls the next few hours of 
 
-// live programmable HTTP API
-// IRC bot framework
+
 
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
 
@@ -27,10 +29,6 @@
 
 // explain api
 // add libraries/apis to API?
-
-// _db admin option ~ops  
-// remind/memo/linkparsing 
-
 
 // wolfram
 
@@ -173,7 +171,7 @@ function checkMemo(user) {
 
 var client = new irc.Client(config.server, config.username, {
     channels: [config.channel],
-    userName: 'squiggle',
+    userName: 'eternium',
     realName: 'none',
     floodProtection: true,
     floodProtectionDelay: 250,

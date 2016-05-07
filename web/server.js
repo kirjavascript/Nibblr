@@ -20,5 +20,5 @@ module.exports = function(client, db, config) {
 
     });
 
-    server.listen(8888, () => console.log('notify server listening'))
+    server.listen(config.serverport, () => console.log('notify server listening'))
 }

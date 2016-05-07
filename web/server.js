@@ -111,7 +111,12 @@ function api(obj) {
     app.get('/api/say', (req,res) => {
         req = url.parse(req.url, true);
 
-        if(checkKey(req) && req.query.user && req.query.message) {
+        if(checkKey(req) && req.query.message) {
+
+            if(!req.query.user) {
+                req.query.user = config.channel;
+            }
+
             res.json({
                 status:"success",
                 type:"message",
@@ -124,17 +129,26 @@ function api(obj) {
             })
         }
         else {
-            res.json({
+            var error = {
                 status: "error",
-                error: "malformed input, syntax is ?user=username&message=hello&key=[key]"
-            });
+                message: "malformed input; syntax is ?user=username&message=hello&key=[key]"
+            };
+            if(!checkKey(req)) {
+                error.message += ', Invalid API Key';
+            }
+            res.json(error);
         }
     })
 
     app.get('/api/notice', (req,res) => {
         req = url.parse(req.url, true);
 
-        if(checkKey(req) && req.query.user && req.query.message) {
+        if(checkKey(req) && req.query.message) {
+
+            if(!req.query.user) {
+                req.query.user = config.channel;
+            }
+
             res.json({
                 status:"success",
                 type:"notice",
@@ -147,7 +161,14 @@ function api(obj) {
             })
         }
         else {
-            res.json('?user=username&message=hello&key=[key]');
+            var error = {
+                status: "error",
+                message: "malformed input; syntax is ?user=username&message=hello&key=[key]"
+            };
+            if(!checkKey(req)) {
+                error.message += ', Invalid API Key';
+            }
+            res.json(error);
         }
     })
 

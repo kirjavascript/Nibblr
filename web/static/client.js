@@ -106,11 +106,35 @@
 	    var socket = _socket2.default.connect(location.origin);
 
 	    socket.on('message', function (o) {
-	        channel.append('div').html('&lt;' + o.from + '&gt; ' + o.text);
+	        return addLine;
 	    });
 
 	    socket.on('viewers', function (o) {
 	        d3.select('.viewers').html(o + ' user' + (o > 1 ? 's' : '') + ' viewing');
+	    });
+
+	    d3.select('.message').on('keydown', function () {
+	        d3.event.keyCode == 13 && sendMsg();
+	    });
+
+	    d3.select('.send').on('keydown', function () {
+	        return sendMsg;
+	    });
+	}
+
+	function addLine(o) {
+	    channel.append('div').classed('msg', true).html('&lt;' + o.from + '&gt; ' + o.text);
+
+	    channel.node().scrollTop = channel.node().scrollHeight;
+	}
+
+	function sendMsg() {
+	    var msgEl = d3.select('.message');
+	    var msg = msgEl.property('value');
+	    msgEl.property('value', '');
+
+	    d3.json(location.origin + '/api/say?message=' + msg + '&key=' + secretKey, function (e, r) {
+	        console.log(r);
 	    });
 	}
 

@@ -612,9 +612,9 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
-    else if (text == '~reset') {
-        process.exit();
-    }
+    
+
+    else if (text == '~reset') {process.exit();}
 
     else if (text.indexOf('~eval ') == 0) {
 

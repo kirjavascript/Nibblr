@@ -1,38 +1,57 @@
+// http://expressjs.com/en/4x/api.html#req
+
 var url = require("url");
-var http = require("http");
 var express = require('express');
 var app = express();
 
-module.exports = function(client, db, config) {
+module.exports = function(obj) {
 
-    // http://kirjava.xyz:8888/?say=1&users=%238bitvape&message=test
+    // init
 
-    // var server = http.createServer((req, res) => {
-    //     req = url.parse(req.url, true);
+    api(obj);
 
-    //     if(req.query.users && req.query.message) {
-    //         res.end('sent ' + req.query.message + ' to ' + req.query.users);
+    app.listen(obj.config.serverport, function () {
+        console.log('Web server listening on ' + obj.config.serverport);
+    });
 
-    //         var action = req.query.say ? 'say' : 'notice';
+    // root
 
-    //         req.query.users.split(',').forEach(d => {
-    //             client[action](d, req.query.message);
-    //         })
-    //     }
+    app.use('/', express.static('./web/public'));
 
-    // });
+}
 
-    // server.listen(config.serverport, () => console.log('notify server listening'))
+function api(obj) {
+
+    app.get(/\/api\/command\/(.*)/, (req,res) => {
+
+        var command = req.path.split('/').pop();
+
+        obj.db.all('SELECT * from commands where name = ?', command, (e,r) => {
+
+            res.json(r);
+        })
+    })
 
     app.get('/api/say', (req,res) => {
         req = url.parse(req.url, true);
 
         if(req.query.user && req.query.message) {
-            res.send('sent message ' + req.query.message + ' to ' + req.query.user);
+            res.json({
+                status:"success",
+                type:"message",
+                message: req.query.message,
+                user: req.query.user.split(',')
+            });
 
             req.query.user.split(',').forEach(d => {
-                client.say(d, req.query.message);
+                obj.client.say(d, req.query.message);
             })
+        }
+        else {
+            res.json({
+                status: "error",
+                error: "malformed input, syntax is ?user=username&message=hello"
+            });
         }
     })
 
@@ -40,23 +59,20 @@ module.exports = function(client, db, config) {
         req = url.parse(req.url, true);
 
         if(req.query.user && req.query.message) {
-            res.send('sent notice ' + req.query.message + ' to ' + req.query.user);
+            res.json({
+                status:"success",
+                type:"notice",
+                message: req.query.message,
+                user: req.query.user.split(',')
+            });
 
             req.query.user.split(',').forEach(d => {
-                client.notice(d, req.query.message);
+                obj.client.notice(d, req.query.message);
             })
         }
+        else {
+            res.json('?user=username&message=hello');
+        }
     })
-
-
-
-    app.get('/', function (req, res) {
-      res.send('Hello World!');
-    });
-
-    app.listen(config.serverport, function () {
-        console.log('Web server listening on ' + config.serverport);
-    });
-
 
 }

@@ -95,10 +95,6 @@
 
 	var _socket2 = _interopRequireDefault(_socket);
 
-	var _config = __webpack_require__(65);
-
-	var _config2 = _interopRequireDefault(_config);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -107,7 +103,7 @@
 
 	if (!channel.empty()) {
 
-	    var socket = _socket2.default.connect('http://' + _config2.default.webInterface.ip + ':' + _config2.default.webInterface.port);
+	    var socket = _socket2.default.connect(location.origin);
 
 	    socket.on('message', function (o) {
 	        channel.append('div').html('&lt;' + o.from + '&gt; ' + o.text);
@@ -11559,27 +11555,6 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */
-/***/ function(module, exports) {
-
-	module.exports = {
-		"server": "irc.rizon.net",
-		"channel": "#Nibblr",
-		"username": "Nibblr",
-		"password": "password",
-		"files": {},
-		"webInterface": {
-			"enabled": true,
-			"ip": "127.0.0.1",
-			"port": 8888,
-			"password": "horseporn"
-		}
-	};
 
 /***/ }
 /******/ ]);

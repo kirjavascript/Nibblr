@@ -1,19 +1,17 @@
-// https://node-irc.readthedocs.org/en/latest/API.html
-
 // live programmable HTTP API
 // IRC bot framework
 
 // TODO //
 
-// sarah blake
-
 // add command -> add and scroll to
-// test command
+// message was x tokens are x c.from c.to client data (example message)
 
-// track active users
+// request nick list / tracking might work better, nick changes, part/join / topic
 // logging, stats
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
 // fulltext indexing on log
+
+// add kick
 
 // convert modules to data.db
 

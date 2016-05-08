@@ -1,7 +1,11 @@
 Nibblr
 ======
 
-Nibblr is an on the fly programmable IRC bot.
+Nibblr is a javascript framework for writing IRC bots. 
+
+It supports on the fly programming of commands via the web dashboard or directly in channel.
+
+...
 
 It comes with a built in javascript interpreter in the form of `~eval` which exposes a few APIs (which you can find with `~eval Object.keys(this)`).
 

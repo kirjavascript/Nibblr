@@ -1,5 +1,3 @@
-// http://expressjs.com/en/4x/api.html#req
-
 var fs = require('fs');
 var url = require("url");
 var express = require('express');

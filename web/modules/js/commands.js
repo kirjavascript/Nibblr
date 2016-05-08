@@ -4,8 +4,6 @@ var commandList = {};
 
 var commands = d3.select('.commands');
 
-var state = {};
-
 if (!commands.empty()) {
 
     let editor = ace.edit("editor");
@@ -16,6 +14,7 @@ if (!commands.empty()) {
         editor.getSession().setMode("ace/mode/javascript");
         editor.setOptions({fontSize: "12pt", wrap: true});
 
+    addCommandEvent();
     update();
 
 }
@@ -27,13 +26,18 @@ function update() {
     })
 }
 
+function addCommandEvent() {
+    d3.select('.add')
+        .on('click', () => alert('todo'))
+}
+
 function makeList() {
 
     d3.select('.qty').html('('+commandList.length+' total)')
 
     let list = d3.select('.list');
 
-    list.html('');
+    list.html(''); // TODO: replace with correctly implemented data binding, lol
 
     list
         .selectAll('.command')
@@ -50,7 +54,7 @@ function makeList() {
             let out = `~<span class="name">${d.name}</span> `;
 
             if (d.locked=='true')
-                out += '<i class="fa fa-lock red" aria-hidden="true"></i>';
+                out += '<i class="fa fa-lock grey" aria-hidden="true"></i>';
 
                 out += `<i data-tooltip="delete" 
                     class="delete fa fa-ban  action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>

@@ -11613,8 +11613,6 @@
 
 	var commands = d3.select('.commands');
 
-	var state = {};
-
 	if (!commands.empty()) {
 
 	    var editor = ace.edit("editor");
@@ -11625,6 +11623,7 @@
 	    editor.getSession().setMode("ace/mode/javascript");
 	    editor.setOptions({ fontSize: "12pt", wrap: true });
 
+	    addCommandEvent();
 	    update();
 	}
 
@@ -11635,13 +11634,19 @@
 	    });
 	}
 
+	function addCommandEvent() {
+	    d3.select('.add').on('click', function () {
+	        return alert('todo');
+	    });
+	}
+
 	function makeList() {
 
 	    d3.select('.qty').html('(' + commandList.length + ' total)');
 
 	    var list = d3.select('.list');
 
-	    list.html('');
+	    list.html(''); // TODO: replace with correctly implemented data binding, lol
 
 	    list.selectAll('.command').data(commandList).enter().append('div').classed('command', true).attr('data-name', function (d) {
 	        return d.name;
@@ -11652,7 +11657,7 @@
 
 	        var out = '~<span class="name">' + d.name + '</span> ';
 
-	        if (d.locked == 'true') out += '<i class="fa fa-lock red" aria-hidden="true"></i>';
+	        if (d.locked == 'true') out += '<i class="fa fa-lock grey" aria-hidden="true"></i>';
 
 	        out += '<i data-tooltip="delete" \n                    class="delete fa fa-ban  action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="' + lockState + '" \n                    class="' + lockState + ' fa fa-' + lockState + ' action ' + (admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="rename" \n                    class="rename fa fa-pencil action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="edit" \n                    class="edit fa fa-code action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="view" \n                    class="view fa fa-book action" aria-hidden="true"></i>\n                    ';
 

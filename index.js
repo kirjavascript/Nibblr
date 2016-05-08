@@ -9,29 +9,24 @@
 
 // commands interface
 
-// add command wizard
-// admin ui uplaod to imgur
 
-// set secret key to client for api requests
 
+// track active users
 // logging, stats
-
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
+// fulltext indexing on log
 
-// modularize - make more generic?
 // convert modules to data.db
 
 // rss("item", "description", 3)
-// say() ?!
+
+// add command wizard
+// admin ui uplaod to imgur
 
 // 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
-// explain api
-// add libraries/apis to API?
-
 // wolfram
 
-// fulltext indexing on log
 
 process.env.TZ = 'Europe/London';
 

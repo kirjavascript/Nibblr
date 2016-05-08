@@ -19,6 +19,9 @@ a, a:visited, a:active {
 a:hover {
   color: #0A0; }
 
+hr {
+  border: 1px solid #0A0; }
+
 .clear {
   clear: both; }
 
@@ -82,19 +85,43 @@ a:hover {
   bottom: 0px;
   left: 0px;
   right: 0px; }
-  .commands #editor {
-    width: 100%;
+  .commands .code {
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 100%; }
+    .commands .code #editor {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px; }
+  .commands .top {
+    width: 95%;
+    margin: 0 auto; }
+    .commands .top a, .commands .top .qty {
+      color: #0A0; }
+    .commands .top .status {
+      float: right;
+      padding-right: 10px; }
+  .commands .qty {
+    display: inline;
+    font-size: 14px; }
+  .commands .menu {
+    position: relative;
+    float: left;
+    width: 50%;
     height: 100%; }
   .commands .list {
-    float: left;
-    width: 40%;
-    height: 100%;
+    position: absolute;
+    top: 60px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
     overflow-y: auto; }
     .commands .list .command {
       width: 95%;
       margin: 0 auto; }
-      .commands .list .command hr {
-        border: 1px solid #0A0; }
       .commands .list .command .red {
         color: red; }
       .commands .list .command .tooltip {
@@ -105,10 +132,6 @@ a:hover {
         float: right;
         width: 30px;
         cursor: pointer; }
-  .commands .code {
-    float: left;
-    width: 60%;
-    height: 100%; }
 
 .help code {
   background-color: #222;

@@ -23,6 +23,10 @@ a:hover {
     color:#0A0;
 }
 
+hr {
+    border: 1px solid #0A0;
+}
+
 .clear {
     clear:both;
 }
@@ -109,24 +113,59 @@ a:hover {
     left: 0px;
     right:0px;
 
-    #editor {
-        width: 100%;
+    .code {
+        position:relative;
+        float:left;
+        width:50%;
         height: 100%;
+
+        #editor {
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right:0px;
+        }
+
+    }
+
+    .top {
+        width: 95%;
+        margin: 0 auto;
+
+        a,.qty {
+            color:#0A0;
+        }
+
+        .status {
+            float: right;
+            padding-right:10px;
+        }
+    }
+
+    .qty {
+        display: inline;
+        font-size: 14px;
+    }
+
+    .menu {
+        position:relative;
+        float:left;
+        width:50%;
+        height:100%;
     }
 
     .list {
-        float:left;
-        width:40%;
-        height: 100%;
+        position: absolute;
+        top: 60px;
+        bottom: 0px;
+        left: 0px;
+        right:0px;
         overflow-y: auto;
 
         .command {
             width: 95%;
             margin: 0 auto;
-
-            hr {
-                border: 1px solid #0A0;
-            }
 
             .red {
                 color:red;
@@ -146,11 +185,7 @@ a:hover {
         }
     }
 
-    .code {
-        float:left;
-        width:60%;
-        height: 100%;
-    }
+
 }
 
 

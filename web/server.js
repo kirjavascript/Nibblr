@@ -53,7 +53,7 @@ function conf(extra = {}, req) {
         admin: session.admin ? session.admin : false,
         secretKey: session.admin ? `'${config.webInterface.secretKey}'` : false,
     }
-    
+
     return Object.assign(obj, extra);
 }
 
@@ -107,9 +107,31 @@ function api(obj) {
 
     app.get('/api/commands', (req,res) => {
 
-        obj.db.all('SELECT * from commands', (e,r) => {
+        obj.db.all('SELECT * from commands ORDER BY name asc', (e,r) => {
             res.json(r)
         })
+
+    })
+
+    app.get('/api/commands/lock', (req,res) => {
+
+        if(checkKey(req) && req.query.name) {
+            obj.db.run('UPDATE commands SET locked = "true" WHERE name = ?',req.query.name, (e,r) => {
+                res.json({statue:"success"})
+            })
+        }
+        else { res.json({statue:"error"}) }
+
+    })
+
+    app.get('/api/commands/unlock', (req,res) => {
+
+        if(checkKey(req) && req.query.name) {
+            obj.db.run('UPDATE commands SET locked = "false" WHERE name = ?',req.query.name, (e,r) => {
+                res.json({statue:"success"})
+            })
+        }
+        else { res.json({statue:"error"}) }
 
     })
 

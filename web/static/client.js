@@ -145,7 +145,7 @@
 	    var msg = msgEl.property('value');
 	    msgEl.property('value', '');
 
-	    d3.json(location.origin + '/api/say?message=' + msg + '&key=' + secretKey, function (e, r) {
+	    d3.json('/api/say?message=' + msg + '&key=' + secretKey, function (e, r) {
 	        console.log(r);
 	        addLine({ from: '(server)', text: msg });
 	    });
@@ -11613,6 +11613,8 @@
 
 	var commands = d3.select('.commands');
 
+	var state = {};
+
 	if (!commands.empty()) {
 
 	    var editor = ace.edit("editor");
@@ -11627,13 +11629,15 @@
 	}
 
 	function update() {
-	    d3.json(location.origin + '/api/commands', function (e, r) {
+	    d3.json('/api/commands', function (e, r) {
 	        commandList = r;
 	        makeList();
 	    });
 	}
 
 	function makeList() {
+
+	    d3.select('.qty').html('(' + commandList.length + ' total)');
 
 	    var list = d3.select('.list');
 
@@ -11642,20 +11646,50 @@
 	    list.selectAll('.command').data(commandList).enter().append('div').classed('command', true).attr('data-name', function (d) {
 	        return d.name;
 	    }).html(function (d) {
-	        var lockState = d.locked == 'true' ? 'unlock' : 'lock';
-	        return '~' + d.name + ' \n            ' + (d.locked == 'true' ? '<i class="fa fa-lock red" aria-hidden="true"></i>' : '') + '\n\n            <i data-tooltip="delete" \n                class="delete fa fa-ban  action" aria-hidden="true"></i>\n            <i data-tooltip="' + lockState + '" \n                class="' + lockState + ' fa fa-' + lockState + ' action" aria-hidden="true"></i>\n            <i data-tooltip="edit" \n                class="edit fa fa-code action" aria-hidden="true"></i>\n            <i data-tooltip="rename" \n                class="rename fa fa-pencil action" aria-hidden="true"></i>\n\n            <span class="tooltip"></span>\n        <hr />';
+
+	        var locked = d.locked == 'true';
+	        var lockState = locked ? 'unlock' : 'lock';
+
+	        var out = '~' + d.name + ' ';
+
+	        if (d.locked == 'true') out += '<i class="fa fa-lock red" aria-hidden="true"></i>';
+
+	        if (!locked || admin) out += '<i data-tooltip="delete" \n                class="delete fa fa-ban  action" aria-hidden="true"></i>';
+
+	        if (admin) out += '<i data-tooltip="' + lockState + '" \n                class="' + lockState + ' fa fa-' + lockState + ' action" aria-hidden="true"></i>';
+
+	        if (!locked || admin) out += '<i data-tooltip="edit" \n                class="edit fa fa-code action" aria-hidden="true"></i>\n            <i data-tooltip="rename" \n                class="rename fa fa-pencil action" aria-hidden="true"></i>';
+
+	        out += '<span class="tooltip"></span><hr />';
+
+	        return out;
 	    });
 
 	    // actions
 
 	    list.selectAll('.edit').on('click', function () {
-	        var name = d3.select(this.parentNode).attr('data-name');
+	        var parent = d3.select(this.parentNode);
+	        var name = parent.attr('data-name');
+
+	        parent.transition().duration(250).style('color', '#FA0');
+
+	        setStatus('editing');
+	        // add save/cancel to block             
 
 	        var command = commandList.find(function (d) {
 	            return d.name == name;
 	        });
-
 	        write(command.command);
+	    });
+
+	    list.selectAll('.lock, .unlock').on('click', function () {
+	        var parent = d3.select(this.parentNode);
+	        var name = parent.attr('data-name');
+	        var type = d3.select(this).classed('lock') ? 'lock' : 'unlock';
+	        var url = '/api/commands/' + type + '?name=' + name + '&key=' + secretKey;
+	        d3.json(url, function (e, r) {
+	            update();
+	        });
 	    });
 
 	    // tooltips
@@ -11667,6 +11701,8 @@
 	    });
 
 	    // tick for save
+
+	    // check for syntax errors befor saving
 	}
 
 	function read() {
@@ -11674,7 +11710,11 @@
 	}
 
 	function write(str) {
-	    ace.edit("editor").setValue(str);
+	    ace.edit("editor").setValue(str, -1);
+	}
+
+	function setStatus(str) {
+	    d3.select('.status').html(str).style('transform', "translate(200%,0)").transition().duration(300).style('transform', "translate(0%,0)");
 	}
 
 /***/ }

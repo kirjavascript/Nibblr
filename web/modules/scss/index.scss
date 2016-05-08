@@ -5,6 +5,7 @@ html {
     font-family: 'Roboto Mono',monospace,verdana;
     font-weight: 400;
     height: 100%;
+    overflow: hidden;
 }
 
 input, button, textarea {
@@ -180,13 +181,13 @@ hr {
     .top {
         width: 95%;
         margin: 0 auto;
+        overflow-x: hidden;
 
         a,.qty {
             color:#0A0;
         }
 
-        .status {
-            float: right;
+        .confirm, .error {
             padding-right:10px;
         }
     }
@@ -201,6 +202,13 @@ hr {
     .qty {
         display: inline;
         font-size: 14px;
+    }
+
+    .addInput {
+        position: absolute;
+        top: -3px;
+        left: 13px;
+        transform: translate(-120%,0);
     }
 
     .menu {

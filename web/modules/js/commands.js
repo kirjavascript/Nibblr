@@ -27,8 +27,70 @@ function update() {
 }
 
 function addCommandEvent() {
+    let parent = d3.select('.top');
     d3.select('.add')
-        .on('click', () => alert('todo'))
+        .on('click', () => {
+
+            let newName = d3.select('.newName').property('value','');
+
+            write(`(command, tokens, client) => c.from + 'said' + command`);
+            animate();
+
+            confirm(parent,'add new', () => {
+                let name = newName.property('value');
+                if (name=="") return;
+                let url = '/api/commands/add?name='+name;
+                let command = read();
+
+                try {
+                    new Function(command);
+                    d3.json(url + '&command='+encodeURIComponent(command),
+                        (e,r) => {
+                            if(r.status=="success") {
+                                animate(1);
+                                update();
+                                parent
+                                    .select('.confirm')
+                                    .style('color', '#0A0')
+                                    .html('added!')
+                                    .transition()
+                                    .duration(1800)
+                                    .style('opacity', 0)
+                                    .remove();
+                            }
+                            else {
+                                err('duplicate name');
+                            }
+                        });
+                }
+                catch(e) {err(e);}
+
+            }, () => animate(1))
+
+        })
+
+    function err(msg) {
+        parent
+            .append('div')
+            .classed('error', true)
+            .html(msg)
+            .transition()
+            .duration(1800)
+            .style('opacity', 0)
+            .remove();
+    }
+
+    function animate(state) {
+        d3.selectAll('.addLink')
+            .transition()
+            .duration(300)
+            .style('transform', `translate(${state?0:'-120%'},0)`)
+
+        d3.selectAll('.addInput')
+            .transition()
+            .duration(300)
+            .style('transform', `translate(${state?'-120%':0},0)`)
+    }
 }
 
 function makeList() {

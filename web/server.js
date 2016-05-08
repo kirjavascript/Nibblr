@@ -235,6 +235,21 @@ function api(obj) {
 
     })
 
+    app.get('/api/commands/add', (req,res) => {
+
+        if(req.query.name && req.query.command) {
+            obj.db.run('INSERT INTO commands(name,command) VALUES (?,?)',
+                [req.query.name, req.query.command], 
+                (e,r) => {
+                    if (e) res.json({status:e})
+                    else res.json({status:"success"})
+                }
+            )
+        }
+        else { res.json({status:"error"}) }
+
+    })
+
     // kick
 
     app.get('/api/kick', (req,res) => {

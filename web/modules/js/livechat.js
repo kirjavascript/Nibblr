@@ -74,7 +74,7 @@ function sendMsg() {
     else {
         d3.json('/api/say?message='+msg+'&key='+secretKey, (e,r) => {
             console.log(r)
-            addLine({from:'( ⚆ _ ⚆ )', text:msg})
+            addLine({from:'(~˘▾˘)~', text:msg})
         })
     }
 }

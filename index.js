@@ -10,6 +10,8 @@
 // logging, stats ~seen (have shrug)
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
 // fulltext indexing on log
+// command use
+// msg qty
 
 // add kick
 

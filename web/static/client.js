@@ -11654,7 +11654,7 @@
 
 	        if (d.locked == 'true') out += '<i class="fa fa-lock red" aria-hidden="true"></i>';
 
-	        out += '<i data-tooltip="delete" \n                class="delete fa fa-ban  action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="' + lockState + '" \n                class="' + lockState + ' fa fa-' + lockState + ' action ' + (admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="edit" \n                class="edit fa fa-code action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="rename" \n                class="rename fa fa-pencil action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>';
+	        out += '<i data-tooltip="delete" \n                    class="delete fa fa-ban  action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="' + lockState + '" \n                    class="' + lockState + ' fa fa-' + lockState + ' action ' + (admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="rename" \n                    class="rename fa fa-pencil action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="edit" \n                    class="edit fa fa-code action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="view" \n                    class="view fa fa-book action" aria-hidden="true"></i>\n                    ';
 
 	        out += '<span class="tooltip"></span><hr />';
 
@@ -11679,6 +11679,15 @@
 	        }, function () {
 	            return nameEl.html(name);
 	        });
+	    });
+
+	    list.selectAll('.view').on('click', function () {
+	        var parent = d3.select(this.parentNode);
+	        var name = parent.attr('data-name');
+	        var command = commandList.find(function (d) {
+	            return d.name == name;
+	        });
+	        write(command.command);
 	    });
 
 	    list.selectAll('.edit').on('click', function () {

@@ -53,13 +53,16 @@ function makeList() {
                 out += '<i class="fa fa-lock red" aria-hidden="true"></i>';
 
                 out += `<i data-tooltip="delete" 
-                class="delete fa fa-ban  action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
+                    class="delete fa fa-ban  action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
                 <i data-tooltip="${lockState}" 
-                class="${lockState} fa fa-${lockState} action ${admin?'':'action-disabled'}" aria-hidden="true"></i>
-                <i data-tooltip="edit" 
-                class="edit fa fa-code action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
+                    class="${lockState} fa fa-${lockState} action ${admin?'':'action-disabled'}" aria-hidden="true"></i>
                 <i data-tooltip="rename" 
-                class="rename fa fa-pencil action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>`;
+                    class="rename fa fa-pencil action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
+                <i data-tooltip="edit" 
+                    class="edit fa fa-code action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
+                <i data-tooltip="view" 
+                    class="view fa fa-book action" aria-hidden="true"></i>
+                    `;
 
             out += `<span class="tooltip"></span><hr />`;
 
@@ -84,6 +87,15 @@ function makeList() {
             confirm(parent, 'confirm rename', 
                 () => d3.json(url+'&new='+newName.node().value, update), 
                 () => nameEl.html(name));
+        })
+
+    list
+        .selectAll('.view')
+        .on('click', function() {
+            let parent = d3.select(this.parentNode);
+            let name = parent.attr('data-name');
+            let command = commandList.find(d => d.name == name);
+            write(command.command);
         })
 
     list

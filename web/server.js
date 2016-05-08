@@ -3,7 +3,6 @@ var url = require("url");
 var express = require('express');
 var session = require('express-session');
 var Markdown = require('markdown-to-html').Markdown;
-var jsonfile = require('jsonfile');
 var app = express();
 
 var config = require('../config.json');

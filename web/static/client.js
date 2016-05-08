@@ -11669,7 +11669,7 @@
 
 	        var newName = d3.select('.newName').property('value', '');
 
-	        write('(command, tokens, client) => c.from + \'said\' + command');
+	        write('(command, tokens, client) => client.from + \'said\' + command');
 	        animate();
 
 	        confirm(parent, 'add new', function () {

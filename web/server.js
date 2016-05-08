@@ -135,6 +135,22 @@ function api(obj) {
 
     })
 
+    app.get('/api/commands/delete', (req,res) => {
+
+        if(checkKey(req) && req.query.name) {
+            obj.db.run('DELETE FROM commands WHERE name = ?',req.query.name, (e,r) => {
+                res.json({statue:"success"})
+            })
+        }
+        else if (req.query.name) {
+            obj.db.run('DELETE FROM commands WHERE name = ? AND locked = "false"',req.query.name, (e,r) => {
+                res.json({statue:"success"})
+            })
+        }
+        else { res.json({statue:"error"}) }
+
+    })
+
     app.get('/api/say', (req,res) => {
         req = url.parse(req.url, true);
 

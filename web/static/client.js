@@ -11692,6 +11692,16 @@
 	        });
 	    });
 
+	    list.selectAll('.delete').on('click', function () {
+	        var parent = d3.select(this.parentNode);
+	        var name = parent.attr('data-name');
+	        var type = d3.select(this).classed('lock') ? 'lock' : 'unlock';
+	        var url = '/api/commands/' + type + '?name=' + name + '&key=' + secretKey;
+	        d3.json(url, function (e, r) {
+	            update();
+	        });
+	    });
+
 	    // tooltips
 
 	    list.selectAll('.action').on('mouseenter', function () {

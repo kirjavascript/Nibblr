@@ -100,6 +100,18 @@ function makeList() {
             }) 
         })
 
+    list
+        .selectAll('.delete')
+        .on('click', function() {
+            let parent = d3.select(this.parentNode);
+            let name = parent.attr('data-name');
+            let type = d3.select(this).classed('lock')?'lock':'unlock';
+            let url =  '/api/commands/'+type+'?name='+name+'&key='+secretKey;        
+            d3.json(url, (e,r) => {
+                update();
+            }) 
+        })
+
     // tooltips
 
     list

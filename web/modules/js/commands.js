@@ -47,24 +47,19 @@ function makeList() {
             let locked = d.locked=='true';
             let lockState = locked?'unlock':'lock';
 
-            let out = `~${d.name} `;
+            let out = `~<span class="name">${d.name}</span> `;
 
             if (d.locked=='true')
                 out += '<i class="fa fa-lock red" aria-hidden="true"></i>';
 
-            if (!locked || admin)
                 out += `<i data-tooltip="delete" 
-                class="delete fa fa-ban  action" aria-hidden="true"></i>`;
-
-            if(admin)
-                out += `<i data-tooltip="${lockState}" 
-                class="${lockState} fa fa-${lockState} action" aria-hidden="true"></i>`;
-
-            if (!locked || admin)
-                out += `<i data-tooltip="edit" 
-                class="edit fa fa-code action" aria-hidden="true"></i>
-            <i data-tooltip="rename" 
-                class="rename fa fa-pencil action" aria-hidden="true"></i>`;
+                class="delete fa fa-ban  action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
+                <i data-tooltip="${lockState}" 
+                class="${lockState} fa fa-${lockState} action ${admin?'':'action-disabled'}" aria-hidden="true"></i>
+                <i data-tooltip="edit" 
+                class="edit fa fa-code action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
+                <i data-tooltip="rename" 
+                class="rename fa fa-pencil action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>`;
 
             out += `<span class="tooltip"></span><hr />`;
 
@@ -74,18 +69,38 @@ function makeList() {
     // actions
 
     list
+        .selectAll('.rename')
+        .on('click', function() {
+            let parent = d3.select(this.parentNode);
+            let name = parent.attr('data-name');
+            let url =  '/api/commands/rename?name='+name;
+
+            if(admin) url += '&key='+secretKey;
+
+            let nameEl = parent.select('.name').html('');
+
+            let newName = nameEl.append('input').property('value', name)
+
+            confirm(parent, 'confirm rename', 
+                () => d3.json(url+'&new='+newName.node().value, update), 
+                () => nameEl.html(name));
+        })
+
+    list
         .selectAll('.edit')
         .on('click', function() {
             let parent = d3.select(this.parentNode);
             let name = parent.attr('data-name');
+            let url =  '/api/commands/edit?name='+name;
 
-            parent.transition().duration(250).style('color','#FA0')
-
-            setStatus(`editing`);
-            // add save/cancel to block              
+            if(admin) url += '&key='+secretKey;
 
             let command = commandList.find(d => d.name == name);
             write(command.command);
+
+            confirm(parent, 'save changes', () => {
+                d3.json(url + '&command='+encodeURIComponent(read()), update);
+            });
         })
 
     list
@@ -95,9 +110,7 @@ function makeList() {
             let name = parent.attr('data-name');
             let type = d3.select(this).classed('lock')?'lock':'unlock';
             let url =  '/api/commands/'+type+'?name='+name+'&key='+secretKey;        
-            d3.json(url, (e,r) => {
-                update();
-            }) 
+            d3.json(url, update);
         })
 
     list
@@ -105,11 +118,11 @@ function makeList() {
         .on('click', function() {
             let parent = d3.select(this.parentNode);
             let name = parent.attr('data-name');
-            let type = d3.select(this).classed('lock')?'lock':'unlock';
-            let url =  '/api/commands/'+type+'?name='+name+'&key='+secretKey;        
-            d3.json(url, (e,r) => {
-                update();
-            }) 
+            let url =  '/api/commands/delete?name='+name;
+
+            if(admin) url += '&key='+secretKey;
+
+            confirm(parent, 'confirm delete', () => d3.json(url, update));
         })
 
     // tooltips
@@ -140,12 +153,50 @@ function write(str) {
     ace.edit("editor").setValue(str, -1);
 }
 
+function confirm(parent, action, yes = ()=>{}, no = ()=>{}) {
 
-function setStatus(str) {
-    d3.select('.status')
-        .html(str)
-        .style('transform', "translate(200%,0)")
-        .transition()
-        .duration(300)
-        .style('transform', "translate(0%,0)")
+    let cancel = d3.selectAll('.cancel');
+
+    if(cancel.size()) {
+        cancel.on('click')()
+        draw();
+    }
+    else {
+        draw();
+    }
+
+    function draw() {
+        let confirmEl = parent
+            .append('div')
+            .classed('confirm', true)
+            .html(`${action} `);
+
+        confirmEl
+            .append('i')
+            .attr('class', 'green fa fa-check')
+            .attr('aria-hidden', 'true')
+            .on('click', d => {
+                yes();
+            })
+
+        confirmEl
+            .append('i')
+            .attr('class', 'red fa fa-times cancel')
+            .attr('aria-hidden', 'true')
+            .on('click', d => {
+                no();
+                confirmEl
+                    .transition()
+                    .duration(300)
+                    .style('transform', "translate(200%,0)")
+                    .remove();
+            })
+
+        confirmEl
+            .style('transform', "translate(200%,0)")
+            .transition()
+            .duration(300)
+            .style('transform', "translate(0%,0)")
+    }
+    
 }

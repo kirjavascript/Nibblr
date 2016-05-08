@@ -117,10 +117,10 @@ function api(obj) {
 
         if(checkKey(req) && req.query.name) {
             obj.db.run('UPDATE commands SET locked = "true" WHERE name = ?',req.query.name, (e,r) => {
-                res.json({statue:"success"})
+                res.json({status:"success"})
             })
         }
-        else { res.json({statue:"error"}) }
+        else { res.json({status:"error"}) }
 
     })
 
@@ -128,26 +128,68 @@ function api(obj) {
 
         if(checkKey(req) && req.query.name) {
             obj.db.run('UPDATE commands SET locked = "false" WHERE name = ?',req.query.name, (e,r) => {
-                res.json({statue:"success"})
+                res.json({status:"success"})
             })
         }
-        else { res.json({statue:"error"}) }
+        else { res.json({status:"error"}) }
 
     })
 
     app.get('/api/commands/delete', (req,res) => {
 
+        let sql = 'DELETE FROM commands WHERE name = ?'
+
         if(checkKey(req) && req.query.name) {
-            obj.db.run('DELETE FROM commands WHERE name = ?',req.query.name, (e,r) => {
-                res.json({statue:"success"})
+            obj.db.run(sql, req.query.name, (e,r) => {
+                res.json({status:"success"})
             })
         }
         else if (req.query.name) {
-            obj.db.run('DELETE FROM commands WHERE name = ? AND locked = "false"',req.query.name, (e,r) => {
-                res.json({statue:"success"})
+            obj.db.run(sql + ' AND locked = "false"',req.query.name, (e,r) => {
+                res.json({status:"success"})
             })
         }
-        else { res.json({statue:"error"}) }
+        else { res.json({status:"error"}) }
+
+    })
+
+    app.get('/api/commands/rename', (req,res) => {
+
+        let sql = 'UPDATE commands SET name = ? WHERE name = ?';
+
+        if(checkKey(req) && req.query.name && req.query.new) {
+            obj.db.run(sql,
+                [req.query.new, req.query.name],
+                (e,r) => {res.json({status:"success"})
+            })
+        }
+        else if (req.query.name && req.query.new) {
+            obj.db.run(sql + ' AND locked = "false"',
+                [req.query.new, req.query.name],
+                (e,r) => {res.json({status:"success"})}
+            )
+        }
+        else { res.json({status:"error"}) }
+
+    })
+
+    app.get('/api/commands/edit', (req,res) => {
+
+        let sql = 'UPDATE commands SET command = ? WHERE name = ?';
+
+        if(checkKey(req) && req.query.name && req.query.command) {
+            obj.db.run(sql,
+                [decodeURIComponent(req.query.command), req.query.name],
+                (e,r) => {res.json({status:"success"})
+            })
+        }
+        else if (req.query.name && req.query.command) {
+            obj.db.run(sql + ' AND locked = "false"',
+                [decodeURIComponent(req.query.command), req.query.name],
+                (e,r) => {res.json({status:"success"})}
+            )
+        }
+        else { res.json({status:"error"}) }
 
     })
 

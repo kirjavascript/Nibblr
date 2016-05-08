@@ -11650,15 +11650,11 @@
 	        var locked = d.locked == 'true';
 	        var lockState = locked ? 'unlock' : 'lock';
 
-	        var out = '~' + d.name + ' ';
+	        var out = '~<span class="name">' + d.name + '</span> ';
 
 	        if (d.locked == 'true') out += '<i class="fa fa-lock red" aria-hidden="true"></i>';
 
-	        if (!locked || admin) out += '<i data-tooltip="delete" \n                class="delete fa fa-ban  action" aria-hidden="true"></i>';
-
-	        if (admin) out += '<i data-tooltip="' + lockState + '" \n                class="' + lockState + ' fa fa-' + lockState + ' action" aria-hidden="true"></i>';
-
-	        if (!locked || admin) out += '<i data-tooltip="edit" \n                class="edit fa fa-code action" aria-hidden="true"></i>\n            <i data-tooltip="rename" \n                class="rename fa fa-pencil action" aria-hidden="true"></i>';
+	        out += '<i data-tooltip="delete" \n                class="delete fa fa-ban  action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="' + lockState + '" \n                class="' + lockState + ' fa fa-' + lockState + ' action ' + (admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="edit" \n                class="edit fa fa-code action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="rename" \n                class="rename fa fa-pencil action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>';
 
 	        out += '<span class="tooltip"></span><hr />';
 
@@ -11667,19 +11663,39 @@
 
 	    // actions
 
+	    list.selectAll('.rename').on('click', function () {
+	        var parent = d3.select(this.parentNode);
+	        var name = parent.attr('data-name');
+	        var url = '/api/commands/rename?name=' + name;
+
+	        if (admin) url += '&key=' + secretKey;
+
+	        var nameEl = parent.select('.name').html('');
+
+	        var newName = nameEl.append('input').property('value', name);
+
+	        confirm(parent, 'confirm rename', function () {
+	            return d3.json(url + '&new=' + newName.node().value, update);
+	        }, function () {
+	            return nameEl.html(name);
+	        });
+	    });
+
 	    list.selectAll('.edit').on('click', function () {
 	        var parent = d3.select(this.parentNode);
 	        var name = parent.attr('data-name');
+	        var url = '/api/commands/edit?name=' + name;
 
-	        parent.transition().duration(250).style('color', '#FA0');
-
-	        setStatus('editing');
-	        // add save/cancel to block             
+	        if (admin) url += '&key=' + secretKey;
 
 	        var command = commandList.find(function (d) {
 	            return d.name == name;
 	        });
 	        write(command.command);
+
+	        confirm(parent, 'save changes', function () {
+	            d3.json(url + '&command=' + encodeURIComponent(read()), update);
+	        });
 	    });
 
 	    list.selectAll('.lock, .unlock').on('click', function () {
@@ -11687,18 +11703,18 @@
 	        var name = parent.attr('data-name');
 	        var type = d3.select(this).classed('lock') ? 'lock' : 'unlock';
 	        var url = '/api/commands/' + type + '?name=' + name + '&key=' + secretKey;
-	        d3.json(url, function (e, r) {
-	            update();
-	        });
+	        d3.json(url, update);
 	    });
 
 	    list.selectAll('.delete').on('click', function () {
 	        var parent = d3.select(this.parentNode);
 	        var name = parent.attr('data-name');
-	        var type = d3.select(this).classed('lock') ? 'lock' : 'unlock';
-	        var url = '/api/commands/' + type + '?name=' + name + '&key=' + secretKey;
-	        d3.json(url, function (e, r) {
-	            update();
+	        var url = '/api/commands/delete?name=' + name;
+
+	        if (admin) url += '&key=' + secretKey;
+
+	        confirm(parent, 'confirm delete', function () {
+	            return d3.json(url, update);
 	        });
 	    });
 
@@ -11723,8 +11739,34 @@
 	    ace.edit("editor").setValue(str, -1);
 	}
 
-	function setStatus(str) {
-	    d3.select('.status').html(str).style('transform', "translate(200%,0)").transition().duration(300).style('transform', "translate(0%,0)");
+	function confirm(parent, action) {
+	    var yes = arguments.length <= 2 || arguments[2] === undefined ? function () {} : arguments[2];
+	    var no = arguments.length <= 3 || arguments[3] === undefined ? function () {} : arguments[3];
+
+
+	    var cancel = d3.selectAll('.cancel');
+
+	    if (cancel.size()) {
+	        cancel.on('click')();
+	        draw();
+	    } else {
+	        draw();
+	    }
+
+	    function draw() {
+	        var confirmEl = parent.append('div').classed('confirm', true).html(action + ' ');
+
+	        confirmEl.append('i').attr('class', 'green fa fa-check').attr('aria-hidden', 'true').on('click', function (d) {
+	            yes();
+	        });
+
+	        confirmEl.append('i').attr('class', 'red fa fa-times cancel').attr('aria-hidden', 'true').on('click', function (d) {
+	            no();
+	            confirmEl.transition().duration(300).style('transform', "translate(200%,0)").remove();
+	        });
+
+	        confirmEl.style('transform', "translate(200%,0)").transition().duration(300).style('transform', "translate(0%,0)");
+	    }
 	}
 
 /***/ }

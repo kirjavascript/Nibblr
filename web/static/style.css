@@ -9,7 +9,7 @@ html {
 input, button {
   border: none;
   outline: 1px solid #0A0;
-  background: black;
+  background-color: #000;
   color: #0D0;
   padding: 5px; }
 
@@ -21,6 +21,15 @@ a:hover {
 
 hr {
   border: 1px solid #0A0; }
+
+.red {
+  color: red; }
+
+.green {
+  color: #0A0; }
+
+.orange {
+  color: #FA0; }
 
 .clear {
   clear: both; }
@@ -104,6 +113,10 @@ hr {
     .commands .top .status {
       float: right;
       padding-right: 10px; }
+  .commands .name input {
+    font-size: 20px;
+    padding: 0;
+    font-weight: 400; }
   .commands .qty {
     display: inline;
     font-size: 14px; }
@@ -112,18 +125,27 @@ hr {
     float: left;
     width: 50%;
     height: 100%; }
+  .commands .confirm {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    color: #FA0;
+    background-color: #000; }
+    .commands .confirm i {
+      cursor: pointer;
+      width: 30px; }
   .commands .list {
     position: absolute;
     top: 60px;
     bottom: 0px;
     left: 0px;
     right: 0px;
-    overflow-y: auto; }
+    overflow-y: auto;
+    overflow-x: hidden; }
     .commands .list .command {
       width: 95%;
-      margin: 0 auto; }
-      .commands .list .command .red {
-        color: red; }
+      margin: 0 auto;
+      position: relative; }
       .commands .list .command .tooltip {
         float: right;
         padding: 0px 15px;
@@ -132,6 +154,9 @@ hr {
         float: right;
         width: 30px;
         cursor: pointer; }
+      .commands .list .command .action-disabled {
+        opacity: 0.2;
+        pointer-events: none; }
 
 .help code {
   background-color: #222;

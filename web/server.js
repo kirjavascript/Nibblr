@@ -6,7 +6,7 @@ var Markdown = require('markdown-to-html').Markdown;
 var app = express();
 
 var config = require('../config.json');
-var socket = require('./socket.js');
+var socket = require('./socket');
     
 
 module.exports = function(obj) {

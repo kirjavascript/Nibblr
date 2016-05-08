@@ -3,8 +3,9 @@
     "channel": "#Nibblr",
     "username": "Nibblr",
     "password": "",
-    "files": {
-
+    "logging": {
+        "enabled": true,
+        "filename": "log.db"
     },
     "webInterface": {
         "enabled": true,

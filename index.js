@@ -1,4 +1,3 @@
-// live programmable HTTP API
 // IRC bot framework
 
 // TODO //
@@ -8,11 +7,13 @@
 
 // track nick list
 
-// logging, stats
+// logging, stats ~seen (have shrug)
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
 // fulltext indexing on log
 
 // add kick
+
+// event backend
 
 // convert modules to data.db
 
@@ -55,7 +56,8 @@ var loopProtect = require('./lib/loop-protect');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
-var webInterface = require('./web/server.js');
+var webInterface = require('./web/server');
+var logger = require('./modules/logging')
 
 // initconf //
 
@@ -119,6 +121,11 @@ function init() {
     if(config.webInterface.enabled) {
         var options = {client, db}
         webInterface(options);
+    }
+    if(config.logging.enabled) {
+        let log = new sqlite3.Database(config.logging.filename);
+        var options = {client, log}
+        logger(options);
     }
     schedule();
 }

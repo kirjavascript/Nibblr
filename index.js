@@ -7,9 +7,7 @@
 
 // sarah blake
 
-// commands interface
-
-
+// add command -> add and scroll to
 
 // track active users
 // logging, stats

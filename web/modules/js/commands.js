@@ -99,7 +99,20 @@ function makeList() {
             write(command.command);
 
             confirm(parent, 'save changes', () => {
-                d3.json(url + '&command='+encodeURIComponent(read()), update);
+                d3.json(url + '&command='+encodeURIComponent(read()),
+                    (e,r) => {
+                        if(r.status=="success") {
+                            parent
+                                .select('.confirm')
+                                .style('color', '#0A0')
+                                .html('changes saved')
+                                .transition()
+                                .duration(800)
+                                .style('opacity', 0)
+                                .on('end', update)
+                                .remove();
+                        }
+                    });
             });
         })
 

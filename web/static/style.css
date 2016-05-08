@@ -6,7 +6,7 @@ html {
   font-weight: 400;
   height: 100%; }
 
-input, button {
+input, button, textarea {
   border: none;
   outline: 1px solid #0A0;
   background-color: #000;
@@ -28,7 +28,7 @@ hr {
 .grey {
   color: #666; }
 
-.green {
+.green, .success {
   color: #0A0; }
 
 .orange {
@@ -42,6 +42,13 @@ hr {
 
 .bold {
   font-weight: 700; }
+
+.error, .success {
+  color: red;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background-color: #000; }
 
 .header * {
   text-shadow: #00dd00 0px 0px 20px; }
@@ -70,6 +77,8 @@ hr {
   position: relative;
   overflow-y: auto;
   padding: 20px; }
+  .channel .msg:last-child {
+    padding-bottom: 20px; }
 
 .users-wrap {
   position: relative; }
@@ -149,12 +158,6 @@ hr {
     .commands .confirm i {
       cursor: pointer;
       width: 30px; }
-  .commands .error {
-    color: red;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    background-color: #000; }
   .commands .list {
     position: absolute;
     top: 60px;
@@ -179,8 +182,28 @@ hr {
         opacity: 0.2;
         pointer-events: none; }
 
-.help code {
+.about code {
   background-color: #222;
   padding: 5px;
   font-weight: 200;
   font-size: 14px; }
+
+.config {
+  position: absolute;
+  top: 150px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px; }
+  .config textarea {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-size: 20px; }
+
+.saveConfig {
+  cursor: pointer;
+  margin-top: -30px;
+  position: relative;
+  width: 100%;
+  text-align: right; }

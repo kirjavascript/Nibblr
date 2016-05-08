@@ -13,7 +13,7 @@ if (!channel.empty()) {
         d3.select('.viewers')
             .html(o + ' user'+(o>1?'s':'')+' viewing')
     });
-
+    
     socket.on('topic', o => {
         d3.select('.topic').html('Topic: ' + o);
     });

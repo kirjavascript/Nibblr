@@ -3,6 +3,7 @@ var url = require("url");
 var express = require('express');
 var session = require('express-session');
 var Markdown = require('markdown-to-html').Markdown;
+var jsonfile = require('jsonfile');
 var app = express();
 
 var config = require('../config.json');
@@ -19,7 +20,7 @@ module.exports = function(obj) {
             .set('layout', 'layout')
             .use(session({
                 secret: config.webInterface.secretKey,
-                cookie: { maxAge: 60000 },
+                cookie: { maxAge: null },
                 resave: true,
                 saveUninitialized: true
             }))
@@ -38,7 +39,7 @@ module.exports = function(obj) {
     app.use('/', express.static('./web/static'))
 
     app.get('/', (req,res) => {
-        res.render('index', conf({config}, req))
+        res.render('livechat', conf({config}, req))
     })    
 
 }
@@ -72,7 +73,7 @@ function site(obj) {
         res.json({success:true})
     })
 
-    app.get('/help', (req,res) => {
+    app.get('/about', (req,res) => {
 
         var md = new Markdown();
         md.bufmax = 2048;
@@ -80,7 +81,7 @@ function site(obj) {
 
         md.render(fileName, {}, function(err) {
             if (!err) {
-                res.render('help', conf({help:md.html}, req))
+                res.render('about', conf({about:md.html}, req))
             }
         });
     })
@@ -89,9 +90,53 @@ function site(obj) {
         res.render('commands', conf({}, req))
     })
 
+    app.get('/config', (req,res) => {
+
+        if(req.session.admin) {
+            res.render('config', conf({
+                config: JSON.stringify(config, null, 4)
+            }, req))
+        }
+        else {
+            res.send('bork');
+        }
+    })
+
 }
 
+function checkKey(req) {
+    if(req.query.key && req.query.key == config.webInterface.secretKey)
+        return true;
+    else 
+        return false;
+}
+
+
 function api(obj) {
+
+    // config
+
+    app.get('/api/config', (req,res) => {
+
+        if(checkKey(req) && req.query.config) {
+
+            try {
+                config = JSON.parse(req.query.config);
+                fs.writeFile("config.json", req.query.config,"utf-8", function(err) {
+                    if(err) {
+                        return {status:"file error"};
+                    }
+                    res.json({status:"success"})
+                });
+            }
+            catch (e) { res.json({status:"json error"}) }
+
+        }
+        else { res.json({status:"error"}) }
+
+    })
+
+    // commands
 
     app.get(/\/api\/command\/(.*)/, (req,res) => {
 
@@ -191,6 +236,8 @@ function api(obj) {
 
     })
 
+    // live chat
+
     app.get('/api/say', (req,res) => {
         req = url.parse(req.url, true);
 
@@ -257,9 +304,3 @@ function api(obj) {
 
 }
 
-function checkKey(req) {
-    if(req.query.key && req.query.key == config.webInterface.secretKey)
-        return true;
-    else 
-        return false;
-}

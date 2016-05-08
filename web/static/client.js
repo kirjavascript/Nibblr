@@ -62,6 +62,8 @@
 
 	__webpack_require__(66);
 
+	__webpack_require__(67);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	var passEl = d3.select('#password').on('keydown', function () {
@@ -11811,6 +11813,42 @@
 	    if (cancel.size()) {
 	        cancel.on('click')();
 	    }
+	}
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _d = __webpack_require__(3);
+
+	var d3 = _interopRequireWildcard(_d);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var saveConfig = d3.select('.saveConfig').on('click', function () {
+	    var code = d3.select('.config > textarea').property('value');
+
+	    try {
+	        JSON.parse(code);
+
+	        d3.json('/api/config?config=' + encodeURIComponent(code) + '&key=' + secretKey, function (e, r) {
+	            if (r.status == "success") {
+	                msg('saved!');
+	            } else {
+	                msg(r.status, 'error');
+	            }
+	        });
+	    } catch (e) {
+	        msg(e, 'error');
+	    }
+	});
+
+	function msg(msg) {
+	    var type = arguments.length <= 1 || arguments[1] === undefined ? 'success' : arguments[1];
+
+	    saveConfig.append('div').classed(type, true).html(msg).transition().duration(1800).style('opacity', 0).remove();
 	}
 
 /***/ }

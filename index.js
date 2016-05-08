@@ -2,10 +2,10 @@
 
 // TODO //
 
-// add command -> add and scroll to
-// message was x tokens are x c.from c.to client data (example message)
+// config json
+// kick
 
-// track nick list
+
 
 // logging, stats ~seen (have shrug)
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
@@ -13,7 +13,14 @@
 // command use
 // msg qty
 
-// add kick
+
+
+// add command -> add and scroll to
+// message was x tokens are x c.from c.to client data (example message)
+
+// track nick list
+
+
 
 // event backend
 
@@ -126,7 +133,7 @@ function init() {
     }
     if(config.logging.enabled) {
         let log = new sqlite3.Database(config.logging.filename);
-        var options = {client, log}
+        var options = {client, db:log}
         logger(options);
     }
     schedule();

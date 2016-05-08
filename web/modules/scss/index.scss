@@ -1,4 +1,4 @@
-html{
+html {
     font-size:20px;
     background-color:black;
     color:#0D0;
@@ -7,7 +7,7 @@ html{
     height: 100%;
 }
 
-input, button {
+input, button, textarea {
     border: none;
     outline: 1px solid #0A0;
     background-color: #000;
@@ -55,6 +55,19 @@ hr {
     font-weight:700;
 }
 
+.error {
+    color: red;
+    position:absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #000;
+}
+
+.success {
+    @extend .error;
+    @extend .green;
+}
+
 // header
 
 .header {
@@ -92,6 +105,10 @@ hr {
     position: relative;
     overflow-y: auto;
     padding: 20px;
+
+    .msg:last-child{
+        padding-bottom: 20px;
+    }
 }
 
 .users-wrap {
@@ -205,14 +222,6 @@ hr {
         }
     }
 
-    .error {
-        color: red;
-        position:absolute;
-        top: 0px;
-        right: 0px;
-        background-color: #000;
-    }
-
     .list {
         position: absolute;
         top: 60px;
@@ -249,13 +258,37 @@ hr {
 }
 
 
-// help
+// about
 
-.help {
+.about {
     code {
         background-color: #222;
         padding: 5px;
         font-weight:200;
         font-size: 14px;
     }
+}
+
+.config {
+    position: absolute;
+    top: 150px;
+    bottom: 0px;
+    left: 0px;
+    right:0px;
+
+    textarea {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+        font-size: 20px;
+    }
+}
+
+.saveConfig {
+    cursor: pointer;
+    margin-top: -30px;
+    position: relative;
+    width:100%;
+    text-align:right;
 }

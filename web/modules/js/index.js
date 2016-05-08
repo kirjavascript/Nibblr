@@ -1,6 +1,7 @@
 import * as d3 from './d3';
 import './livechat';
 import './commands';
+import './config';
 
 let passEl = d3.select('#password')
     .on('keydown', () => {

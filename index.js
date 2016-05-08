@@ -9,6 +9,7 @@
 // command use
 // msg qty
 
+// set indexing
 
 
 // add command -> add and scroll to
@@ -74,7 +75,7 @@ irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400
 // db //
 
 var sqlite3 = require("sqlite3");
-var db = new sqlite3.Database('data.db');
+var log, db = new sqlite3.Database('data.db');
 
 // sandbox //
 
@@ -128,7 +129,7 @@ function init() {
         webInterface(options);
     }
     if(config.logging.enabled) {
-        let log = new sqlite3.Database(config.logging.filename);
+        log = new sqlite3.Database(config.logging.filename);
         var options = {client, db:log}
         logger(options);
     }
@@ -594,7 +595,29 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
+    else if (config.logging.enabled && text.indexOf('~seen ') == 0) {
 
+        try {
+            var who = text.substring(6);
+
+            log.get('SELECT time,command,message FROM log where lower(user) = lower(?) ORDER BY time DESC',
+                who,
+                (e,r) => {
+                    if(r) {
+                        let msg = `${who} was last seen ${r.time} using ${r.command} ${r.message}`;
+
+                        client.say(to, irc.colors.wrap('cyan', msg));
+                    }
+                    else {
+                        client.say(to, irc.colors.wrap('cyan', '¯\\_(ツ)_/¯'));
+                    }
+                })
+
+
+        }
+        catch (e) {client.say(to, irc.colors.wrap('light_red', '¯\\_(ツ)_/¯'))}
+
+    }
 
     else if (text == '~reset') {process.exit();}
 
@@ -620,7 +643,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~eval ~commands.[name] ~remind(when) ~memo(user [,when]) ~reset ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~" + r.map(d => d.name).join(" ~");
+                var response = "~eval ~commands.[name] ~seen ~remind(when) ~memo(user [,when]) ~reset ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

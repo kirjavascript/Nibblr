@@ -92,6 +92,7 @@ function makeList() {
     list
         .selectAll('.view')
         .on('click', function() {
+            resetConfirm();
             let parent = d3.select(this.parentNode);
             let name = parent.attr('data-name');
             let command = commandList.find(d => d.name == name);
@@ -111,20 +112,35 @@ function makeList() {
             write(command.command);
 
             confirm(parent, 'save changes', () => {
-                d3.json(url + '&command='+encodeURIComponent(read()),
-                    (e,r) => {
-                        if(r.status=="success") {
-                            parent
-                                .select('.confirm')
-                                .style('color', '#0A0')
-                                .html('changes saved')
-                                .transition()
-                                .duration(800)
-                                .style('opacity', 0)
-                                .on('end', update)
-                                .remove();
-                        }
-                    });
+                let command = read();
+                try {
+                    new Function(command);
+                    d3.json(url + '&command='+encodeURIComponent(command),
+                        (e,r) => {
+                            if(r.status=="success") {
+                                parent
+                                    .select('.confirm')
+                                    .style('color', '#0A0')
+                                    .html('changes saved')
+                                    .transition()
+                                    .duration(800)
+                                    .style('opacity', 0)
+                                    .on('end', update)
+                                    .remove();
+                            }
+                        });
+                }
+                catch(e) {
+                    parent
+                        .append('div')
+                        .classed('error', true)
+                        .html(e)
+                        .transition()
+                        .duration(1800)
+                        .style('opacity', 0)
+                        .remove();
+                }
+
             });
         })
 
@@ -224,4 +240,13 @@ function confirm(parent, action, yes = ()=>{}, no = ()=>{}) {
             .style('transform', "translate(0%,0)")
     }
     
+}
+
+function resetConfirm() {
+
+    let cancel = d3.selectAll('.cancel');
+
+    if(cancel.size()) {
+        cancel.on('click')()
+    }
 }

@@ -134,6 +134,12 @@ hr {
     .commands .confirm i {
       cursor: pointer;
       width: 30px; }
+  .commands .error {
+    color: red;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #000; }
   .commands .list {
     position: absolute;
     top: 60px;

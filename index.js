@@ -8,6 +8,7 @@
 // sarah blake
 
 // add command -> add and scroll to
+// test command
 
 // track active users
 // logging, stats

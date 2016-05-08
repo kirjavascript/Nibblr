@@ -186,6 +186,14 @@ hr {
         }
     }
 
+    .error {
+        color: red;
+        position:absolute;
+        top: 0px;
+        right: 0px;
+        background-color: #000;
+    }
+
     .list {
         position: absolute;
         top: 60px;

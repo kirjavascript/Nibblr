@@ -11682,6 +11682,7 @@
 	    });
 
 	    list.selectAll('.view').on('click', function () {
+	        resetConfirm();
 	        var parent = d3.select(this.parentNode);
 	        var name = parent.attr('data-name');
 	        var command = commandList.find(function (d) {
@@ -11703,11 +11704,17 @@
 	        write(command.command);
 
 	        confirm(parent, 'save changes', function () {
-	            d3.json(url + '&command=' + encodeURIComponent(read()), function (e, r) {
-	                if (r.status == "success") {
-	                    parent.select('.confirm').style('color', '#0A0').html('changes saved').transition().duration(800).style('opacity', 0).on('end', update).remove();
-	                }
-	            });
+	            var command = read();
+	            try {
+	                new Function(command);
+	                d3.json(url + '&command=' + encodeURIComponent(command), function (e, r) {
+	                    if (r.status == "success") {
+	                        parent.select('.confirm').style('color', '#0A0').html('changes saved').transition().duration(800).style('opacity', 0).on('end', update).remove();
+	                    }
+	                });
+	            } catch (e) {
+	                parent.append('div').classed('error', true).html(e).transition().duration(1800).style('opacity', 0).remove();
+	            }
 	        });
 	    });
 
@@ -11779,6 +11786,15 @@
 	        });
 
 	        confirmEl.style('transform', "translate(200%,0)").transition().duration(300).style('transform', "translate(0%,0)");
+	    }
+	}
+
+	function resetConfirm() {
+
+	    var cancel = d3.selectAll('.cancel');
+
+	    if (cancel.size()) {
+	        cancel.on('click')();
 	    }
 	}
 

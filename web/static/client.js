@@ -125,6 +125,16 @@
 	        d3.select('.viewers').html(o + ' user' + (o > 1 ? 's' : '') + ' viewing');
 	    });
 
+	    socket.on('topic', function (o) {
+	        d3.select('.topic').html('Topic: ' + o);
+	    });
+	    socket.on('nicks', function (o) {
+	        console.log(o);
+	        d3.select('.users').selectAll('p').data(o).enter().append('p').html(function (d) {
+	            return d;
+	        });
+	    });
+
 	    d3.select('.message').on('keydown', function () {
 	        d3.event.keyCode == 13 && sendMsg();
 	    });

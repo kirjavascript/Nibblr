@@ -14,6 +14,19 @@ if (!channel.empty()) {
             .html(o + ' user'+(o>1?'s':'')+' viewing')
     });
 
+    socket.on('topic', o => {
+        d3.select('.topic').html('Topic: ' + o);
+    });
+    socket.on('nicks', o => {
+        console.log(o)
+        d3.select('.users')
+            .selectAll('p')
+            .data(o)
+            .enter()
+            .append('p')
+            .html(d => d);
+    });
+
     d3.select('.message')
         .on('keydown', () => {
             d3.event.keyCode == 13 && sendMsg();

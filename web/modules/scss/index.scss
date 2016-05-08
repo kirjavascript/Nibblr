@@ -94,6 +94,21 @@ hr {
     padding: 20px;
 }
 
+.users-wrap {
+    position: relative;
+}
+
+.users {
+    position: absolute;
+    font-size:14px;
+    right: 30px;
+    top: 20px;
+    p {
+        padding: 0;
+        margin: 0;
+    }
+}
+
 .speak {
     position:relative;
     height: 30px;
@@ -116,7 +131,7 @@ hr {
     }
 }
 
-.viewers {
+.viewers, .topic {
     padding: 20px;
 }
 

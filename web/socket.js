@@ -1,14 +1,21 @@
 var io = require('socket.io');
 
+var info = {
+    topic: '',
+    nicks: []
+};
+
 module.exports = function(obj) {
 
     var socket = io.listen(obj.server);
 
     socket.on('connection', client => {
-        emit('viewers', _clients().length)
+        emit('viewers', clients().length)
+        emit('topic', info.topic)
+        emit('nicks', info.nicks)
 
         client.on('disconnect', client => {
-            emit('viewers', _clients().length)
+            emit('viewers', clients().length)
         });
 
     });
@@ -19,13 +26,27 @@ module.exports = function(obj) {
 
     });
 
+    obj.client.addListener("topic", function(channel, topic, nick, message) {
+
+        info.topic = topic;
+        emit('topic', info.topic);
+
+    });
+
+    obj.client.addListener("names", function(channel, nicks) {
+
+        info.nicks = Object.keys(nicks).map(d => nicks[d]+d);
+        emit('nicks', info.nicks);
+
+    });
+
     function emit(str, obj) {
-        _clients().forEach(client => {
+        clients().forEach(client => {
             client.emit(str, obj);
         })
     }
 
-    function _clients() {
+    function clients() {
         return Object
             .keys(socket.sockets.sockets)
             .map(d => socket.sockets.sockets[d])

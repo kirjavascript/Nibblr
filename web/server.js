@@ -235,6 +235,45 @@ function api(obj) {
 
     })
 
+    // kick
+
+    app.get('/api/kick', (req,res) => {
+        req = url.parse(req.url, true);
+
+        if(checkKey(req) && req.query.user) {
+
+            let channel = req.query.channel || config.channel;
+
+            res.json({});
+
+            obj.client.send('KICK', channel, req.query.user, '\u000304(╯°□°）╯︵ ┻━┻');
+            
+        }
+        else {
+            res.json({status:"error"});
+        }
+    })
+
+    // kick
+
+    app.get('/api/mode', (req,res) => {
+        req = url.parse(req.url, true);
+
+        if(checkKey(req) && req.query.user && req.query.mode) {
+
+            let channel = req.query.channel || config.channel;
+
+            res.json({});
+
+            obj.client.send('MODE', channel, req.query.mode, req.query.user);
+            
+        }
+        else {
+            res.json({status:"error"});
+        }
+    })
+
+
     // live chat
 
     app.get('/api/say', (req,res) => {

@@ -2,10 +2,7 @@
 
 // TODO //
 
-// config json
 // kick
-
-
 
 // logging, stats ~seen (have shrug)
 // log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
@@ -193,6 +190,10 @@ client.addListener("registered", function(message) {
     console.log(message);
     client.say("nickserv", "identify " + config.password);
     init();
+});
+
+client.addListener('error', function(message) {
+    console.log('error: ', message);
 });
 
 client.addListener("message", function(from, to, text, message) {

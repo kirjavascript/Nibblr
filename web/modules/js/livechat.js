@@ -18,7 +18,6 @@ if (!channel.empty()) {
         d3.select('.topic').html('Topic: ' + o);
     });
     socket.on('nicks', o => {
-        console.log(o)
         d3.select('.users')
             .selectAll('p')
             .data(o)
@@ -41,7 +40,10 @@ function addLine(o) {
     channel
         .append('div')
         .classed('msg', true)
-        .html(`&lt;${o.from}&gt; ${o.text}`)
+        .html(
+            o.msg ? `${o.msg}: ${o.text}`:
+            `&lt;${o.from}&gt; ${o.text}`
+        )
 
     channel.node().scrollTop = channel.node().scrollHeight;
 }
@@ -51,9 +53,28 @@ function sendMsg() {
     var msg = msgEl.property('value');
         msgEl.property('value', '');
 
-    d3.json('/api/say?message='+msg+'&key='+secretKey, (e,r) => {
-        console.log(r)
-        addLine({from:'(server)', text:msg})
-    })
+    console.log(msg)
 
+    if(msg.indexOf('/kick ') == 0) {
+
+        var user = msg.substring(6);
+
+        d3.json('/api/kick?user='+user+'&key='+secretKey, (e,r) => {
+            addLine({msg:'kicked', text:user})
+        })
+    }
+    else if (msg.indexOf('/mode ') == 0) {
+
+        var a = msg.split(" ");
+
+        d3.json('/api/mode?user='+a[2]+'&mode='+a[1]+'&key='+secretKey, (e,r) => {
+            addLine({msg:'set mode', text:a[1]+' '+a[2]})
+        })
+    }
+    else {
+        d3.json('/api/say?message='+msg+'&key='+secretKey, (e,r) => {
+            console.log(r)
+            addLine({from:'( ⚆ _ ⚆ )', text:msg})
+        })
+    }
 }

@@ -279,7 +279,6 @@ function api(obj) {
     // kick
 
     app.get('/api/mode', (req,res) => {
-        req = url.parse(req.url, true);
 
         if(checkKey(req) && req.query.user && req.query.mode) {
 
@@ -295,11 +294,32 @@ function api(obj) {
         }
     })
 
+    // log 
+
+
+
+    app.get('/api/log', (req,res) => {
+
+        if (req.query.id) {
+            obj.log.all('SELECT * from LOG WHERE id < ? ORDER BY id DESC LIMIT ?', 
+                [req.query.id, req.query.limit],
+                (e,r) => {
+                    res.json(r);
+                })
+        }
+        else {
+            obj.log.all('SELECT * from LOG ORDER BY id DESC LIMIT ?', 
+                req.query.limit,
+                (e,r) => {
+                    res.json(r);
+                })
+        }
+        
+    })
 
     // live chat
 
     app.get('/api/say', (req,res) => {
-        req = url.parse(req.url, true);
 
         if(checkKey(req) && req.query.message) {
 
@@ -331,7 +351,6 @@ function api(obj) {
     })
 
     app.get('/api/notice', (req,res) => {
-        req = url.parse(req.url, true);
 
         if(checkKey(req) && req.query.message) {
 

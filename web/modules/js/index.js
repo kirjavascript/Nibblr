@@ -2,14 +2,14 @@ import * as d3 from './d3';
 import './livechat';
 import './commands';
 import './config';
+import './logs';
 
 let passEl = d3.select('#password')
     .on('keydown', () => {
         d3.event.keyCode == 13 && login();
     });
 
-d3.select('#login')
-    .on('click', login)
+d3.select('#login').on('click', login)
 
 function login() {
         let pass = passEl.property('value');

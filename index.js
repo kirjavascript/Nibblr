@@ -134,15 +134,16 @@ var context = {
 // init //
 
 function init() {
-    if(config.webInterface.enabled) {
-        var options = {client, db}
-        webInterface(options);
-    }
     if(config.logging.enabled) {
         log = new sqlite3.Database(config.logging.filename);
         var options = {client, db:log}
         logger(options);
     }
+    if(config.webInterface.enabled) {
+        var options = {client, db, log}
+        webInterface(options);
+    }
+
     schedule();
 }
 

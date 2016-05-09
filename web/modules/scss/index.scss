@@ -5,7 +5,7 @@ html {
     font-family: 'Roboto Mono',monospace,verdana;
     font-weight: 400;
     height: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 input, button, textarea {
@@ -263,6 +263,25 @@ hr {
     }
 
 
+}
+
+// logs
+
+.log {
+
+    .entry {
+        width: 95%;
+        margin: 0 auto;
+        position: relative;
+
+        > div {
+            display: inline-block;
+        }
+
+        .time {
+            font-size: 14px;
+        }
+    }
 }
 
 

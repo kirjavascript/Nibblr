@@ -64,6 +64,8 @@
 
 	__webpack_require__(62);
 
+	__webpack_require__(68);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	var passEl = d3.select('#password').on('keydown', function () {
@@ -11902,6 +11904,65 @@
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _d = __webpack_require__(2);
+
+	var d3 = _interopRequireWildcard(_d);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var log = d3.select('.log');
+
+	var id = null;
+
+	if (!log.empty()) {
+	    var data = log.select('.data');
+	    get();
+	}
+
+	var commandColour = {
+	    mode: '#A0A',
+	    join: '#0AF',
+	    part: '#FA0',
+	    nick: '#FA0',
+	    quit: '#A00'
+	};
+
+	function get() {
+	    d3.json('/api/log?limit=100', function (e, r) {
+	        var entry = data.selectAll('.entry').data(r).enter().append('div').classed('entry', true);
+
+	        entry.append('div').classed('time', true).html(function (d) {
+	            return d.time;
+	        });
+
+	        entry.append('div').classed('command', true).style('color', function (d) {
+	            return commandColour[d.command.toLowerCase()];
+	        }).html(function (d) {
+	            return d.command.toLowerCase();
+	        });
+
+	        entry.append('div').classed('user', true).html(function (d) {
+	            return '&lt;' + d.user + '&gt;';
+	        });
+
+	        entry.append('div').classed('message', true).html(function (d) {
+	            return d.message;
+	        });
+
+	        entry.append('hr');
+	    });
+	}
 
 /***/ }
 /******/ ]);

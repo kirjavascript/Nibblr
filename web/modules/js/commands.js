@@ -46,9 +46,9 @@ function addCommandEvent() {
                     new Function(command);
                     d3.json(url + '&command='+encodeURIComponent(command),
                         (e,r) => {
+                            update();
                             if(r.status=="success") {
                                 animate(1);
-                                update();
                                 parent
                                     .select('.confirm')
                                     .style('color', '#0A0')

@@ -3,8 +3,18 @@
 
 // TODO //
 
-// logging, stats ~seen (have shrug)
-// log to different db dev/live based on password being null and .gitignore the live one / seen (shreddy was last seen saying x) / log / stats / quotes /~speak
+// reparse log
+
+// 20:12 <&Nibblr> Kirjava, you said https://www.youtube.com/watch?v=MFzDaBzBlL0
+// 20:12 <&Nibblr> Kirjava, you said order strawb cheesecaek & strawb milk
+// 20:12 <&Nibblr> kirjava, Kirjava said yellowcake
+// favicon
+// EJS
+
+// log show x at a time
+
+// logging, stats
+// log / stats / quotes /~speak
 // fulltext indexing on log
 // command use
 // msg qty
@@ -12,9 +22,7 @@
 // set indexing
 
 
-// add command -> add and scroll to
-// message was x tokens are x c.from c.to client data (example message)
-
+// add Colourpicker/API info (write()) to nibblr commands
 // track nick list
 
 

@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(61);
+	module.exports = __webpack_require__(63);
 
 
 /***/ },
@@ -54,15 +54,15 @@
 
 	'use strict';
 
-	var _d = __webpack_require__(3);
+	var _d = __webpack_require__(2);
 
 	var d3 = _interopRequireWildcard(_d);
 
-	__webpack_require__(2);
+	__webpack_require__(13);
 
-	__webpack_require__(66);
+	__webpack_require__(61);
 
-	__webpack_require__(67);
+	__webpack_require__(62);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -99,98 +99,13 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var _d = __webpack_require__(3);
-
-	var d3 = _interopRequireWildcard(_d);
-
-	var _socket = __webpack_require__(14);
-
-	var _socket2 = _interopRequireDefault(_socket);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	var channel = d3.select('.channel');
-
-	if (!channel.empty()) {
-
-	    var socket = _socket2.default.connect(location.origin);
-
-	    socket.on('message', function (o) {
-	        return addLine(o);
-	    });
-
-	    socket.on('viewers', function (o) {
-	        d3.select('.viewers').html(o + ' user' + (o > 1 ? 's' : '') + ' viewing');
-	    });
-
-	    socket.on('topic', function (o) {
-	        d3.select('.topic').html('Topic: ' + o);
-	    });
-	    socket.on('nicks', function (o) {
-	        d3.select('.users').selectAll('p').data(o).enter().append('p').html(function (d) {
-	            return d;
-	        });
-	    });
-
-	    d3.select('.message').on('keydown', function () {
-	        d3.event.keyCode == 13 && sendMsg();
-	    });
-
-	    d3.select('.send').on('keydown', function () {
-	        return sendMsg;
-	    });
-	}
-
-	function addLine(o) {
-	    channel.append('div').classed('msg', true).html(o.msg ? o.msg + ': ' + o.text : '&lt;' + o.from + '&gt; ' + o.text);
-
-	    channel.node().scrollTop = channel.node().scrollHeight;
-	}
-
-	function sendMsg() {
-	    var msgEl = d3.select('.message');
-	    var msg = msgEl.property('value');
-	    msgEl.property('value', '');
-
-	    console.log(msg);
-
-	    if (msg.indexOf('/kick ') == 0) {
-
-	        var user = msg.substring(6);
-
-	        d3.json('/api/kick?user=' + user + '&key=' + secretKey, function (e, r) {
-	            addLine({ msg: 'kicked', text: user });
-	        });
-	    } else if (msg.indexOf('/mode ') == 0) {
-
-	        var a = msg.split(" ");
-
-	        d3.json('/api/mode?user=' + a[2] + '&mode=' + a[1] + '&key=' + secretKey, function (e, r) {
-	            addLine({ msg: 'set mode', text: a[1] + ' ' + a[2] });
-	        });
-	    } else {
-	        d3.json('/api/say?message=' + msg + '&key=' + secretKey, function (e, r) {
-	            console.log(r);
-	            addLine({ from: '(~˘▾˘)~', text: msg });
-	        });
-	    }
-	}
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _d3Request = __webpack_require__(4);
+	var _d3Request = __webpack_require__(3);
 
 	Object.defineProperty(exports, "request", {
 	  enumerable: true,
@@ -235,7 +150,7 @@
 	  }
 	});
 
-	var _d3Selection = __webpack_require__(8);
+	var _d3Selection = __webpack_require__(7);
 
 	Object.defineProperty(exports, "mouse", {
 	  enumerable: true,
@@ -292,7 +207,7 @@
 	  }
 	});
 
-	var _d3Transition = __webpack_require__(9);
+	var _d3Transition = __webpack_require__(8);
 
 	Object.defineProperty(exports, "active", {
 	  enumerable: true,
@@ -308,11 +223,11 @@
 	});
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(5), __webpack_require__(6), __webpack_require__(7)) :
+	   true ? factory(exports, __webpack_require__(4), __webpack_require__(5), __webpack_require__(6)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-collection', 'd3-dispatch', 'd3-dsv'], factory) :
 	  (factory((global.d3_request = global.d3_request || {}),global.d3_collection,global.d3_dispatch,global.d3_dsv));
 	}(this, function (exports,d3Collection,d3Dispatch,d3Dsv) { 'use strict';
@@ -522,7 +437,7 @@
 	}));
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -751,7 +666,7 @@
 	}));
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -850,7 +765,7 @@
 	}));
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -1024,7 +939,7 @@
 	}));
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -1969,11 +1884,11 @@
 	}));
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(8), __webpack_require__(6), __webpack_require__(10), __webpack_require__(11), __webpack_require__(12), __webpack_require__(13)) :
+	   true ? factory(exports, __webpack_require__(7), __webpack_require__(5), __webpack_require__(9), __webpack_require__(10), __webpack_require__(11), __webpack_require__(12)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-selection', 'd3-dispatch', 'd3-timer', 'd3-interpolate', 'd3-color', 'd3-ease'], factory) :
 	  (factory((global.d3_transition = global.d3_transition || {}),global.d3_selection,global.d3_dispatch,global.d3_timer,global.d3_interpolate,global.d3_color,global.d3_ease));
 	}(this, function (exports,d3Selection,d3Dispatch,d3Timer,d3Interpolate,d3Color,d3Ease) { 'use strict';
@@ -2742,7 +2657,7 @@
 	}));
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -2894,11 +2809,11 @@
 	}));
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(12)) :
+	   true ? factory(exports, __webpack_require__(11)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-color'], factory) :
 	  (factory((global.d3_interpolate = global.d3_interpolate || {}),global.d3_color));
 	}(this, function (exports,d3Color) { 'use strict';
@@ -3409,7 +3324,7 @@
 	}));
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -3931,7 +3846,7 @@
 	}));
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -4190,6 +4105,91 @@
 	  exports.easeElasticInOut = elasticInOut;
 
 	}));
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _d = __webpack_require__(2);
+
+	var d3 = _interopRequireWildcard(_d);
+
+	var _socket = __webpack_require__(14);
+
+	var _socket2 = _interopRequireDefault(_socket);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var channel = d3.select('.channel');
+
+	if (!channel.empty()) {
+
+	    var socket = _socket2.default.connect(location.origin);
+
+	    socket.on('message', function (o) {
+	        return addLine(o);
+	    });
+
+	    socket.on('viewers', function (o) {
+	        d3.select('.viewers').html(o + ' user' + (o > 1 ? 's' : '') + ' viewing');
+	    });
+
+	    socket.on('topic', function (o) {
+	        d3.select('.topic').html('Topic: ' + o);
+	    });
+	    socket.on('nicks', function (o) {
+	        d3.select('.users').selectAll('p').data(o).enter().append('p').html(function (d) {
+	            return d;
+	        });
+	    });
+
+	    d3.select('.message').on('keydown', function () {
+	        d3.event.keyCode == 13 && sendMsg();
+	    });
+
+	    d3.select('.send').on('keydown', function () {
+	        return sendMsg;
+	    });
+	}
+
+	function addLine(o) {
+	    channel.append('div').classed('msg', true).html(o.msg ? o.msg + ': ' + o.text : '&lt;' + o.from + '&gt; ' + o.text);
+
+	    channel.node().scrollTop = channel.node().scrollHeight;
+	}
+
+	function sendMsg() {
+	    var msgEl = d3.select('.message');
+	    var msg = msgEl.property('value');
+	    msgEl.property('value', '');
+
+	    console.log(msg);
+
+	    if (msg.indexOf('/kick ') == 0) {
+
+	        var user = msg.substring(6);
+
+	        d3.json('/api/kick?user=' + user + '&key=' + secretKey, function (e, r) {
+	            addLine({ msg: 'kicked', text: user });
+	        });
+	    } else if (msg.indexOf('/mode ') == 0) {
+
+	        var a = msg.split(" ");
+
+	        d3.json('/api/mode?user=' + a[2] + '&mode=' + a[1] + '&key=' + secretKey, function (e, r) {
+	            addLine({ msg: 'set mode', text: a[1] + ' ' + a[2] });
+	        });
+	    } else {
+	        d3.json('/api/say?message=' + msg + '&key=' + secretKey, function (e, r) {
+	            console.log(r);
+	            addLine({ from: '(~˘▾˘)~', text: msg });
+	        });
+	    }
+	}
 
 /***/ },
 /* 14 */
@@ -11618,21 +11618,11 @@
 
 /***/ },
 /* 61 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _d = __webpack_require__(3);
+	var _d = __webpack_require__(2);
 
 	var d3 = _interopRequireWildcard(_d);
 
@@ -11681,9 +11671,9 @@
 	            try {
 	                new Function(command);
 	                d3.json(url + '&command=' + encodeURIComponent(command), function (e, r) {
+	                    update();
 	                    if (r.status == "success") {
 	                        animate(1);
-	                        update();
 	                        parent.select('.confirm').style('color', '#0A0').html('added!').transition().duration(1800).style('opacity', 0).remove();
 	                    } else {
 	                        err('duplicate name');
@@ -11872,12 +11862,12 @@
 	}
 
 /***/ },
-/* 67 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _d = __webpack_require__(3);
+	var _d = __webpack_require__(2);
 
 	var d3 = _interopRequireWildcard(_d);
 
@@ -11906,6 +11896,12 @@
 
 	    saveConfig.append('div').classed(type, true).html(msg).transition().duration(1800).style('opacity', 0).remove();
 	}
+
+/***/ },
+/* 63 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

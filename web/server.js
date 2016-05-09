@@ -97,10 +97,17 @@ function site(obj) {
             }, req))
         }
         else {
-            res.send('bork');
+            res.render('about', conf({}, req))
         }
     })
 
+    app.get('/logs', (req,res) => {
+        res.render('logs', conf({}, req))
+    })
+
+    app.get('/stats', (req,res) => {
+        res.render('stats', conf({}, req))
+    })
 }
 
 function checkKey(req) {

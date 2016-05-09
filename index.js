@@ -4,12 +4,13 @@
 // TODO //
 
 // reparse log
+// infi scroll log + < & >) <-- position fixed
+// copy command ui
+// favicon
+// wordcloud
 
 // 20:12 <&Nibblr> Kirjava, you said https://www.youtube.com/watch?v=MFzDaBzBlL0
-// 20:12 <&Nibblr> Kirjava, you said order strawb cheesecaek & strawb milk
-// 20:12 <&Nibblr> kirjava, Kirjava said yellowcake
 // favicon
-// EJS
 
 // log show x at a time
 
@@ -26,8 +27,9 @@
 // track nick list
 
 
-
+// document web API / command context
 // event backend
+// about -> github iframe
 
 // convert modules to data.db
 
@@ -627,7 +629,7 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
-    else if (text == '~reset') {process.exit();}
+    else if (text == '~reset' || text == 'combobreaker') {process.exit();}
 
     else if (text.indexOf('~eval ') == 0) {
 

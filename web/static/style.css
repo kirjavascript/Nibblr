@@ -133,7 +133,7 @@ hr {
   .commands .top {
     width: 95%;
     margin: 0 auto;
-    overflow-x: hidden; }
+    overflow: hidden; }
     .commands .top a, .commands .top .qty {
       color: #0A0; }
     .commands .top .confirm, .commands .top .error, .commands .top .success {

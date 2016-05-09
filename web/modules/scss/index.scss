@@ -277,9 +277,22 @@ hr {
         > div {
             display: inline-block;
         }
-
         .time {
             font-size: 14px;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+        }
+        .command {
+            padding-right: 10px;
+        }
+        
+        .user {
+            
+        }
+        .message {
+            padding: 0px 10px;
+            text-align:right;
         }
     }
 }

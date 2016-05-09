@@ -195,7 +195,15 @@ hr {
   .log .entry > div {
     display: inline-block; }
   .log .entry .time {
-    font-size: 14px; }
+    font-size: 14px;
+    position: absolute;
+    top: 0px;
+    right: 0px; }
+  .log .entry .command {
+    padding-right: 10px; }
+  .log .entry .message {
+    padding: 0px 10px;
+    text-align: right; }
 
 .about code {
   background-color: #222;

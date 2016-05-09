@@ -11937,30 +11937,50 @@
 	    nick: '#FA0',
 	    quit: '#A00'
 	};
+	window.onscroll = function (ev) {
+	    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+	        get();
+	    }
+	};
 
 	function get() {
-	    d3.json('/api/log?limit=100', function (e, r) {
-	        var entry = data.selectAll('.entry').data(r).enter().append('div').classed('entry', true);
 
-	        entry.append('div').classed('time', true).html(function (d) {
-	            return d.time;
-	        });
+	    var url = '/api/log?limit=100';
+	    if (id) url += '&id=' + id;
 
-	        entry.append('div').classed('command', true).style('color', function (d) {
-	            return commandColour[d.command.toLowerCase()];
-	        }).html(function (d) {
-	            return d.command.toLowerCase();
-	        });
+	    d3.json(url, function (e, r) {
+
+	        console.log(r);
+	        var entry = data.selectAll('.entry').data(r, function (d) {
+	            return d.id;
+	        }).enter().append('div').classed('entry', true);
+
+	        entry.each(function (d) {
+	            var command = d.command.toLowerCase();
+	            command != 'privmsg' && d3.select(this).append('div').classed('command', true).style('color', commandColour[command]).html(command);
+
+	            id = d.id;
+	        })
+	        // fade
+	        .style('opacity', 0).transition().duration(900).delay(function (d, i) {
+	            return i * 100;
+	        }).style('opacity', 1);
 
 	        entry.append('div').classed('user', true).html(function (d) {
-	            return '&lt;' + d.user + '&gt;';
+	            return d.command.toLowerCase() == 'privmsg' ? '&lt;' + d.user + '&gt;' : d.user;
 	        });
 
 	        entry.append('div').classed('message', true).html(function (d) {
 	            return d.message;
 	        });
 
+	        entry.append('div').classed('time', true).html(function (d) {
+	            return d.time;
+	        });
+
 	        entry.append('hr');
+
+	        console.log(id);
 	    });
 	}
 

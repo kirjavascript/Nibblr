@@ -52,10 +52,16 @@ if (!stats.empty()) {
             .append('rect')
             .classed('bar',1)
             .attr('x', d => xScale(d.user))
-            .attr('y', d => yScale(d.count))
             .attr('width', xScale.bandwidth())
-            .attr('height', d => height - yScale(d.count))
+            .attr('height', 0)
             .attr('fill', '#0F0')
+            .attr('y', height)
+            .transition()
+            .duration(500)
+            .delay((d,i) => i*100)
+            .ease(d3.easeElastic)
+            .attr('height', d => height - yScale(d.count))
+            .attr('y', d => yScale(d.count))
 
 
 

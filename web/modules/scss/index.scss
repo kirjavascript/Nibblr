@@ -332,3 +332,22 @@ hr {
     width:100%;
     text-align:right;
 }
+// stats
+
+.axis {
+    font-size: 12px;
+    stroke: #0E0;
+    
+    path {
+        fill: none;
+        stroke: #0E0;
+        stroke-width: 1px;
+    }
+    line {
+        shape-rendering: crispEdges;
+        stroke: #0E0;
+    }
+    text {
+
+    }
+}

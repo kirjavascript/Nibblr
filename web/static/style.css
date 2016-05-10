@@ -230,3 +230,14 @@ hr {
   position: relative;
   width: 100%;
   text-align: right; }
+
+.axis {
+  font-size: 12px;
+  stroke: #0E0; }
+  .axis path {
+    fill: none;
+    stroke: #0E0;
+    stroke-width: 1px; }
+  .axis line {
+    shape-rendering: crispEdges;
+    stroke: #0E0; }

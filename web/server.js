@@ -3,6 +3,7 @@ var url = require("url");
 var express = require('express');
 var session = require('express-session');
 var Markdown = require('markdown-to-html').Markdown;
+var favicon = require('serve-favicon');
 var app = express();
 
 var config = require('../config.json');
@@ -17,6 +18,7 @@ module.exports = function(obj) {
             .set('view engine', 'html')
             .set('views', __dirname + '/templates')
             .set('layout', 'layout')
+            .use(favicon('web/static/favicon.ico'))
             .use(session({
                 secret: config.webInterface.secretKey,
                 cookie: { maxAge: null },
@@ -35,7 +37,7 @@ module.exports = function(obj) {
 
     // root
 
-    app.use('/', express.static('./web/static'))
+    app.use('/', express.static('web/static'))
 
     app.get('/', (req,res) => {
         res.render('livechat', conf({config}, req))
@@ -316,6 +318,17 @@ function api(obj) {
         }
         
     })
+
+    app.get('/api/log/freq', (req,res) => {
+
+        obj.log.all('SELECT USER from LOG ORDER BY id DESC LIMIT ?', 
+            req.query.limit,
+            (e,r) => {
+                res.json(r);
+            })
+        
+    })
+
 
     // live chat
 

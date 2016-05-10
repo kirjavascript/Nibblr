@@ -321,7 +321,7 @@ function api(obj) {
 
     app.get('/api/log/freq', (req,res) => {
 
-        obj.log.all('SELECT USER, count(*) from LOG group by user', 
+        obj.log.all('SELECT USER, count(*) from LOG group by user COLLATE NOCASE ASC', 
             (e,r) => {
                 res.json(r);
             })

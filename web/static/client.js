@@ -109,7 +109,7 @@
 	  value: true
 	});
 
-	var _d3Array = __webpack_require__(8);
+	var _d3Array = __webpack_require__(3);
 
 	Object.defineProperty(exports, "bisect", {
 	  enumerable: true,
@@ -280,7 +280,232 @@
 	  }
 	});
 
-	var _d3Request = __webpack_require__(3);
+	var _d3Ease = __webpack_require__(4);
+
+	Object.defineProperty(exports, "easeLinear", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeLinear;
+	  }
+	});
+	Object.defineProperty(exports, "easeQuad", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeQuad;
+	  }
+	});
+	Object.defineProperty(exports, "easeQuadIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeQuadIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeQuadOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeQuadOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeQuadInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeQuadInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeCubic", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCubic;
+	  }
+	});
+	Object.defineProperty(exports, "easeCubicIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCubicIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeCubicOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCubicOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeCubicInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCubicInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easePoly", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easePoly;
+	  }
+	});
+	Object.defineProperty(exports, "easePolyIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easePolyIn;
+	  }
+	});
+	Object.defineProperty(exports, "easePolyOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easePolyOut;
+	  }
+	});
+	Object.defineProperty(exports, "easePolyInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easePolyInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeSin", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeSin;
+	  }
+	});
+	Object.defineProperty(exports, "easeSinIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeSinIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeSinOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeSinOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeSinInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeSinInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeExp", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeExp;
+	  }
+	});
+	Object.defineProperty(exports, "easeExpIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeExpIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeExpOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeExpOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeExpInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeExpInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeCircle", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCircle;
+	  }
+	});
+	Object.defineProperty(exports, "easeCircleIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCircleIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeCircleOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCircleOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeCircleInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeCircleInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeBounce", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBounce;
+	  }
+	});
+	Object.defineProperty(exports, "easeBounceIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBounceIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeBounceOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBounceOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeBounceInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBounceInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeBack", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBack;
+	  }
+	});
+	Object.defineProperty(exports, "easeBackIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBackIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeBackOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBackOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeBackInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeBackInOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeElastic", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeElastic;
+	  }
+	});
+	Object.defineProperty(exports, "easeElasticIn", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeElasticIn;
+	  }
+	});
+	Object.defineProperty(exports, "easeElasticOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeElasticOut;
+	  }
+	});
+	Object.defineProperty(exports, "easeElasticInOut", {
+	  enumerable: true,
+	  get: function get() {
+	    return _d3Ease.easeElasticInOut;
+	  }
+	});
+
+	var _d3Request = __webpack_require__(5);
 
 	Object.defineProperty(exports, "request", {
 	  enumerable: true,
@@ -325,7 +550,7 @@
 	  }
 	});
 
-	var _d3Scale = __webpack_require__(7);
+	var _d3Scale = __webpack_require__(9);
 
 	Object.defineProperty(exports, "scaleBand", {
 	  enumerable: true,
@@ -484,7 +709,7 @@
 	  }
 	});
 
-	var _d3Selection = __webpack_require__(14);
+	var _d3Selection = __webpack_require__(15);
 
 	Object.defineProperty(exports, "mouse", {
 	  enumerable: true,
@@ -541,7 +766,7 @@
 	  }
 	});
 
-	var _d3Transition = __webpack_require__(15);
+	var _d3Transition = __webpack_require__(16);
 
 	Object.defineProperty(exports, "active", {
 	  enumerable: true,
@@ -588,7 +813,742 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(4), __webpack_require__(5), __webpack_require__(6)) :
+	   true ? factory(exports) :
+	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	  (factory((global.d3_array = {})));
+	}(this, function (exports) { 'use strict';
+
+	  function ascending(a, b) {
+	    return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
+	  }
+
+	  function bisector(compare) {
+	    if (compare.length === 1) compare = ascendingComparator(compare);
+	    return {
+	      left: function(a, x, lo, hi) {
+	        if (lo == null) lo = 0;
+	        if (hi == null) hi = a.length;
+	        while (lo < hi) {
+	          var mid = lo + hi >>> 1;
+	          if (compare(a[mid], x) < 0) lo = mid + 1;
+	          else hi = mid;
+	        }
+	        return lo;
+	      },
+	      right: function(a, x, lo, hi) {
+	        if (lo == null) lo = 0;
+	        if (hi == null) hi = a.length;
+	        while (lo < hi) {
+	          var mid = lo + hi >>> 1;
+	          if (compare(a[mid], x) > 0) hi = mid;
+	          else lo = mid + 1;
+	        }
+	        return lo;
+	      }
+	    };
+	  }
+
+	  function ascendingComparator(f) {
+	    return function(d, x) {
+	      return ascending(f(d), x);
+	    };
+	  }
+
+	  var ascendingBisect = bisector(ascending);
+	  var bisectRight = ascendingBisect.right;
+	  var bisectLeft = ascendingBisect.left;
+
+	  function descending(a, b) {
+	    return b < a ? -1 : b > a ? 1 : b >= a ? 0 : NaN;
+	  }
+
+	  function number$1(x) {
+	    return x === null ? NaN : +x;
+	  }
+
+	  function variance(array, f) {
+	    var n = array.length,
+	        m = 0,
+	        a,
+	        d,
+	        s = 0,
+	        i = -1,
+	        j = 0;
+
+	    if (f == null) {
+	      while (++i < n) {
+	        if (!isNaN(a = number$1(array[i]))) {
+	          d = a - m;
+	          m += d / ++j;
+	          s += d * (a - m);
+	        }
+	      }
+	    }
+
+	    else {
+	      while (++i < n) {
+	        if (!isNaN(a = number$1(f(array[i], i, array)))) {
+	          d = a - m;
+	          m += d / ++j;
+	          s += d * (a - m);
+	        }
+	      }
+	    }
+
+	    if (j > 1) return s / (j - 1);
+	  }
+
+	  function deviation(array, f) {
+	    var v = variance(array, f);
+	    return v ? Math.sqrt(v) : v;
+	  }
+
+	  function extent(array, f) {
+	    var i = -1,
+	        n = array.length,
+	        a,
+	        b,
+	        c;
+
+	    if (f == null) {
+	      while (++i < n) if ((b = array[i]) != null && b >= b) { a = c = b; break; }
+	      while (++i < n) if ((b = array[i]) != null) {
+	        if (a > b) a = b;
+	        if (c < b) c = b;
+	      }
+	    }
+
+	    else {
+	      while (++i < n) if ((b = f(array[i], i, array)) != null && b >= b) { a = c = b; break; }
+	      while (++i < n) if ((b = f(array[i], i, array)) != null) {
+	        if (a > b) a = b;
+	        if (c < b) c = b;
+	      }
+	    }
+
+	    return [a, c];
+	  }
+
+	  function constant(x) {
+	    return function() {
+	      return x;
+	    };
+	  }
+
+	  function identity(x) {
+	    return x;
+	  }
+
+	  function range(start, stop, step) {
+	    start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
+
+	    var i = -1,
+	        n = Math.max(0, Math.ceil((stop - start) / step)) | 0,
+	        range = new Array(n);
+
+	    while (++i < n) {
+	      range[i] = start + i * step;
+	    }
+
+	    return range;
+	  }
+
+	  var e10 = Math.sqrt(50);
+	  var e5 = Math.sqrt(10);
+	  var e2 = Math.sqrt(2);
+	  function ticks(start, stop, count) {
+	    var step = tickStep(start, stop, count);
+	    return range(
+	      Math.ceil(start / step) * step,
+	      Math.floor(stop / step) * step + step / 2, // inclusive
+	      step
+	    );
+	  }
+
+	  function tickStep(start, stop, count) {
+	    var step0 = Math.abs(stop - start) / Math.max(0, count),
+	        step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
+	        error = step0 / step1;
+	    if (error >= e10) step1 *= 10;
+	    else if (error >= e5) step1 *= 5;
+	    else if (error >= e2) step1 *= 2;
+	    return stop < start ? -step1 : step1;
+	  }
+
+	  function sturges(values) {
+	    return Math.ceil(Math.log(values.length) / Math.LN2) + 1;
+	  }
+
+	  function number(x) {
+	    return +x;
+	  }
+
+	  function histogram() {
+	    var value = identity,
+	        domain = extent,
+	        threshold = sturges;
+
+	    function histogram(data) {
+	      var i,
+	          n = data.length,
+	          x,
+	          values = new Array(n);
+
+	      // Coerce values to numbers.
+	      for (i = 0; i < n; ++i) {
+	        values[i] = +value(data[i], i, data);
+	      }
+
+	      var xz = domain(values),
+	          x0 = +xz[0],
+	          x1 = +xz[1],
+	          tz = threshold(values, x0, x1);
+
+	      // Convert number of thresholds into uniform thresholds.
+	      if (!Array.isArray(tz)) tz = ticks(x0, x1, +tz);
+
+	      // Coerce thresholds to numbers, ignoring any outside the domain.
+	      var m = tz.length;
+	      for (i = 0; i < m; ++i) tz[i] = +tz[i];
+	      while (tz[0] <= x0) tz.shift(), --m;
+	      while (tz[m - 1] >= x1) tz.pop(), --m;
+
+	      var bins = new Array(m + 1),
+	          bin;
+
+	      // Initialize bins.
+	      for (i = 0; i <= m; ++i) {
+	        bin = bins[i] = [];
+	        bin.x0 = i > 0 ? tz[i - 1] : x0;
+	        bin.x1 = i < m ? tz[i] : x1;
+	      }
+
+	      // Assign data to bins by value, ignoring any outside the domain.
+	      for (i = 0; i < n; ++i) {
+	        x = values[i];
+	        if (x0 <= x && x <= x1) {
+	          bins[bisectRight(tz, x, 0, m)].push(data[i]);
+	        }
+	      }
+
+	      return bins;
+	    }
+
+	    histogram.value = function(_) {
+	      return arguments.length ? (value = typeof _ === "function" ? _ : constant(+_), histogram) : value;
+	    };
+
+	    histogram.domain = function(_) {
+	      return arguments.length ? (domain = typeof _ === "function" ? _ : constant([+_[0], +_[1]]), histogram) : domain;
+	    };
+
+	    histogram.thresholds = function(_) {
+	      if (!arguments.length) return threshold;
+	      threshold = typeof _ === "function" ? _
+	          : Array.isArray(_) ? constant(Array.prototype.map.call(_, number))
+	          : constant(+_);
+	      return histogram;
+	    };
+
+	    return histogram;
+	  }
+
+	  function quantile(array, p, f) {
+	    if (f == null) f = number$1;
+	    if (!(n = array.length)) return;
+	    if ((p = +p) <= 0 || n < 2) return +f(array[0], 0, array);
+	    if (p >= 1) return +f(array[n - 1], n - 1, array);
+	    var n,
+	        h = (n - 1) * p,
+	        i = Math.floor(h),
+	        a = +f(array[i], i, array),
+	        b = +f(array[i + 1], i + 1, array);
+	    return a + (b - a) * (h - i);
+	  }
+
+	  function freedmanDiaconis(values, min, max) {
+	    values.sort(ascending);
+	    return Math.ceil((max - min) / (2 * (quantile(values, 0.75) - quantile(values, 0.25)) * Math.pow(values.length, -1 / 3)));
+	  }
+
+	  function scott(values, min, max) {
+	    return Math.ceil((max - min) / (3.5 * deviation(values) * Math.pow(values.length, -1 / 3)));
+	  }
+
+	  function max(array, f) {
+	    var i = -1,
+	        n = array.length,
+	        a,
+	        b;
+
+	    if (f == null) {
+	      while (++i < n) if ((b = array[i]) != null && b >= b) { a = b; break; }
+	      while (++i < n) if ((b = array[i]) != null && b > a) a = b;
+	    }
+
+	    else {
+	      while (++i < n) if ((b = f(array[i], i, array)) != null && b >= b) { a = b; break; }
+	      while (++i < n) if ((b = f(array[i], i, array)) != null && b > a) a = b;
+	    }
+
+	    return a;
+	  }
+
+	  function mean(array, f) {
+	    var s = 0,
+	        n = array.length,
+	        a,
+	        i = -1,
+	        j = n;
+
+	    if (f == null) {
+	      while (++i < n) if (!isNaN(a = number$1(array[i]))) s += a; else --j;
+	    }
+
+	    else {
+	      while (++i < n) if (!isNaN(a = number$1(f(array[i], i, array)))) s += a; else --j;
+	    }
+
+	    if (j) return s / j;
+	  }
+
+	  function median(array, f) {
+	    var numbers = [],
+	        n = array.length,
+	        a,
+	        i = -1;
+
+	    if (f == null) {
+	      while (++i < n) if (!isNaN(a = number$1(array[i]))) numbers.push(a);
+	    }
+
+	    else {
+	      while (++i < n) if (!isNaN(a = number$1(f(array[i], i, array)))) numbers.push(a);
+	    }
+
+	    return quantile(numbers.sort(ascending), 0.5);
+	  }
+
+	  function merge(arrays) {
+	    var n = arrays.length,
+	        m,
+	        i = -1,
+	        j = 0,
+	        merged,
+	        array;
+
+	    while (++i < n) j += arrays[i].length;
+	    merged = new Array(j);
+
+	    while (--n >= 0) {
+	      array = arrays[n];
+	      m = array.length;
+	      while (--m >= 0) {
+	        merged[--j] = array[m];
+	      }
+	    }
+
+	    return merged;
+	  }
+
+	  function min(array, f) {
+	    var i = -1,
+	        n = array.length,
+	        a,
+	        b;
+
+	    if (f == null) {
+	      while (++i < n) if ((b = array[i]) != null && b >= b) { a = b; break; }
+	      while (++i < n) if ((b = array[i]) != null && a > b) a = b;
+	    }
+
+	    else {
+	      while (++i < n) if ((b = f(array[i], i, array)) != null && b >= b) { a = b; break; }
+	      while (++i < n) if ((b = f(array[i], i, array)) != null && a > b) a = b;
+	    }
+
+	    return a;
+	  }
+
+	  function pairs(array) {
+	    var i = 0, n = array.length - 1, p = array[0], pairs = new Array(n < 0 ? 0 : n);
+	    while (i < n) pairs[i] = [p, p = array[++i]];
+	    return pairs;
+	  }
+
+	  function permute(array, indexes) {
+	    var i = indexes.length, permutes = new Array(i);
+	    while (i--) permutes[i] = array[indexes[i]];
+	    return permutes;
+	  }
+
+	  function scan(array, compare) {
+	    if (!(n = array.length)) return;
+	    var i = 0,
+	        n,
+	        j = 0,
+	        xi,
+	        xj = array[j];
+
+	    if (!compare) compare = ascending;
+
+	    while (++i < n) if (compare(xi = array[i], xj) < 0 || compare(xj, xj) !== 0) xj = xi, j = i;
+
+	    if (compare(xj, xj) === 0) return j;
+	  }
+
+	  function shuffle(array, i0, i1) {
+	    var m = (i1 == null ? array.length : i1) - (i0 = i0 == null ? 0 : +i0),
+	        t,
+	        i;
+
+	    while (m) {
+	      i = Math.random() * m-- | 0;
+	      t = array[m + i0];
+	      array[m + i0] = array[i + i0];
+	      array[i + i0] = t;
+	    }
+
+	    return array;
+	  }
+
+	  function sum(array, f) {
+	    var s = 0,
+	        n = array.length,
+	        a,
+	        i = -1;
+
+	    if (f == null) {
+	      while (++i < n) if (a = +array[i]) s += a; // Note: zero and null are equivalent.
+	    }
+
+	    else {
+	      while (++i < n) if (a = +f(array[i], i, array)) s += a;
+	    }
+
+	    return s;
+	  }
+
+	  function transpose(matrix) {
+	    if (!(n = matrix.length)) return [];
+	    for (var i = -1, m = min(matrix, length), transpose = new Array(m); ++i < m;) {
+	      for (var j = -1, n, row = transpose[i] = new Array(n); ++j < n;) {
+	        row[j] = matrix[j][i];
+	      }
+	    }
+	    return transpose;
+	  }
+
+	  function length(d) {
+	    return d.length;
+	  }
+
+	  function zip() {
+	    return transpose(arguments);
+	  }
+
+	  var version = "0.7.1";
+
+	  exports.version = version;
+	  exports.bisect = bisectRight;
+	  exports.bisectRight = bisectRight;
+	  exports.bisectLeft = bisectLeft;
+	  exports.ascending = ascending;
+	  exports.bisector = bisector;
+	  exports.descending = descending;
+	  exports.deviation = deviation;
+	  exports.extent = extent;
+	  exports.histogram = histogram;
+	  exports.thresholdFreedmanDiaconis = freedmanDiaconis;
+	  exports.thresholdScott = scott;
+	  exports.thresholdSturges = sturges;
+	  exports.max = max;
+	  exports.mean = mean;
+	  exports.median = median;
+	  exports.merge = merge;
+	  exports.min = min;
+	  exports.pairs = pairs;
+	  exports.permute = permute;
+	  exports.quantile = quantile;
+	  exports.range = range;
+	  exports.scan = scan;
+	  exports.shuffle = shuffle;
+	  exports.sum = sum;
+	  exports.ticks = ticks;
+	  exports.tickStep = tickStep;
+	  exports.transpose = transpose;
+	  exports.variance = variance;
+	  exports.zip = zip;
+
+	}));
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function (global, factory) {
+	   true ? factory(exports) :
+	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	  (factory((global.d3_ease = {})));
+	}(this, function (exports) { 'use strict';
+
+	  function linear(t) {
+	    return +t;
+	  }
+
+	  function quadIn(t) {
+	    return t * t;
+	  }
+
+	  function quadOut(t) {
+	    return t * (2 - t);
+	  }
+
+	  function quadInOut(t) {
+	    return ((t *= 2) <= 1 ? t * t : --t * (2 - t) + 1) / 2;
+	  }
+
+	  function cubicIn(t) {
+	    return t * t * t;
+	  }
+
+	  function cubicOut(t) {
+	    return --t * t * t + 1;
+	  }
+
+	  function cubicInOut(t) {
+	    return ((t *= 2) <= 1 ? t * t * t : (t -= 2) * t * t + 2) / 2;
+	  }
+
+	  var exponent = 3;
+
+	  var polyIn = (function custom(e) {
+	    e = +e;
+
+	    function polyIn(t) {
+	      return Math.pow(t, e);
+	    }
+
+	    polyIn.exponent = custom;
+
+	    return polyIn;
+	  })(exponent);
+
+	  var polyOut = (function custom(e) {
+	    e = +e;
+
+	    function polyOut(t) {
+	      return 1 - Math.pow(1 - t, e);
+	    }
+
+	    polyOut.exponent = custom;
+
+	    return polyOut;
+	  })(exponent);
+
+	  var polyInOut = (function custom(e) {
+	    e = +e;
+
+	    function polyInOut(t) {
+	      return ((t *= 2) <= 1 ? Math.pow(t, e) : 2 - Math.pow(2 - t, e)) / 2;
+	    }
+
+	    polyInOut.exponent = custom;
+
+	    return polyInOut;
+	  })(exponent);
+
+	  var pi = Math.PI;
+	  var halfPi = pi / 2;
+	  function sinIn(t) {
+	    return 1 - Math.cos(t * halfPi);
+	  }
+
+	  function sinOut(t) {
+	    return Math.sin(t * halfPi);
+	  }
+
+	  function sinInOut(t) {
+	    return (1 - Math.cos(pi * t)) / 2;
+	  }
+
+	  function expIn(t) {
+	    return Math.pow(2, 10 * t - 10);
+	  }
+
+	  function expOut(t) {
+	    return 1 - Math.pow(2, -10 * t);
+	  }
+
+	  function expInOut(t) {
+	    return ((t *= 2) <= 1 ? Math.pow(2, 10 * t - 10) : 2 - Math.pow(2, 10 - 10 * t)) / 2;
+	  }
+
+	  function circleIn(t) {
+	    return 1 - Math.sqrt(1 - t * t);
+	  }
+
+	  function circleOut(t) {
+	    return Math.sqrt(1 - --t * t);
+	  }
+
+	  function circleInOut(t) {
+	    return ((t *= 2) <= 1 ? 1 - Math.sqrt(1 - t * t) : Math.sqrt(1 - (t -= 2) * t) + 1) / 2;
+	  }
+
+	  var b1 = 4 / 11;
+	  var b2 = 6 / 11;
+	  var b3 = 8 / 11;
+	  var b4 = 3 / 4;
+	  var b5 = 9 / 11;
+	  var b6 = 10 / 11;
+	  var b7 = 15 / 16;
+	  var b8 = 21 / 22;
+	  var b9 = 63 / 64;
+	  var b0 = 1 / b1 / b1;
+	  function bounceIn(t) {
+	    return 1 - bounceOut(1 - t);
+	  }
+
+	  function bounceOut(t) {
+	    return (t = +t) < b1 ? b0 * t * t : t < b3 ? b0 * (t -= b2) * t + b4 : t < b6 ? b0 * (t -= b5) * t + b7 : b0 * (t -= b8) * t + b9;
+	  }
+
+	  function bounceInOut(t) {
+	    return ((t *= 2) <= 1 ? 1 - bounceOut(1 - t) : bounceOut(t - 1) + 1) / 2;
+	  }
+
+	  var overshoot = 1.70158;
+
+	  var backIn = (function custom(s) {
+	    s = +s;
+
+	    function backIn(t) {
+	      return t * t * ((s + 1) * t - s);
+	    }
+
+	    backIn.overshoot = custom;
+
+	    return backIn;
+	  })(overshoot);
+
+	  var backOut = (function custom(s) {
+	    s = +s;
+
+	    function backOut(t) {
+	      return --t * t * ((s + 1) * t + s) + 1;
+	    }
+
+	    backOut.overshoot = custom;
+
+	    return backOut;
+	  })(overshoot);
+
+	  var backInOut = (function custom(s) {
+	    s = +s;
+
+	    function backInOut(t) {
+	      return ((t *= 2) < 1 ? t * t * ((s + 1) * t - s) : (t -= 2) * t * ((s + 1) * t + s) + 2) / 2;
+	    }
+
+	    backInOut.overshoot = custom;
+
+	    return backInOut;
+	  })(overshoot);
+
+	  var tau = 2 * Math.PI;
+	  var amplitude = 1;
+	  var period = 0.3;
+	  var elasticIn = (function custom(a, p) {
+	    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
+
+	    function elasticIn(t) {
+	      return a * Math.pow(2, 10 * --t) * Math.sin((s - t) / p);
+	    }
+
+	    elasticIn.amplitude = function(a) { return custom(a, p * tau); };
+	    elasticIn.period = function(p) { return custom(a, p); };
+
+	    return elasticIn;
+	  })(amplitude, period);
+
+	  var elasticOut = (function custom(a, p) {
+	    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
+
+	    function elasticOut(t) {
+	      return 1 - a * Math.pow(2, -10 * (t = +t)) * Math.sin((t + s) / p);
+	    }
+
+	    elasticOut.amplitude = function(a) { return custom(a, p * tau); };
+	    elasticOut.period = function(p) { return custom(a, p); };
+
+	    return elasticOut;
+	  })(amplitude, period);
+
+	  var elasticInOut = (function custom(a, p) {
+	    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
+
+	    function elasticInOut(t) {
+	      return ((t = t * 2 - 1) < 0
+	          ? a * Math.pow(2, 10 * t) * Math.sin((s - t) / p)
+	          : 2 - a * Math.pow(2, -10 * t) * Math.sin((s + t) / p)) / 2;
+	    }
+
+	    elasticInOut.amplitude = function(a) { return custom(a, p * tau); };
+	    elasticInOut.period = function(p) { return custom(a, p); };
+
+	    return elasticInOut;
+	  })(amplitude, period);
+
+	  var version = "0.7.0";
+
+	  exports.version = version;
+	  exports.easeLinear = linear;
+	  exports.easeQuad = quadInOut;
+	  exports.easeQuadIn = quadIn;
+	  exports.easeQuadOut = quadOut;
+	  exports.easeQuadInOut = quadInOut;
+	  exports.easeCubic = cubicInOut;
+	  exports.easeCubicIn = cubicIn;
+	  exports.easeCubicOut = cubicOut;
+	  exports.easeCubicInOut = cubicInOut;
+	  exports.easePoly = polyInOut;
+	  exports.easePolyIn = polyIn;
+	  exports.easePolyOut = polyOut;
+	  exports.easePolyInOut = polyInOut;
+	  exports.easeSin = sinInOut;
+	  exports.easeSinIn = sinIn;
+	  exports.easeSinOut = sinOut;
+	  exports.easeSinInOut = sinInOut;
+	  exports.easeExp = expInOut;
+	  exports.easeExpIn = expIn;
+	  exports.easeExpOut = expOut;
+	  exports.easeExpInOut = expInOut;
+	  exports.easeCircle = circleInOut;
+	  exports.easeCircleIn = circleIn;
+	  exports.easeCircleOut = circleOut;
+	  exports.easeCircleInOut = circleInOut;
+	  exports.easeBounce = bounceOut;
+	  exports.easeBounceIn = bounceIn;
+	  exports.easeBounceOut = bounceOut;
+	  exports.easeBounceInOut = bounceInOut;
+	  exports.easeBack = backInOut;
+	  exports.easeBackIn = backIn;
+	  exports.easeBackOut = backOut;
+	  exports.easeBackInOut = backInOut;
+	  exports.easeElastic = elasticOut;
+	  exports.easeElasticIn = elasticIn;
+	  exports.easeElasticOut = elasticOut;
+	  exports.easeElasticInOut = elasticInOut;
+
+	}));
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function (global, factory) {
+	   true ? factory(exports, __webpack_require__(6), __webpack_require__(7), __webpack_require__(8)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-collection', 'd3-dispatch', 'd3-dsv'], factory) :
 	  (factory((global.d3_request = global.d3_request || {}),global.d3_collection,global.d3_dispatch,global.d3_dsv));
 	}(this, function (exports,d3Collection,d3Dispatch,d3Dsv) { 'use strict';
@@ -798,7 +1758,7 @@
 	}));
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -1027,7 +1987,7 @@
 	}));
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -1126,7 +2086,7 @@
 	}));
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -1300,11 +2260,11 @@
 	}));
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(8), __webpack_require__(4), __webpack_require__(9), __webpack_require__(11), __webpack_require__(12), __webpack_require__(13), __webpack_require__(10)) :
+	   true ? factory(exports, __webpack_require__(3), __webpack_require__(6), __webpack_require__(10), __webpack_require__(12), __webpack_require__(13), __webpack_require__(14), __webpack_require__(11)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-array', 'd3-collection', 'd3-interpolate', 'd3-format', 'd3-time', 'd3-time-format', 'd3-color'], factory) :
 	  (factory((global.d3_scale = global.d3_scale || {}),global.d3_array,global.d3_collection,global.d3_interpolate,global.d3_format,global.d3_time,global.d3_time_format,global.d3_color));
 	}(this, function (exports,d3Array,d3Collection,d3Interpolate,d3Format,d3Time,d3TimeFormat,d3Color) { 'use strict';
@@ -2234,485 +3194,11 @@
 	}));
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports) :
-	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	  (factory((global.d3_array = {})));
-	}(this, function (exports) { 'use strict';
-
-	  function ascending(a, b) {
-	    return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
-	  }
-
-	  function bisector(compare) {
-	    if (compare.length === 1) compare = ascendingComparator(compare);
-	    return {
-	      left: function(a, x, lo, hi) {
-	        if (lo == null) lo = 0;
-	        if (hi == null) hi = a.length;
-	        while (lo < hi) {
-	          var mid = lo + hi >>> 1;
-	          if (compare(a[mid], x) < 0) lo = mid + 1;
-	          else hi = mid;
-	        }
-	        return lo;
-	      },
-	      right: function(a, x, lo, hi) {
-	        if (lo == null) lo = 0;
-	        if (hi == null) hi = a.length;
-	        while (lo < hi) {
-	          var mid = lo + hi >>> 1;
-	          if (compare(a[mid], x) > 0) hi = mid;
-	          else lo = mid + 1;
-	        }
-	        return lo;
-	      }
-	    };
-	  }
-
-	  function ascendingComparator(f) {
-	    return function(d, x) {
-	      return ascending(f(d), x);
-	    };
-	  }
-
-	  var ascendingBisect = bisector(ascending);
-	  var bisectRight = ascendingBisect.right;
-	  var bisectLeft = ascendingBisect.left;
-
-	  function descending(a, b) {
-	    return b < a ? -1 : b > a ? 1 : b >= a ? 0 : NaN;
-	  }
-
-	  function number$1(x) {
-	    return x === null ? NaN : +x;
-	  }
-
-	  function variance(array, f) {
-	    var n = array.length,
-	        m = 0,
-	        a,
-	        d,
-	        s = 0,
-	        i = -1,
-	        j = 0;
-
-	    if (f == null) {
-	      while (++i < n) {
-	        if (!isNaN(a = number$1(array[i]))) {
-	          d = a - m;
-	          m += d / ++j;
-	          s += d * (a - m);
-	        }
-	      }
-	    }
-
-	    else {
-	      while (++i < n) {
-	        if (!isNaN(a = number$1(f(array[i], i, array)))) {
-	          d = a - m;
-	          m += d / ++j;
-	          s += d * (a - m);
-	        }
-	      }
-	    }
-
-	    if (j > 1) return s / (j - 1);
-	  }
-
-	  function deviation(array, f) {
-	    var v = variance(array, f);
-	    return v ? Math.sqrt(v) : v;
-	  }
-
-	  function extent(array, f) {
-	    var i = -1,
-	        n = array.length,
-	        a,
-	        b,
-	        c;
-
-	    if (f == null) {
-	      while (++i < n) if ((b = array[i]) != null && b >= b) { a = c = b; break; }
-	      while (++i < n) if ((b = array[i]) != null) {
-	        if (a > b) a = b;
-	        if (c < b) c = b;
-	      }
-	    }
-
-	    else {
-	      while (++i < n) if ((b = f(array[i], i, array)) != null && b >= b) { a = c = b; break; }
-	      while (++i < n) if ((b = f(array[i], i, array)) != null) {
-	        if (a > b) a = b;
-	        if (c < b) c = b;
-	      }
-	    }
-
-	    return [a, c];
-	  }
-
-	  function constant(x) {
-	    return function() {
-	      return x;
-	    };
-	  }
-
-	  function identity(x) {
-	    return x;
-	  }
-
-	  function range(start, stop, step) {
-	    start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
-
-	    var i = -1,
-	        n = Math.max(0, Math.ceil((stop - start) / step)) | 0,
-	        range = new Array(n);
-
-	    while (++i < n) {
-	      range[i] = start + i * step;
-	    }
-
-	    return range;
-	  }
-
-	  var e10 = Math.sqrt(50);
-	  var e5 = Math.sqrt(10);
-	  var e2 = Math.sqrt(2);
-	  function ticks(start, stop, count) {
-	    var step = tickStep(start, stop, count);
-	    return range(
-	      Math.ceil(start / step) * step,
-	      Math.floor(stop / step) * step + step / 2, // inclusive
-	      step
-	    );
-	  }
-
-	  function tickStep(start, stop, count) {
-	    var step0 = Math.abs(stop - start) / Math.max(0, count),
-	        step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
-	        error = step0 / step1;
-	    if (error >= e10) step1 *= 10;
-	    else if (error >= e5) step1 *= 5;
-	    else if (error >= e2) step1 *= 2;
-	    return stop < start ? -step1 : step1;
-	  }
-
-	  function sturges(values) {
-	    return Math.ceil(Math.log(values.length) / Math.LN2) + 1;
-	  }
-
-	  function number(x) {
-	    return +x;
-	  }
-
-	  function histogram() {
-	    var value = identity,
-	        domain = extent,
-	        threshold = sturges;
-
-	    function histogram(data) {
-	      var i,
-	          n = data.length,
-	          x,
-	          values = new Array(n);
-
-	      // Coerce values to numbers.
-	      for (i = 0; i < n; ++i) {
-	        values[i] = +value(data[i], i, data);
-	      }
-
-	      var xz = domain(values),
-	          x0 = +xz[0],
-	          x1 = +xz[1],
-	          tz = threshold(values, x0, x1);
-
-	      // Convert number of thresholds into uniform thresholds.
-	      if (!Array.isArray(tz)) tz = ticks(x0, x1, +tz);
-
-	      // Coerce thresholds to numbers, ignoring any outside the domain.
-	      var m = tz.length;
-	      for (i = 0; i < m; ++i) tz[i] = +tz[i];
-	      while (tz[0] <= x0) tz.shift(), --m;
-	      while (tz[m - 1] >= x1) tz.pop(), --m;
-
-	      var bins = new Array(m + 1),
-	          bin;
-
-	      // Initialize bins.
-	      for (i = 0; i <= m; ++i) {
-	        bin = bins[i] = [];
-	        bin.x0 = i > 0 ? tz[i - 1] : x0;
-	        bin.x1 = i < m ? tz[i] : x1;
-	      }
-
-	      // Assign data to bins by value, ignoring any outside the domain.
-	      for (i = 0; i < n; ++i) {
-	        x = values[i];
-	        if (x0 <= x && x <= x1) {
-	          bins[bisectRight(tz, x, 0, m)].push(data[i]);
-	        }
-	      }
-
-	      return bins;
-	    }
-
-	    histogram.value = function(_) {
-	      return arguments.length ? (value = typeof _ === "function" ? _ : constant(+_), histogram) : value;
-	    };
-
-	    histogram.domain = function(_) {
-	      return arguments.length ? (domain = typeof _ === "function" ? _ : constant([+_[0], +_[1]]), histogram) : domain;
-	    };
-
-	    histogram.thresholds = function(_) {
-	      if (!arguments.length) return threshold;
-	      threshold = typeof _ === "function" ? _
-	          : Array.isArray(_) ? constant(Array.prototype.map.call(_, number))
-	          : constant(+_);
-	      return histogram;
-	    };
-
-	    return histogram;
-	  }
-
-	  function quantile(array, p, f) {
-	    if (f == null) f = number$1;
-	    if (!(n = array.length)) return;
-	    if ((p = +p) <= 0 || n < 2) return +f(array[0], 0, array);
-	    if (p >= 1) return +f(array[n - 1], n - 1, array);
-	    var n,
-	        h = (n - 1) * p,
-	        i = Math.floor(h),
-	        a = +f(array[i], i, array),
-	        b = +f(array[i + 1], i + 1, array);
-	    return a + (b - a) * (h - i);
-	  }
-
-	  function freedmanDiaconis(values, min, max) {
-	    values.sort(ascending);
-	    return Math.ceil((max - min) / (2 * (quantile(values, 0.75) - quantile(values, 0.25)) * Math.pow(values.length, -1 / 3)));
-	  }
-
-	  function scott(values, min, max) {
-	    return Math.ceil((max - min) / (3.5 * deviation(values) * Math.pow(values.length, -1 / 3)));
-	  }
-
-	  function max(array, f) {
-	    var i = -1,
-	        n = array.length,
-	        a,
-	        b;
-
-	    if (f == null) {
-	      while (++i < n) if ((b = array[i]) != null && b >= b) { a = b; break; }
-	      while (++i < n) if ((b = array[i]) != null && b > a) a = b;
-	    }
-
-	    else {
-	      while (++i < n) if ((b = f(array[i], i, array)) != null && b >= b) { a = b; break; }
-	      while (++i < n) if ((b = f(array[i], i, array)) != null && b > a) a = b;
-	    }
-
-	    return a;
-	  }
-
-	  function mean(array, f) {
-	    var s = 0,
-	        n = array.length,
-	        a,
-	        i = -1,
-	        j = n;
-
-	    if (f == null) {
-	      while (++i < n) if (!isNaN(a = number$1(array[i]))) s += a; else --j;
-	    }
-
-	    else {
-	      while (++i < n) if (!isNaN(a = number$1(f(array[i], i, array)))) s += a; else --j;
-	    }
-
-	    if (j) return s / j;
-	  }
-
-	  function median(array, f) {
-	    var numbers = [],
-	        n = array.length,
-	        a,
-	        i = -1;
-
-	    if (f == null) {
-	      while (++i < n) if (!isNaN(a = number$1(array[i]))) numbers.push(a);
-	    }
-
-	    else {
-	      while (++i < n) if (!isNaN(a = number$1(f(array[i], i, array)))) numbers.push(a);
-	    }
-
-	    return quantile(numbers.sort(ascending), 0.5);
-	  }
-
-	  function merge(arrays) {
-	    var n = arrays.length,
-	        m,
-	        i = -1,
-	        j = 0,
-	        merged,
-	        array;
-
-	    while (++i < n) j += arrays[i].length;
-	    merged = new Array(j);
-
-	    while (--n >= 0) {
-	      array = arrays[n];
-	      m = array.length;
-	      while (--m >= 0) {
-	        merged[--j] = array[m];
-	      }
-	    }
-
-	    return merged;
-	  }
-
-	  function min(array, f) {
-	    var i = -1,
-	        n = array.length,
-	        a,
-	        b;
-
-	    if (f == null) {
-	      while (++i < n) if ((b = array[i]) != null && b >= b) { a = b; break; }
-	      while (++i < n) if ((b = array[i]) != null && a > b) a = b;
-	    }
-
-	    else {
-	      while (++i < n) if ((b = f(array[i], i, array)) != null && b >= b) { a = b; break; }
-	      while (++i < n) if ((b = f(array[i], i, array)) != null && a > b) a = b;
-	    }
-
-	    return a;
-	  }
-
-	  function pairs(array) {
-	    var i = 0, n = array.length - 1, p = array[0], pairs = new Array(n < 0 ? 0 : n);
-	    while (i < n) pairs[i] = [p, p = array[++i]];
-	    return pairs;
-	  }
-
-	  function permute(array, indexes) {
-	    var i = indexes.length, permutes = new Array(i);
-	    while (i--) permutes[i] = array[indexes[i]];
-	    return permutes;
-	  }
-
-	  function scan(array, compare) {
-	    if (!(n = array.length)) return;
-	    var i = 0,
-	        n,
-	        j = 0,
-	        xi,
-	        xj = array[j];
-
-	    if (!compare) compare = ascending;
-
-	    while (++i < n) if (compare(xi = array[i], xj) < 0 || compare(xj, xj) !== 0) xj = xi, j = i;
-
-	    if (compare(xj, xj) === 0) return j;
-	  }
-
-	  function shuffle(array, i0, i1) {
-	    var m = (i1 == null ? array.length : i1) - (i0 = i0 == null ? 0 : +i0),
-	        t,
-	        i;
-
-	    while (m) {
-	      i = Math.random() * m-- | 0;
-	      t = array[m + i0];
-	      array[m + i0] = array[i + i0];
-	      array[i + i0] = t;
-	    }
-
-	    return array;
-	  }
-
-	  function sum(array, f) {
-	    var s = 0,
-	        n = array.length,
-	        a,
-	        i = -1;
-
-	    if (f == null) {
-	      while (++i < n) if (a = +array[i]) s += a; // Note: zero and null are equivalent.
-	    }
-
-	    else {
-	      while (++i < n) if (a = +f(array[i], i, array)) s += a;
-	    }
-
-	    return s;
-	  }
-
-	  function transpose(matrix) {
-	    if (!(n = matrix.length)) return [];
-	    for (var i = -1, m = min(matrix, length), transpose = new Array(m); ++i < m;) {
-	      for (var j = -1, n, row = transpose[i] = new Array(n); ++j < n;) {
-	        row[j] = matrix[j][i];
-	      }
-	    }
-	    return transpose;
-	  }
-
-	  function length(d) {
-	    return d.length;
-	  }
-
-	  function zip() {
-	    return transpose(arguments);
-	  }
-
-	  var version = "0.7.1";
-
-	  exports.version = version;
-	  exports.bisect = bisectRight;
-	  exports.bisectRight = bisectRight;
-	  exports.bisectLeft = bisectLeft;
-	  exports.ascending = ascending;
-	  exports.bisector = bisector;
-	  exports.descending = descending;
-	  exports.deviation = deviation;
-	  exports.extent = extent;
-	  exports.histogram = histogram;
-	  exports.thresholdFreedmanDiaconis = freedmanDiaconis;
-	  exports.thresholdScott = scott;
-	  exports.thresholdSturges = sturges;
-	  exports.max = max;
-	  exports.mean = mean;
-	  exports.median = median;
-	  exports.merge = merge;
-	  exports.min = min;
-	  exports.pairs = pairs;
-	  exports.permute = permute;
-	  exports.quantile = quantile;
-	  exports.range = range;
-	  exports.scan = scan;
-	  exports.shuffle = shuffle;
-	  exports.sum = sum;
-	  exports.ticks = ticks;
-	  exports.tickStep = tickStep;
-	  exports.transpose = transpose;
-	  exports.variance = variance;
-	  exports.zip = zip;
-
-	}));
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(10)) :
+	   true ? factory(exports, __webpack_require__(11)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-color'], factory) :
 	  (factory((global.d3_interpolate = global.d3_interpolate || {}),global.d3_color));
 	}(this, function (exports,d3Color) { 'use strict';
@@ -3223,7 +3709,7 @@
 	}));
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -3745,7 +4231,7 @@
 	}));
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -4252,7 +4738,7 @@
 	}));
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -4606,11 +5092,11 @@
 	}));
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(12)) :
+	   true ? factory(exports, __webpack_require__(13)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-time'], factory) :
 	  (factory((global.d3_time_format = global.d3_time_format || {}),global.d3_time));
 	}(this, function (exports,d3Time) { 'use strict';
@@ -5444,7 +5930,7 @@
 	}));
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -6389,11 +6875,11 @@
 	}));
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
-	   true ? factory(exports, __webpack_require__(14), __webpack_require__(5), __webpack_require__(16), __webpack_require__(9), __webpack_require__(10), __webpack_require__(17)) :
+	   true ? factory(exports, __webpack_require__(15), __webpack_require__(7), __webpack_require__(17), __webpack_require__(10), __webpack_require__(11), __webpack_require__(4)) :
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-selection', 'd3-dispatch', 'd3-timer', 'd3-interpolate', 'd3-color', 'd3-ease'], factory) :
 	  (factory((global.d3_transition = global.d3_transition || {}),global.d3_selection,global.d3_dispatch,global.d3_timer,global.d3_interpolate,global.d3_color,global.d3_ease));
 	}(this, function (exports,d3Selection,d3Dispatch,d3Timer,d3Interpolate,d3Color,d3Ease) { 'use strict';
@@ -7162,7 +7648,7 @@
 	}));
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -7310,267 +7796,6 @@
 	  exports.timerFlush = timerFlush;
 	  exports.timeout = timeout$1;
 	  exports.interval = interval$1;
-
-	}));
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function (global, factory) {
-	   true ? factory(exports) :
-	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	  (factory((global.d3_ease = {})));
-	}(this, function (exports) { 'use strict';
-
-	  function linear(t) {
-	    return +t;
-	  }
-
-	  function quadIn(t) {
-	    return t * t;
-	  }
-
-	  function quadOut(t) {
-	    return t * (2 - t);
-	  }
-
-	  function quadInOut(t) {
-	    return ((t *= 2) <= 1 ? t * t : --t * (2 - t) + 1) / 2;
-	  }
-
-	  function cubicIn(t) {
-	    return t * t * t;
-	  }
-
-	  function cubicOut(t) {
-	    return --t * t * t + 1;
-	  }
-
-	  function cubicInOut(t) {
-	    return ((t *= 2) <= 1 ? t * t * t : (t -= 2) * t * t + 2) / 2;
-	  }
-
-	  var exponent = 3;
-
-	  var polyIn = (function custom(e) {
-	    e = +e;
-
-	    function polyIn(t) {
-	      return Math.pow(t, e);
-	    }
-
-	    polyIn.exponent = custom;
-
-	    return polyIn;
-	  })(exponent);
-
-	  var polyOut = (function custom(e) {
-	    e = +e;
-
-	    function polyOut(t) {
-	      return 1 - Math.pow(1 - t, e);
-	    }
-
-	    polyOut.exponent = custom;
-
-	    return polyOut;
-	  })(exponent);
-
-	  var polyInOut = (function custom(e) {
-	    e = +e;
-
-	    function polyInOut(t) {
-	      return ((t *= 2) <= 1 ? Math.pow(t, e) : 2 - Math.pow(2 - t, e)) / 2;
-	    }
-
-	    polyInOut.exponent = custom;
-
-	    return polyInOut;
-	  })(exponent);
-
-	  var pi = Math.PI;
-	  var halfPi = pi / 2;
-	  function sinIn(t) {
-	    return 1 - Math.cos(t * halfPi);
-	  }
-
-	  function sinOut(t) {
-	    return Math.sin(t * halfPi);
-	  }
-
-	  function sinInOut(t) {
-	    return (1 - Math.cos(pi * t)) / 2;
-	  }
-
-	  function expIn(t) {
-	    return Math.pow(2, 10 * t - 10);
-	  }
-
-	  function expOut(t) {
-	    return 1 - Math.pow(2, -10 * t);
-	  }
-
-	  function expInOut(t) {
-	    return ((t *= 2) <= 1 ? Math.pow(2, 10 * t - 10) : 2 - Math.pow(2, 10 - 10 * t)) / 2;
-	  }
-
-	  function circleIn(t) {
-	    return 1 - Math.sqrt(1 - t * t);
-	  }
-
-	  function circleOut(t) {
-	    return Math.sqrt(1 - --t * t);
-	  }
-
-	  function circleInOut(t) {
-	    return ((t *= 2) <= 1 ? 1 - Math.sqrt(1 - t * t) : Math.sqrt(1 - (t -= 2) * t) + 1) / 2;
-	  }
-
-	  var b1 = 4 / 11;
-	  var b2 = 6 / 11;
-	  var b3 = 8 / 11;
-	  var b4 = 3 / 4;
-	  var b5 = 9 / 11;
-	  var b6 = 10 / 11;
-	  var b7 = 15 / 16;
-	  var b8 = 21 / 22;
-	  var b9 = 63 / 64;
-	  var b0 = 1 / b1 / b1;
-	  function bounceIn(t) {
-	    return 1 - bounceOut(1 - t);
-	  }
-
-	  function bounceOut(t) {
-	    return (t = +t) < b1 ? b0 * t * t : t < b3 ? b0 * (t -= b2) * t + b4 : t < b6 ? b0 * (t -= b5) * t + b7 : b0 * (t -= b8) * t + b9;
-	  }
-
-	  function bounceInOut(t) {
-	    return ((t *= 2) <= 1 ? 1 - bounceOut(1 - t) : bounceOut(t - 1) + 1) / 2;
-	  }
-
-	  var overshoot = 1.70158;
-
-	  var backIn = (function custom(s) {
-	    s = +s;
-
-	    function backIn(t) {
-	      return t * t * ((s + 1) * t - s);
-	    }
-
-	    backIn.overshoot = custom;
-
-	    return backIn;
-	  })(overshoot);
-
-	  var backOut = (function custom(s) {
-	    s = +s;
-
-	    function backOut(t) {
-	      return --t * t * ((s + 1) * t + s) + 1;
-	    }
-
-	    backOut.overshoot = custom;
-
-	    return backOut;
-	  })(overshoot);
-
-	  var backInOut = (function custom(s) {
-	    s = +s;
-
-	    function backInOut(t) {
-	      return ((t *= 2) < 1 ? t * t * ((s + 1) * t - s) : (t -= 2) * t * ((s + 1) * t + s) + 2) / 2;
-	    }
-
-	    backInOut.overshoot = custom;
-
-	    return backInOut;
-	  })(overshoot);
-
-	  var tau = 2 * Math.PI;
-	  var amplitude = 1;
-	  var period = 0.3;
-	  var elasticIn = (function custom(a, p) {
-	    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
-
-	    function elasticIn(t) {
-	      return a * Math.pow(2, 10 * --t) * Math.sin((s - t) / p);
-	    }
-
-	    elasticIn.amplitude = function(a) { return custom(a, p * tau); };
-	    elasticIn.period = function(p) { return custom(a, p); };
-
-	    return elasticIn;
-	  })(amplitude, period);
-
-	  var elasticOut = (function custom(a, p) {
-	    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
-
-	    function elasticOut(t) {
-	      return 1 - a * Math.pow(2, -10 * (t = +t)) * Math.sin((t + s) / p);
-	    }
-
-	    elasticOut.amplitude = function(a) { return custom(a, p * tau); };
-	    elasticOut.period = function(p) { return custom(a, p); };
-
-	    return elasticOut;
-	  })(amplitude, period);
-
-	  var elasticInOut = (function custom(a, p) {
-	    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau);
-
-	    function elasticInOut(t) {
-	      return ((t = t * 2 - 1) < 0
-	          ? a * Math.pow(2, 10 * t) * Math.sin((s - t) / p)
-	          : 2 - a * Math.pow(2, -10 * t) * Math.sin((s + t) / p)) / 2;
-	    }
-
-	    elasticInOut.amplitude = function(a) { return custom(a, p * tau); };
-	    elasticInOut.period = function(p) { return custom(a, p); };
-
-	    return elasticInOut;
-	  })(amplitude, period);
-
-	  var version = "0.7.0";
-
-	  exports.version = version;
-	  exports.easeLinear = linear;
-	  exports.easeQuad = quadInOut;
-	  exports.easeQuadIn = quadIn;
-	  exports.easeQuadOut = quadOut;
-	  exports.easeQuadInOut = quadInOut;
-	  exports.easeCubic = cubicInOut;
-	  exports.easeCubicIn = cubicIn;
-	  exports.easeCubicOut = cubicOut;
-	  exports.easeCubicInOut = cubicInOut;
-	  exports.easePoly = polyInOut;
-	  exports.easePolyIn = polyIn;
-	  exports.easePolyOut = polyOut;
-	  exports.easePolyInOut = polyInOut;
-	  exports.easeSin = sinInOut;
-	  exports.easeSinIn = sinIn;
-	  exports.easeSinOut = sinOut;
-	  exports.easeSinInOut = sinInOut;
-	  exports.easeExp = expInOut;
-	  exports.easeExpIn = expIn;
-	  exports.easeExpOut = expOut;
-	  exports.easeExpInOut = expInOut;
-	  exports.easeCircle = circleInOut;
-	  exports.easeCircleIn = circleIn;
-	  exports.easeCircleOut = circleOut;
-	  exports.easeCircleInOut = circleInOut;
-	  exports.easeBounce = bounceOut;
-	  exports.easeBounceIn = bounceIn;
-	  exports.easeBounceOut = bounceOut;
-	  exports.easeBounceInOut = bounceInOut;
-	  exports.easeBack = backInOut;
-	  exports.easeBackIn = backIn;
-	  exports.easeBackOut = backOut;
-	  exports.easeBackInOut = backInOut;
-	  exports.easeElastic = elasticOut;
-	  exports.easeElasticIn = elasticIn;
-	  exports.easeElasticOut = elasticOut;
-	  exports.easeElasticInOut = elasticInOut;
 
 	}));
 
@@ -15665,11 +15890,13 @@
 
 	        svg.selectAll('.bar').data(data).enter().append('rect').classed('bar', 1).attr('x', function (d) {
 	            return xScale(d.user);
+	        }).attr('width', xScale.bandwidth()).attr('height', 0).attr('fill', '#0F0').attr('y', height).transition().duration(500).delay(function (d, i) {
+	            return i * 100;
+	        }).ease(d3.easeElastic).attr('height', function (d) {
+	            return height - yScale(d.count);
 	        }).attr('y', function (d) {
 	            return yScale(d.count);
-	        }).attr('width', xScale.bandwidth()).attr('height', function (d) {
-	            return height - yScale(d.count);
-	        }).attr('fill', '#0F0');
+	        });
 	    });
 	}
 

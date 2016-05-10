@@ -2,12 +2,19 @@
 // https://en.wikipedia.org/wiki/List_of_Internet_Relay_Chat_commands
 
 // TODO //
+// limit by x transition graph
 
+// stats cache?
+
+// google2module
+// %20 command input
 // reparse log
 // infi scroll log + < & >) <-- position fixed
 // copy command ui
 // favicon
 // wordcloud
+
+// for log, check scroll ONCE animation is finished and give it a bigger offset
 
 // 20:12 <&Nibblr> Kirjava, you said https://www.youtube.com/watch?v=MFzDaBzBlL0
 // favicon

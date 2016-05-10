@@ -1,33 +1,33 @@
-// export {
-//   bisect,
-//   bisectRight,
-//   bisectLeft,
-//   ascending,
-//   bisector,
-//   descending,
-//   deviation,
-//   extent,
-//   histogram,
-//   thresholdFreedmanDiaconis,
-//   thresholdScott,
-//   thresholdSturges,
-//   max,
-//   mean,
-//   median,
-//   merge,
-//   min,
-//   pairs,
-//   permute,
-//   quantile,
-//   range,
-//   scan,
-//   shuffle,
-//   sum,
-//   ticks,
-//   transpose,
-//   variance,
-//   zip
-// } from "d3-array";
+export {
+  bisect,
+  bisectRight,
+  bisectLeft,
+  ascending,
+  bisector,
+  descending,
+  deviation,
+  extent,
+  histogram,
+  thresholdFreedmanDiaconis,
+  thresholdScott,
+  thresholdSturges,
+  max,
+  mean,
+  median,
+  merge,
+  min,
+  pairs,
+  permute,
+  quantile,
+  range,
+  scan,
+  shuffle,
+  sum,
+  ticks,
+  transpose,
+  variance,
+  zip
+} from "d3-array";
 
 // export {
 //   entries,
@@ -345,34 +345,34 @@ export {
 //   timeFormatZhCn
 // } from "d3-time-format";
 
-// export {
-//   scaleBand,
-//   scalePoint,
-//   scaleIdentity,
-//   scaleLinear,
-//   scaleLog,
-//   scaleOrdinal,
-//   scaleImplicit,
-//   scalePow,
-//   scaleSqrt,
-//   scaleQuantile,
-//   scaleQuantize,
-//   scaleThreshold,
-//   scaleTime,
-//   scaleUtc,
-//   scaleCategory10,
-//   scaleCategory20b,
-//   scaleCategory20c,
-//   scaleCategory20,
-//   scaleCubehelix,
-//   scaleRainbow,
-//   scaleWarm,
-//   scaleCool,
-//   scaleViridis,
-//   scaleMagma,
-//   scaleInferno,
-//   scalePlasma
-// } from "d3-scale";
+export {
+  scaleBand,
+  scalePoint,
+  scaleIdentity,
+  scaleLinear,
+  scaleLog,
+  scaleOrdinal,
+  scaleImplicit,
+  scalePow,
+  scaleSqrt,
+  scaleQuantile,
+  scaleQuantize,
+  scaleThreshold,
+  scaleTime,
+  scaleUtc,
+  scaleCategory10,
+  scaleCategory20b,
+  scaleCategory20c,
+  scaleCategory20,
+  scaleCubehelix,
+  scaleRainbow,
+  scaleWarm,
+  scaleCool,
+  scaleViridis,
+  scaleMagma,
+  scaleInferno,
+  scalePlasma
+} from "d3-scale";
 
 export {
   mouse,
@@ -391,12 +391,12 @@ export {
   transition
 } from "d3-transition";
 
-// export {
-//   axisTop,
-//   axisRight,
-//   axisBottom,
-//   axisLeft
-// } from "d3-axis";
+export {
+  axisTop,
+  axisRight,
+  axisBottom,
+  axisLeft
+} from "d3-axis";
 
 // export {
 //   voronoi

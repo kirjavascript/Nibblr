@@ -321,8 +321,7 @@ function api(obj) {
 
     app.get('/api/log/freq', (req,res) => {
 
-        obj.log.all('SELECT USER from LOG ORDER BY id DESC LIMIT ?', 
-            req.query.limit,
+        obj.log.all('SELECT USER, count(*) from LOG group by user', 
             (e,r) => {
                 res.json(r);
             })

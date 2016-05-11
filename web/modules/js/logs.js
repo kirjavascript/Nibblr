@@ -16,15 +16,18 @@ let commandColour = {
     nick: '#FA0',
     quit: '#A00'
 }
-window.onscroll = function(ev) {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight-200) {
-        get();
-    }
-};
+// window.onscroll = function(ev) {
+//     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight-200) {
+//         get();
+//     }
+// };
 
 function get() {
 
-    let url = '/api/log?limit=100';
+    let url = '/api/log';
+
+    if (text) url += '?text=' + text;
+    else url += '?limit=100'
     if (id) url += '&id='+id;
 
     d3.json(url, (e,r) => {
@@ -49,10 +52,13 @@ function get() {
             })
             // fade
             .style('opacity', 0)
+            .style('margin-top', '-50px')
             .transition()
-            .duration(900)
-            .delay((d,i) => i*100)
+            .duration(1000)
+            .delay((d,i) => i*40)
             .style('opacity', 1)
+            .style('margin-top', '0px')
+            .on('end')
 
         entry.append('div')
             .classed('user', true)

@@ -2,13 +2,13 @@
 // https://en.wikipedia.org/wiki/List_of_Internet_Relay_Chat_commands
 
 // TODO //
-// limit by x transition graph
+// limit by date transition graph
+// activity by hour
 
-// stats cache?
-
+// add timestamps to memos
 // google2module
 // %20 command input
-// reparse log
+
 // infi scroll log + < & >) <-- position fixed
 // copy command ui
 // favicon

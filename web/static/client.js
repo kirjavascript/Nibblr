@@ -15794,15 +15794,17 @@
 	    nick: '#FA0',
 	    quit: '#A00'
 	};
-	window.onscroll = function (ev) {
-	    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-	        get();
-	    }
-	};
+	// window.onscroll = function(ev) {
+	//     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight-200) {
+	//         get();
+	//     }
+	// };
 
 	function get() {
 
-	    var url = '/api/log?limit=100';
+	    var url = '/api/log';
+
+	    if (text) url += '?text=' + text;else url += '?limit=100';
 	    if (id) url += '&id=' + id;
 
 	    d3.json(url, function (e, r) {
@@ -15819,9 +15821,9 @@
 	            id = d.id;
 	        })
 	        // fade
-	        .style('opacity', 0).transition().duration(900).delay(function (d, i) {
-	            return i * 100;
-	        }).style('opacity', 1);
+	        .style('opacity', 0).style('margin-top', '-50px').transition().duration(1000).delay(function (d, i) {
+	            return i * 40;
+	        }).style('opacity', 1).style('margin-top', '0px').on('end');
 
 	        entry.append('div').classed('user', true).html(function (d) {
 	            return d.command.toLowerCase() == 'privmsg' ? '&lt;' + d.user + '&gt;' : d.user;

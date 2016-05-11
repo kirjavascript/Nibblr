@@ -39,7 +39,7 @@ module.exports = function(obj) {
 
     app.use('/', express.static('web/static'))
 
-    app.get('/', (req,res) => {
+    app.get(['/', '/channel'], (req,res) => {
         res.render('livechat', conf({config}, req))
     })    
 
@@ -103,8 +103,11 @@ function site(obj) {
         }
     })
 
-    app.get('/logs', (req,res) => {
-        res.render('logs', conf({}, req))
+    app.get(['/logs/:text', '/logs'], (req,res) => {
+
+        res.render('logs', conf({
+            text:req.params.text
+        }, req))
     })
 
     app.get('/stats', (req,res) => {
@@ -299,10 +302,16 @@ function api(obj) {
     // log 
 
 
-
     app.get('/api/log', (req,res) => {
 
-        if (req.query.id) {
+        if (req.query.text) {
+            obj.log.all('SELECT * from LOG WHERE message like ? ORDER BY id DESC', 
+                [`%${req.query.text}%`],
+                (e,r) => {
+                    res.json(r);
+                })
+        }
+        else if (req.query.id) {
             obj.log.all('SELECT * from LOG WHERE id < ? ORDER BY id DESC LIMIT ?', 
                 [req.query.id, req.query.limit],
                 (e,r) => {

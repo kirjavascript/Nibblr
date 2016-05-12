@@ -32,7 +32,6 @@ function get() {
 
     d3.json(url, (e,r) => {
 
-        console.log(r);
         let entry = data.selectAll('.entry')
             .data(r, d => d.id)
             .enter()
@@ -78,8 +77,6 @@ function get() {
 
 
         entry.append('hr')
-
-        console.log(id);
 
     })
 }

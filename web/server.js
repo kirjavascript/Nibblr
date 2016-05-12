@@ -98,7 +98,7 @@ function site(obj) {
             }, req))
         }
         else {
-            res.render('about', conf({}, req))
+            res.render('livechat', conf({}, req))
         }
     })
 

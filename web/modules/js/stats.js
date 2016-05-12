@@ -1,10 +1,10 @@
 import * as d3 from './d3';
 
-let stats = d3.select('.stats');
+let linecount = d3.select('.linecount');
 
 let id = null;
 
-if (!stats.empty()) {
+if (!linecount.empty()) {
 
     d3.json('/api/log/freq', (e,data) => {
 

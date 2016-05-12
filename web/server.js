@@ -6,6 +6,8 @@ var Markdown = require('markdown-to-html').Markdown;
 var favicon = require('serve-favicon');
 var app = express();
 
+var ejs = require('ejs'); ejs.open = '{{'; ejs.close = '}}';
+
 var config = require('../config.json');
 var socket = require('./socket');
     
@@ -51,6 +53,7 @@ function conf(extra = {}, req) {
     let obj = {
         admin: session.admin ? session.admin : false,
         secretKey: session.admin ? `'${config.webInterface.secretKey}'` : false,
+        delimiter: '?'
     }
 
     return Object.assign(obj, extra);

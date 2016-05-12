@@ -27,8 +27,6 @@
 // command use
 // msg qty
 
-// set indexing
-
 
 // add Colourpicker/API info (write()) to nibblr commands
 // track nick list
@@ -38,7 +36,7 @@
 // event backend
 // about -> github iframe
 
-// convert modules to data.db
+// convert modules to data.db / move events to log
 
 // rss("item", "description", 3)
 

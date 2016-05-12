@@ -4,11 +4,11 @@
 </div>
 <div class="channel"></div>
     
-{{#admin}}
+<% if(admin) { %>
 <div class="speak">
     <input class="message" placeholder="type message...">
     <button class="send">Send</button>
 </div>
-{{/admin}}
+<% } %>
 
 <div class="viewers"></div>

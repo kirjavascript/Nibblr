@@ -8,8 +8,8 @@
     <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 </head>
 <script>
-    var secretKey = {{{ secretKey }}};
-    var admin = {{{ admin }}};
+    var secretKey = <%- secretKey %>;
+    var admin = <%- admin %>;
 </script>
 
     <body>
@@ -21,17 +21,17 @@
                     <a href="/logs">logs</a> /
                     <a href="/stats">stats</a> /
                     <a href="/about">about</a>
-                    {{#admin}} /
+                    <% if (admin) { %>
                         <a href="/config">config</a> /
                         <a href="#" id="logout">logout</a>
-                    {{/admin}}
+                    <% } %>
                 </div>
 
-                {{^admin}}
+                <% if (!admin) { %>
                     <div class="auth clear">
                         <input type="password" id="password" placeholder="password..." /><a href="#" id="login">admin login</a>
                     </div>
-                {{/admin}}
+                <% } %>
             </div>
 
             <pre class="logo">
@@ -44,7 +44,7 @@
 
         <div class="clear"></div>
 
-        {{{yield}}}
+        <%- body %>
 
         <script src="/client.js"></script>
     </body>

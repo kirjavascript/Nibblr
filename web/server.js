@@ -14,10 +14,9 @@ module.exports = function(obj) {
 
     // config
 
-    var server = app.engine('html', require('hogan-express'))
-            .set('view engine', 'html')
+    var server = app.set('view engine', 'ejs')
+            .use(require('express-ejs-layouts'))
             .set('views', __dirname + '/templates')
-            .set('layout', 'layout')
             .use(favicon('web/static/favicon.ico'))
             .use(session({
                 secret: config.webInterface.secretKey,
@@ -40,7 +39,7 @@ module.exports = function(obj) {
     app.use('/', express.static('web/static'))
 
     app.get(['/', '/channel'], (req,res) => {
-        res.render('livechat', conf({config}, req))
+        res.render('livechat', conf({}, req))
     })    
 
 }

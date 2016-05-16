@@ -4,6 +4,7 @@
 // TODO //
 // limit by date transition graph
 // activity by hour
+// markov if command not found / randomly
 
 // add timestamps to memos
 // google2module
@@ -21,7 +22,6 @@
 
 // log show x at a time
 
-// logging, stats
 // log / stats / quotes /~speak
 // fulltext indexing on log
 // command use
@@ -163,7 +163,7 @@ function schedule() {
 
                 if(Date.create(d.timestamp).isBefore('now')) {
                     db.run('DELETE FROM events WHERE i = ?', d.i);
-                    client.say(config.channel, d.user+ ": " + irc.colors.wrap('light_magenta', d.message));
+                    client.say(config.channel, d.user+ " ➜ " + irc.colors.wrap('light_magenta', d.message));
                 }
 
             })
@@ -405,7 +405,7 @@ client.addListener("message", function(from, to, text, message) {
                     if(err) return client.say(to, irc.colors.wrap('light_red', err));
 
                     res.links.forEach(d => {
-                        client.say(to, irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('yellow', d.title))
+                        client.say(to, irc.colors.wrap('light_blue','▶ ') + irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('yellow', d.title))
                     })
                 })
 
@@ -551,9 +551,9 @@ client.addListener("message", function(from, to, text, message) {
                 client.say(to, irc.colors.wrap('light_red', 'Error: Invalid Date'));
             }
             else {
-                var resp = "Reminder set for ";
+                var resp = "▶ Reminder set for ";
 
-                resp += when.full();
+                resp += when.full() + ' ◀';
 
                 db.run("INSERT INTO events(timestamp,type,user,message) VALUES (?,?,?,?)", [
                     when.toISOString(),
@@ -588,13 +588,15 @@ client.addListener("message", function(from, to, text, message) {
                 client.say(to, irc.colors.wrap('light_red', 'Error: Invalid Date'));
             }
             else if(user.length) {
-                var resp = "Saved message for ";
+                var resp = "▶ Saved message for ";
 
                 resp += user;
 
                 if(when.isAfter('now')) {
                     resp += " delayed until " + when.full()
                 }
+
+                resp += ' ◀';
 
                 db.run("INSERT INTO events(timestamp,type,user,target,message) VALUES (?,?,?,?,?)", [
                     when.toISOString(),
@@ -761,7 +763,11 @@ client.addListener("message", function(from, to, text, message) {
 
                     if(title && title[1]) {
 
-                        var data = "Title: " + entities.decode(title[1]);
+
+                        var data = 
+                            irc.colors.wrap('light_blue', '▂▃▅▇█▓▒░ ') +
+                            "Title: " + entities.decode(title[1]) +
+                            irc.colors.wrap('light_blue', ' ░▒▓█▇▅▃▂');
 
                         client.say(to, irc.colors.wrap('light_cyan', data));
 

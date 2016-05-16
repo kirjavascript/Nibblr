@@ -6,8 +6,6 @@ var Markdown = require('markdown-to-html').Markdown;
 var favicon = require('serve-favicon');
 var app = express();
 
-var ejs = require('ejs'); ejs.open = '{{'; ejs.close = '}}';
-
 var config = require('../config.json');
 var socket = require('./socket');
     

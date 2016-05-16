@@ -4,11 +4,9 @@
     "username": "Nibblr",
     "password": "",
     "logging": {
-        "enabled": true,
         "filename": "log.db"
     },
     "webInterface": {
-        "enabled": true,
         "port": 8888,
         "password": "changeme",
         "secretKey": "changeme"

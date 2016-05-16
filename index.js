@@ -2,6 +2,9 @@
 // https://en.wikipedia.org/wiki/List_of_Internet_Relay_Chat_commands
 
 // TODO //
+// rewrite colours to just use c
+// ~log(lines)
+
 // limit by date transition graph
 // activity by hour
 // markov if command not found / randomly
@@ -59,12 +62,12 @@ catch (e) {
 }   
 
 // requires //
-
 require('sugar-date');
 var fs = require('fs');
 var irc = require('irc');
 var atob = require('atob');
 var urban = require('urban');
+var c = require('irc-colors');
 var google = require('google');
 var request = require('request');
 var tortuga = require('tortuga');
@@ -90,11 +93,13 @@ irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400
 // db //
 
 var sqlite3 = require("sqlite3");
-var log, db = new sqlite3.Database('data.db');
+var db = new sqlite3.Database('data.db');
+var log = new sqlite3.Database(config.logging.filename);
 
 // sandbox //
 
 var context = {
+    Date: Date, // Sugarjs
     loopProtect: loopProtect,
     html2txt: (str, lines) => {
         if (lines) return html2txt.fromString(str).split("\n").splice(0,lines).join("\n");
@@ -103,6 +108,7 @@ var context = {
     br2n: str => str.replace(/<br ?\/?>/g, "\n"),
     striptags: str => str.replace(/<(?:.|\n)*?>/gm, ''),
     data: {},
+    c: c,
     colour: (a,b) => b.split('\n').map(d => irc.colors.wrap(a,d)).join("\n"),
     randomcolour: function(str) {
         var colours = ['light_red', 'magenta', 'orange', 'yellow', 'light_green', 'cyan', 'light_cyan', 'light_blue', 'light_magenta', 'light_gray'];
@@ -139,15 +145,10 @@ var context = {
 // init //
 
 function init() {
-    if(config.logging.enabled) {
-        log = new sqlite3.Database(config.logging.filename);
-        var options = {client, db:log}
-        logger(options);
-    }
-    if(config.webInterface.enabled) {
-        var options = {client, db, log}
-        webInterface(options);
-    }
+    
+
+    logger({client, db:log});
+    webInterface({client, db, log});
 
     schedule();
 }
@@ -613,7 +614,7 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
-    else if (config.logging.enabled && text.indexOf('~seen ') == 0) {
+    else if (text.indexOf('~seen ') == 0) {
 
         try {
             var who = text.substring(6);
@@ -769,7 +770,7 @@ client.addListener("message", function(from, to, text, message) {
                             "Title: " + entities.decode(title[1]) +
                             irc.colors.wrap('light_blue', ' ░▒▓█▇▅▃▂');
 
-                        client.say(to, irc.colors.wrap('light_cyan', data));
+                        client.say(to, data);
 
                     }
 

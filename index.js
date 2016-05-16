@@ -5,7 +5,6 @@
 // rewrite colours to just use c
 // ~log(lines)
 // 1 line ascii
-// ~commands.bum colour('orange', '(‿')+colour('light_red','ˠ')+colour('orange','‿)')
 
 // limit by date transition graph
 // activity by hour
@@ -542,16 +541,32 @@ client.addListener("message", function(from, to, text, message) {
     else if (text.indexOf('~log') == 0) {
 
         var rgxp = /~log\((.*?)\) (.*)/.exec(text);
+        var rgxp2 = /~log (.*)/.exec(text);
 
         if (rgxp && rgxp[1] && rgxp[2]) {
             var lines = rgxp[1];
             var srch = rgxp[2];
 
+            log.all('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC LIMIT ?', 
+                [`%${srch}%`, lines],
+                (e,r) => {
 
-                //client.say(to, );
+                    r.forEach(d => {
+                        var msg = c.underline(d.time) + ' <'+d.user+'> '+d.message;
+                        client.say(to, msg);
+                    })
+                })
+        }
+        else if (rgxp2 && rgxp2[1]) {
+            log.get('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC', 
+                `%${rgxp2[1]}%`,
+                (e,r) => {
+                    var msg = c.underline(r.time) + ' <'+r.user+'> '+r.message;
+                    client.say(to, msg);
+                })
         }
         else {
-            client.say(to, irc.colors.wrap('light_red', 'Syntax: ~log(lines) search term'));
+            client.say(to, irc.colors.wrap('light_red', 'Syntax: ~log search term OR ~log(qty) search term'));
         }
 
     }
@@ -688,7 +703,7 @@ client.addListener("message", function(from, to, text, message) {
 
             try {
 
-                var response = "~eval ~commands.[name] ~seen ~remind(when) ~memo(user [,when]) ~reset ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~" + r.map(d => d.name).join(" ~");
+                var response = "~eval ~commands.[name] ~seen ~remind ~memo ~log ~reset ~define ~example ~imgur ~reddit ~google ~torrent ~youtube ~pornhub ~drug ~weather ~" + r.map(d => d.name).join(" ~");
 
                 client.say(to, response);
             }

@@ -4,6 +4,8 @@
 // TODO //
 // rewrite colours to just use c
 // ~log(lines)
+// 1 line ascii
+// ~commands.bum colour('orange', '(‿')+colour('light_red','ˠ')+colour('orange','‿)')
 
 // limit by date transition graph
 // activity by hour
@@ -93,8 +95,8 @@ irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400
 // db //
 
 var sqlite3 = require("sqlite3");
-var db = new sqlite3.Database('data.db');
-var log = new sqlite3.Database(config.logging.filename);
+var db = new sqlite3.Database(config.commands);
+var log = new sqlite3.Database(config.logging);
 
 // sandbox //
 
@@ -537,6 +539,24 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
+    else if (text.indexOf('~log') == 0) {
+
+        var rgxp = /~log\((.*?)\) (.*)/.exec(text);
+
+        if (rgxp && rgxp[1] && rgxp[2]) {
+            var lines = rgxp[1];
+            var srch = rgxp[2];
+
+
+                //client.say(to, );
+        }
+        else {
+            client.say(to, irc.colors.wrap('light_red', 'Syntax: ~log(lines) search term'));
+        }
+
+    }
+
+
     else if (text.indexOf('~remind') == 0) {
 
         var rgxp = /~remind\((.*?)\) (.*)/.exec(text);
@@ -565,6 +585,9 @@ client.addListener("message", function(from, to, text, message) {
 
                 client.say(to, irc.colors.wrap('cyan', resp));
             }
+        }
+        else {
+            client.say(to, irc.colors.wrap('light_red', 'Syntax: ~remind(when) message'));
         }
 
     }
@@ -610,6 +633,9 @@ client.addListener("message", function(from, to, text, message) {
                 client.say(to, irc.colors.wrap('cyan', resp));
             }
 
+        }
+        else {
+            client.say(to, irc.colors.wrap('light_red', 'Syntax: ~memo(who [, when]) message'));
         }
 
     }
@@ -767,7 +793,7 @@ client.addListener("message", function(from, to, text, message) {
 
                         var data = 
                             irc.colors.wrap('light_blue', '▂▃▅▇█▓▒░ ') +
-                            "Title: " + entities.decode(title[1]) +
+                            entities.decode(title[1]) +
                             irc.colors.wrap('light_blue', ' ░▒▓█▇▅▃▂');
 
                         client.say(to, data);

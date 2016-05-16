@@ -3,9 +3,8 @@
     "channel": "#Nibblr",
     "username": "Nibblr",
     "password": "",
-    "logging": {
-        "filename": "log.db"
-    },
+    "commands": "data.db",
+    "logging": "log.db",
     "webInterface": {
         "port": 8888,
         "password": "changeme",

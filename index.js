@@ -560,7 +560,7 @@ client.addListener("message", function(from, to, text, message) {
             log.get('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC',
                 `%${rgxp2[1]}%`,
                 (e,r) => {
-                    if(r.time) {
+                    if(r && r.time) {
                         var msg = c.underline(r.time) + ' <'+r.user+'> '+r.message;
                         client.say(to, msg);
                     }

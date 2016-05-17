@@ -54,13 +54,13 @@
 
 process.env.TZ = 'Europe/London';
 
-try { 
+try {
     var config = require('./config.json');
 }
-catch (e) { 
+catch (e) {
     console.log('config.json missing, see config.json.example');
     process.exit();
-}   
+}
 
 // requires //
 require('sugar-date');
@@ -146,7 +146,7 @@ var context = {
 // init //
 
 function init() {
-    
+
 
     logger({client, db:log});
     webInterface({client, db, log});
@@ -547,22 +547,23 @@ client.addListener("message", function(from, to, text, message) {
             var lines = rgxp[1];
             var srch = rgxp[2];
 
-            log.all('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC LIMIT ?', 
+            log.all('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC LIMIT ?',
                 [`%${srch}%`, lines],
                 (e,r) => {
-
-                    r.forEach(d => {
+                    !e && r.forEach(d => {
                         var msg = c.underline(d.time) + ' <'+d.user+'> '+d.message;
                         client.say(to, msg);
                     })
                 })
         }
         else if (rgxp2 && rgxp2[1]) {
-            log.get('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC', 
+            log.get('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC',
                 `%${rgxp2[1]}%`,
                 (e,r) => {
-                    var msg = c.underline(r.time) + ' <'+r.user+'> '+r.message;
-                    client.say(to, msg);
+                    if(!e) {
+                        var msg = c.underline(r.time) + ' <'+r.user+'> '+r.message;
+                        client.say(to, msg);
+                    }
                 })
         }
         else {
@@ -679,15 +680,15 @@ client.addListener("message", function(from, to, text, message) {
 
     }
 
-    else if (text == '~reset' || text == 'combobreaker') {process.exit();}
+    else if (text == '~reset' || text == '~combobreaker') {process.exit();}
 
     else if (text.indexOf('~eval ') == 0) {
 
         try {
             var resp = safeEval(text.substring(6), context);
 
-            if (resp!==hide) 
-                client.say(to, 
+            if (resp!==hide)
+                client.say(to,
                     typeof resp == "string" ? context.colour("yellow", resp) :
                     typeof resp == "function" ? irc.colors.wrap('light_magenta', resp) :
                     irc.colors.wrap('light_red', resp)
@@ -755,7 +756,7 @@ client.addListener("message", function(from, to, text, message) {
         }
 
     }
-    
+
 
     else if (text[0] == '~') {
 
@@ -806,7 +807,7 @@ client.addListener("message", function(from, to, text, message) {
                     if(title && title[1]) {
 
 
-                        var data = 
+                        var data =
                             irc.colors.wrap('light_blue', '▂▃▅▇█▓▒░ ') +
                             entities.decode(title[1]) +
                             irc.colors.wrap('light_blue', ' ░▒▓█▇▅▃▂');

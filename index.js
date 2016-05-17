@@ -550,7 +550,7 @@ client.addListener("message", function(from, to, text, message) {
             log.all('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC LIMIT ?',
                 [`%${srch}%`, lines],
                 (e,r) => {
-                    r.length && r.forEach(d => {
+                    r && r.forEach(d => {
                         var msg = c.underline(d.time) + ' <'+d.user+'> '+d.message;
                         client.say(to, msg);
                     })
@@ -560,7 +560,7 @@ client.addListener("message", function(from, to, text, message) {
             log.get('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC',
                 `%${rgxp2[1]}%`,
                 (e,r) => {
-                    if(e) {
+                    if(r.time) {
                         var msg = c.underline(r.time) + ' <'+r.user+'> '+r.message;
                         client.say(to, msg);
                     }

@@ -4,3 +4,4 @@ node_modules
 config.json
 8bvlog.db
 8bvdata.db
+npm-debug.log

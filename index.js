@@ -2,14 +2,15 @@
 // https://en.wikipedia.org/wiki/List_of_Internet_Relay_Chat_commands
 
 // TODO //
+// ~view commands @ -> show builtins
 // rewrite colours to just use c
-// ~log(lines)
 // 1 line ascii
 
 // limit by date transition graph
 // activity by hour
 // markov if command not found / randomly
 
+// http://www.df7cb.de/irc/pisg/pisg-month.html
 // add timestamps to memos
 // google2module
 // %20 command input
@@ -678,8 +679,13 @@ client.addListener("message", function(from, to, text, message) {
         catch (e) {client.say(to, irc.colors.wrap('light_red', '¯\\_(ツ)_/¯'))}
 
     }
+    
 
     else if (text == '~reset' || text == 'combobreaker') {process.exit();}
+    else if (~text.indexOf('~nick')) {
+
+        client.send('NICK', text.substring(6));
+    }
 
     else if (text.indexOf('~eval ') == 0) {
 

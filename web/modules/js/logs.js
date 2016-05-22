@@ -57,7 +57,6 @@ function get() {
             .delay((d,i) => i*40)
             .style('opacity', 1)
             .style('margin-top', '0px')
-            .on('end')
 
         entry.append('div')
             .classed('user', true)

@@ -5,6 +5,8 @@ import './config';
 import './logs';
 import './stats';
 
+// reverse module structure and code split
+
 let passEl = d3.select('#password')
     .on('keydown', () => {
         d3.event.keyCode == 13 && login();

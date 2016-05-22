@@ -10,8 +10,8 @@ if (!cloud.empty()) {
         .size([window.innerWidth, 800])
         .words(cloudData)
         .padding(5)
-        //.rotate(() => ~~(Math.random() * 2))
         .font("Impact")
+        .timeInterval(250)
         .fontSize(d => d.size)
         .on("end", draw);
 
@@ -25,13 +25,17 @@ if (!cloud.empty()) {
           .attr("transform", `translate(${layout.size()[0] / 2},${layout.size()[1] / 2})`)
         .selectAll("text")
           .data(words)
-        .enter().append("text")
-          .style("font-size", d => `${d.size}px`)
-          .style("font-family", "Impact")
-          .style("fill", (d, i) => fill(i))
-          .attr("text-anchor", "middle")
-          .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
-          .text(d => d.text);
+        .enter()
+            .append("text")
+              .style("font-size", d => '0px')
+              .style("font-family", "Impact")
+              .style("fill", (d, i) => fill(i))
+              .attr("text-anchor", "middle")
+              .attr("transform", d => `translate(${[d.x, d.y]})rotate(${d.rotate})`)
+              .text(d => d.text)
+              .transition()
+              .duration(1200)
+              .style("font-size", d => `${d.size}px`)
     }
 }
 

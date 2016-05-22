@@ -138,7 +138,7 @@ function site(obj) {
                 })
             }
 
-            let max = freq.sort((a,b) => a.size-b.size).splice(-1000);
+            let max = freq.sort((a,b) => a.size-b.size).splice(-500);
 
             res.render('cloud', conf({
                 freq: JSON.stringify(max)

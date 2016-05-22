@@ -113,6 +113,39 @@ function site(obj) {
     app.get('/stats', (req,res) => {
         res.render('stats', conf({}, req))
     })
+
+    app.get('/cloud', (req,res) => {
+
+        obj.log.all('SELECT message from LOG', (e,r) => {
+
+            let hash = Object.create({});
+
+            for(let i=0;i<r.length;i++) {
+                r[i].message
+                    .split(" ")
+                    .forEach(d => {
+                        if(hash[d]) hash[d]++;
+                        else hash[d] = 1;
+                    })
+            }
+
+            let freq = [];
+
+            for(let word in hash) {
+                freq.push({
+                    text: word,
+                    size: hash[word]
+                })
+            }
+
+            let max = freq.sort((a,b) => a.size-b.size).splice(-1000);
+
+            res.render('cloud', conf({
+                freq: JSON.stringify(max)
+            }, req))
+        });
+
+    })
 }
 
 function checkKey(req) {

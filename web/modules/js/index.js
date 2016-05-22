@@ -4,6 +4,7 @@ import './commands';
 import './config';
 import './logs';
 import './stats';
+import './cloud';
 
 // reverse module structure and code split
 

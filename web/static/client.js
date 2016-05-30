@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(71);
+	module.exports = __webpack_require__(75);
 
 
 /***/ },
@@ -68,7 +68,7 @@
 
 	__webpack_require__(70);
 
-	__webpack_require__(75);
+	__webpack_require__(72);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -15854,66 +15854,86 @@
 
 	var d3 = _interopRequireWildcard(_d);
 
+	var _linecount = __webpack_require__(71);
+
+	var _linecount2 = _interopRequireDefault(_linecount);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	var linecount = d3.select('.linecount');
+	var stats = d3.select('.stats');
 
-	var id = null;
+	if (!stats.empty()) {
 
-	if (!linecount.empty()) {
+	    d3.json('/api/stats', function (e, data) {
 
-	    d3.json('/api/log/freq', function (e, data) {
+	        (0, _linecount2.default)(data.linecount);
 
-	        data = data.map(function (d) {
-	            return { user: d.user, count: d['count(*)'] };
-	        });
-
-	        var margin = { top: 20, right: 20, bottom: 60, left: 40 },
-	            width = window.innerWidth - margin.left - margin.right,
-	            height = 800 - margin.top - margin.bottom;
-
-	        var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	        var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
-	            return d.count;
-	        })]).range([height, 0]);
-
-	        var xScale = d3.scaleBand().range([0, width]).domain(data.map(function (d) {
-	            return d.user;
-	        }));
-
-	        var yAxis = d3.axisLeft(yScale).ticks(10);
-	        var xAxis = d3.axisBottom(xScale);
-
-	        svg.append("g").attr("class", "axis").call(yAxis);
-
-	        svg.append("g").attr("class", "axis").call(xAxis).attr("transform", 'translate(0,' + height + ')').selectAll('text').attr("dx", "-3em").attr("dy", ".5em").attr('transform', function (d) {
-	            return 'rotate(-45)';
-	        });
-
-	        svg.selectAll('.bar').data(data).enter().append('rect').classed('bar', 1).attr('x', function (d) {
-	            return xScale(d.user);
-	        }).attr('width', xScale.bandwidth()).attr('height', 0).attr('fill', '#0F0').attr('y', height).transition().duration(500).delay(function (d, i) {
-	            return i * 100;
-	        }).ease(d3.easeElastic).attr('height', function (d) {
-	            return height - yScale(d.count);
-	        }).attr('y', function (d) {
-	            return yScale(d.count);
-	        });
+	        console.log(data);
 	    });
 	}
 
 /***/ },
 /* 71 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	// removed by extract-text-webpack-plugin
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (data) {
+
+	    data = data.map(function (d) {
+	        return { user: d.user, count: d['count(*)'] };
+	    }).reverse();
+
+	    var margin = { top: 20, right: 20, bottom: 60, left: 80 },
+	        width = 900 - margin.left - margin.right,
+	        height = 500 - margin.top - margin.bottom;
+
+	    var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	    var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
+	        return d.count;
+	    })]).range([height, 0]);
+
+	    var xScale = d3.scaleBand().range([0, width]).domain(data.map(function (d) {
+	        return d.user;
+	    }));
+
+	    var yAxis = d3.axisLeft(yScale).ticks(10);
+	    var xAxis = d3.axisBottom(xScale);
+
+	    yAxis.tickSizeInner(-width);
+
+	    svg.append("g").attr("class", "axis").call(yAxis);
+
+	    svg.append("g").attr("class", "axis").call(xAxis).attr("transform", 'translate(0,' + height + ')').selectAll('text').attr("dx", "-3em").attr("dy", ".5em").attr('transform', function (d) {
+	        return 'rotate(-45)';
+	    });
+
+	    svg.selectAll('.bar').data(data).enter().append('rect').classed('bar', 1).attr('x', function (d) {
+	        return xScale(d.user);
+	    }).attr('width', xScale.bandwidth()).attr('height', 0).attr('fill', '#0F0').attr('stroke', 'darkgreen').attr('stroke-width', '2').attr('y', height).transition().duration(200).delay(function (d, i) {
+	        return (Math.random() * 30 | 0) * 20;
+	    }).ease(d3.easeElastic).attr('height', function (d) {
+	        return height - yScale(d.count);
+	    }).attr('y', function (d) {
+	        return yScale(d.count);
+	    });
+	};
+
+	var _d = __webpack_require__(2);
+
+	var d3 = _interopRequireWildcard(_d);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /***/ },
-/* 72 */,
-/* 73 */,
-/* 74 */,
-/* 75 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15922,7 +15942,7 @@
 
 	var d3 = _interopRequireWildcard(_d);
 
-	var _d3Cloud = __webpack_require__(76);
+	var _d3Cloud = __webpack_require__(73);
 
 	var _d3Cloud2 = _interopRequireDefault(_d3Cloud);
 
@@ -15933,39 +15953,39 @@
 	var cloud = d3.select('.wordcloud');
 
 	if (!cloud.empty()) {
-	  (function () {
-	    var draw = function draw(words) {
-	      d3.select("body").append("svg").attr("width", layout.size()[0]).attr("height", layout.size()[1]).append("g").attr("transform", 'translate(' + layout.size()[0] / 2 + ',' + layout.size()[1] / 2 + ')').selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
-	        return '0px';
-	      }).style("font-family", "Impact").style("fill", function (d, i) {
-	        return fill(i);
-	      }).attr("text-anchor", "middle").attr("transform", function (d) {
-	        return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
-	      }).text(function (d) {
-	        return d.text;
-	      }).transition().duration(1200).style("font-size", function (d) {
-	        return d.size + 'px';
-	      });
-	    };
+	    (function () {
+	        var draw = function draw(words) {
+	            d3.select("body").append("svg").attr("width", layout.size()[0]).attr("height", layout.size()[1]).append("g").attr("transform", 'translate(' + layout.size()[0] / 2 + ',' + layout.size()[1] / 2 + ')').selectAll("text").data(words).enter().append("text").style("font-size", function (d) {
+	                return '0px';
+	            }).style("font-family", "Impact").style("fill", function (d, i) {
+	                return fill(i);
+	            }).attr("text-anchor", "middle").attr("transform", function (d) {
+	                return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
+	            }).text(function (d) {
+	                return d.text;
+	            }).transition().duration(1200).style("font-size", function (d) {
+	                return d.size + 'px';
+	            });
+	        };
 
-	    var fill = d3.scaleCategory20();
+	        var fill = d3.scaleCategory20();
 
-	    var layout = (0, _d3Cloud2.default)().size([window.innerWidth, 800]).words(cloudData).padding(5).font("Impact").timeInterval(250).fontSize(function (d) {
-	      return d.size;
-	    }).on("end", draw);
+	        var layout = (0, _d3Cloud2.default)().size([window.innerWidth, 800]).words(cloudData).padding(5).font("Impact").timeInterval(250).fontSize(function (d) {
+	            return d.size;
+	        }).on("end", draw);
 
-	    layout.start();
-	  })();
+	        layout.start();
+	    })();
 	}
 
 /***/ },
-/* 76 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Word cloud layout by Jason Davies, https://www.jasondavies.com/wordcloud/
 	// Algorithm due to Jonathan Feinberg, http://static.mrfeinberg.com/bv_ch03.pdf
 
-	var dispatch = __webpack_require__(77).dispatch;
+	var dispatch = __webpack_require__(74).dispatch;
 
 	var cloudRadians = Math.PI / 180,
 	    cw = 1 << 11 >> 5,
@@ -16364,7 +16384,7 @@
 
 
 /***/ },
-/* 77 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -16471,6 +16491,12 @@
 	  exports.dispatch = dispatch;
 
 	}));
+
+/***/ },
+/* 75 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

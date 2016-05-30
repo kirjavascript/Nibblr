@@ -2,13 +2,13 @@ var fs = require('fs');
 var url = require("url");
 var express = require('express');
 var session = require('express-session');
-var Markdown = require('markdown-to-html').Markdown;
 var favicon = require('serve-favicon');
 var app = express();
 
 var config = require('../config.json');
 var socket = require('./socket');
-    
+
+var d3q = require('d3-queue');
 
 module.exports = function(obj) {
 
@@ -75,16 +75,7 @@ function site(obj) {
     })
 
     app.get('/about', (req,res) => {
-
-        var md = new Markdown();
-        md.bufmax = 2048;
-        var fileName = __dirname + '/../README.md';
-
-        md.render(fileName, {}, function(err) {
-            if (!err) {
-                res.render('about', conf({about:md.html}, req))
-            }
-        });
+        res.render('about', conf({}, req))
     })
 
     app.get('/commands', (req,res) => {
@@ -361,11 +352,32 @@ function api(obj) {
         
     })
 
-    app.get('/api/log/freq', (req,res) => {
+    // stats
 
-        obj.log.all('SELECT USER, count(*) from LOG group by user', 
-            (e,r) => {
-                res.json(r);
+    app.get('/api/stats', (req,res) => {
+
+        // SQLite seems to fuck with promises, so just wrap them in functions
+
+        function freq(callback) {
+            obj.log.all('SELECT USER, count(*) from LOG group by user ORDER by count(*) DESC LIMIT 30',callback)
+        }
+
+        function dump(callback) {
+            obj.log.all('select message from log where time > \'2016-05-30\'', callback);
+        }
+
+        d3q.queue()
+            .defer(freq)
+            .defer(dump)
+            .await((error, linecount, dump) => {
+
+                if(error) return 1;
+
+                res.json({
+                    linecount,
+                    dump
+                });
+
             })
         
     })

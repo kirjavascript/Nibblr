@@ -48,11 +48,9 @@ function getStats(from, to) {
 
     d3.json(url, (e,data) => {
 
-        status.textContent = `(${dayDiff} days)`
+        status.textContent = `(${dayDiff} day${dayDiff>1?'s':''})`
 
         linecount(data.linecount);
-
-        console.log(data);
 
     });
 

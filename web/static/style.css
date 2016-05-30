@@ -231,14 +231,14 @@ hr {
   width: 100%;
   text-align: right; }
 
-.axis {
+.xAxis, .yAxis {
   font-size: 12px;
   stroke: #0E0; }
-  .axis path {
+  .xAxis path, .yAxis path {
     fill: none;
     stroke: #0E0;
     stroke-width: 1px; }
-  .axis line {
+  .xAxis line, .yAxis line {
     shape-rendering: crispEdges;
     stroke: #0E0; }
 

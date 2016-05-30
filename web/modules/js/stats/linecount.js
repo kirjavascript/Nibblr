@@ -1,6 +1,6 @@
 import * as d3 from './../d3';
 
-export default function(data) {
+export default function(data, init) {
 
     data = data.map(d => ({user:d.user,count:d['count(*)']})).reverse()
 
@@ -8,11 +8,20 @@ export default function(data) {
         width = 900 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
-    let svg = d3.select(".linecount").append("svg")
+    let svg = d3.select(".linecount").html('').append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    let xAxisG = svg
+        .append("g")
+        .attr("class", "xAxis")
+        .attr("transform", `translate(0,${height})`);
+
+    let yAxisG = svg
+        .append("g")
+        .attr("class", "yAxis");
 
     let yScale = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.count)])
@@ -27,28 +36,30 @@ export default function(data) {
 
     yAxis.tickSizeInner(-width);
 
-    svg
-        .append("g")
-        .attr("class", "axis")
+    yAxisG
+        .transition()
+        .duration(100)
         .call(yAxis);
 
-    svg
-        .append("g")
-        .attr("class", "axis")
+    xAxisG
+        .transition()
+        .duration(1000)
         .call(xAxis)
-        .attr("transform", `translate(0,${height})`)
-        .selectAll('text')
-        .attr("dx", "-3em")
-        .attr("dy", ".5em")
-        .attr('transform', d => `rotate(-45)`)
+        .on('start', () => {
+            xAxisG
+                .selectAll('text')
+                .attr("dx", "-3em")
+                .attr("dy", ".5em")
+                .attr('transform', d => `rotate(-45)`)
+        })
 
-    svg.selectAll('.bar')
-        .data(data)
+    let bars = svg.selectAll('.bar')
+        .data(data, d => d.user);
+
+    bars
         .enter()
         .append('rect')
         .classed('bar',1)
-        .attr('x', d => xScale(d.user))
-        .attr('width', xScale.bandwidth())
         .attr('height', 0)
         .attr('fill', '#0F0')
         .attr('stroke', 'darkgreen')
@@ -58,6 +69,9 @@ export default function(data) {
         .duration(200)
         .delay((d,i) => ((Math.random()*30)|0)*20)
         .ease(d3.easeElastic)
+        .attr('x', d => xScale(d.user))
+        .attr('width', xScale.bandwidth())
         .attr('height', d => height - yScale(d.count))
         .attr('y', d => yScale(d.count))
 }
+

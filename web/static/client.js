@@ -1557,7 +1557,7 @@
 	  (factory((global.d3_request = global.d3_request || {}),global.d3_collection,global.d3_dispatch,global.d3_dsv));
 	}(this, function (exports,d3Collection,d3Dispatch,d3Dsv) { 'use strict';
 
-	  var version = "0.4.6";
+	  var version = "0.4.7";
 
 	  function request(url, callback) {
 	    var request,
@@ -1771,6 +1771,8 @@
 	  (factory((global.d3_collection = global.d3_collection || {})));
 	}(this, function (exports) { 'use strict';
 
+	  var version = "0.2.0";
+
 	  var prefix = "$";
 
 	  function Map() {}
@@ -1853,8 +1855,8 @@
 	        nest;
 
 	    function apply(array, depth, createResult, setResult) {
-	      if (depth >= keys.length) return rollup
-	          ? rollup(array) : (sortValues
+	      if (depth >= keys.length) return rollup != null
+	          ? rollup(array) : (sortValues != null
 	          ? array.sort(sortValues)
 	          : array);
 
@@ -1883,18 +1885,11 @@
 	    }
 
 	    function entries(map, depth) {
-	      if (depth >= keys.length) return map;
-
-	      var array = [],
-	          sortKey = sortKeys[depth++];
-
-	      map.each(function(value, key) {
-	        array.push({key: key, values: entries(value, depth)});
-	      });
-
-	      return sortKey
-	          ? array.sort(function(a, b) { return sortKey(a.key, b.key); })
-	          : array;
+	      if (++depth > keys.length) return map;
+	      var array, sortKey = sortKeys[depth - 1];
+	      if (rollup != null && depth >= keys.length) array = map.entries();
+	      else array = [], map.each(function(v, k) { array.push({key: k, values: entries(v, depth)}); });
+	      return sortKey != null ? array.sort(function(a, b) { return sortKey(a.key, b.key); }) : array;
 	    }
 
 	    return nest = {
@@ -1977,8 +1972,6 @@
 	    for (var key in map) entries.push({key: key, value: map[key]});
 	    return entries;
 	  }
-
-	  var version = "0.1.2";
 
 	  exports.version = version;
 	  exports.nest = nest;
@@ -2273,7 +2266,7 @@
 	  (factory((global.d3_scale = global.d3_scale || {}),global.d3_array,global.d3_collection,global.d3_interpolate,global.d3_format,global.d3_time,global.d3_time_format,global.d3_color));
 	}(this, function (exports,d3Array,d3Collection,d3Interpolate,d3Format,d3Time,d3TimeFormat,d3Color) { 'use strict';
 
-	  var version = "0.7.0";
+	  var version = "0.7.2";
 
 	  var array = Array.prototype;
 
@@ -2499,22 +2492,22 @@
 	        range = unit,
 	        interpolate = d3Interpolate.interpolate,
 	        clamp = false,
+	        piecewise,
 	        output,
 	        input;
 
 	    function rescale() {
-	      var map = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
-	      output = map(domain, range, clamp ? deinterpolateClamp(deinterpolate$$) : deinterpolate$$, interpolate);
-	      input = map(range, domain, deinterpolate, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate);
+	      piecewise = Math.min(domain.length, range.length) > 2 ? polymap : bimap;
+	      output = input = null;
 	      return scale;
 	    }
 
 	    function scale(x) {
-	      return output(+x);
+	      return (output || (output = piecewise(domain, range, clamp ? deinterpolateClamp(deinterpolate$$) : deinterpolate$$, interpolate)))(+x);
 	    }
 
 	    scale.invert = function(y) {
-	      return input(+y);
+	      return (input || (input = piecewise(range, domain, deinterpolate, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
 	    };
 
 	    scale.domain = function(_) {
@@ -3194,6 +3187,7 @@
 	  exports.scaleMagma = magma;
 	  exports.scaleInferno = inferno;
 	  exports.scalePlasma = plasma;
+	  exports.scaleSequential = sequential;
 
 	}));
 
@@ -3206,6 +3200,8 @@
 	  typeof define === 'function' && define.amd ? define(['exports', 'd3-color'], factory) :
 	  (factory((global.d3_interpolate = global.d3_interpolate || {}),global.d3_color));
 	}(this, function (exports,d3Color) { 'use strict';
+
+	  var version = "0.8.0";
 
 	  function constant(x) {
 	    return function() {
@@ -3263,21 +3259,18 @@
 	    return interpolateRgb;
 	  })(1);
 
-	  // TODO sparse arrays?
 	  function array(a, b) {
-	    var x = [],
-	        c = [],
-	        na = a ? a.length : 0,
-	        nb = b ? b.length : 0,
-	        n0 = Math.min(na, nb),
+	    var nb = b ? b.length : 0,
+	        na = a ? Math.min(nb, a.length) : 0,
+	        x = new Array(nb),
+	        c = new Array(nb),
 	        i;
 
-	    for (i = 0; i < n0; ++i) x.push(value(a[i], b[i]));
-	    for (; i < na; ++i) c[i] = a[i];
+	    for (i = 0; i < na; ++i) x[i] = value(a[i], b[i]);
 	    for (; i < nb; ++i) c[i] = b[i];
 
 	    return function(t) {
-	      for (i = 0; i < n0; ++i) c[i] = x[i](t);
+	      for (i = 0; i < na; ++i) c[i] = x[i](t);
 	      return c;
 	    };
 	  }
@@ -3296,16 +3289,10 @@
 	    if (a === null || typeof a !== "object") a = {};
 	    if (b === null || typeof b !== "object") b = {};
 
-	    for (k in a) {
-	      if (k in b) {
+	    for (k in b) {
+	      if (k in a) {
 	        i[k] = value(a[k], b[k]);
 	      } else {
-	        c[k] = a[k];
-	      }
-	    }
-
-	    for (k in b) {
-	      if (!(k in a)) {
 	        c[k] = b[k];
 	      }
 	    }
@@ -3688,8 +3675,6 @@
 
 	    return interpolateCubehelixLong;
 	  })(1);
-
-	  var version = "0.7.0";
 
 	  exports.version = version;
 	  exports.interpolate = value;
@@ -5943,7 +5928,7 @@
 	  (factory((global.d3_selection = global.d3_selection || {})));
 	}(this, function (exports) { 'use strict';
 
-	  var version = "0.7.1";
+	  var version = "0.7.3";
 
 	  var xhtml = "http://www.w3.org/1999/xhtml";
 
@@ -6104,6 +6089,17 @@
 	    return this;
 	  }
 
+	  function customEvent(event1, listener, that, args) {
+	    var event0 = exports.event;
+	    event1.sourceEvent = exports.event;
+	    exports.event = event1;
+	    try {
+	      return listener.apply(that, args);
+	    } finally {
+	      exports.event = event0;
+	    }
+	  }
+
 	  function sourceEvent() {
 	    var current = exports.event, source;
 	    while (source = current.sourceEvent) current = source;
@@ -6124,8 +6120,8 @@
 	    return [event.clientX - rect.left - node.clientLeft, event.clientY - rect.top - node.clientTop];
 	  }
 
-	  function mouse(node, event) {
-	    if (event == null) event = sourceEvent();
+	  function mouse(node) {
+	    var event = sourceEvent();
 	    if (event.changedTouches) event = event.changedTouches[0];
 	    return point(node, event);
 	  }
@@ -6230,43 +6226,35 @@
 	        keyValue;
 
 	    // Compute the key for each node.
-	    // If multiple nodes have the same key, only the first one counts.
+	    // If multiple nodes have the same key, the duplicates are added to exit.
 	    for (i = 0; i < groupLength; ++i) {
 	      if (node = group[i]) {
 	        keyValues[i] = keyValue = keyPrefix + key.call(node, node.__data__, i, group);
-	        if (!nodeByKeyValue[keyValue]) {
+	        if (keyValue in nodeByKeyValue) {
+	          exit[i] = node;
+	        } else {
 	          nodeByKeyValue[keyValue] = node;
 	        }
 	      }
 	    }
 
 	    // Compute the key for each datum.
-	    // If multiple data have the same key, only the first one counts.
+	    // If there a node associated with this key, join and add it to update.
+	    // If there is not (or the key is a duplicate), add it to enter.
 	    for (i = 0; i < dataLength; ++i) {
 	      keyValue = keyPrefix + key.call(parent, data[i], i, data);
-
-	      // Is there a node associated with this key?
-	      // If not, this datum is added to the enter selection.
-	      if (!(node = nodeByKeyValue[keyValue])) {
-	        enter[i] = new EnterNode(parent, data[i]);
-	      }
-
-	      // Did we already bind a node using this key? (Or is a duplicate?)
-	      // If unique, the node and datum are joined in the update selection.
-	      // Otherwise, the datum is ignored, neither entering nor exiting.
-	      else if (node !== true) {
+	      if (node = nodeByKeyValue[keyValue]) {
 	        update[i] = node;
 	        node.__data__ = data[i];
+	        nodeByKeyValue[keyValue] = null;
+	      } else {
+	        enter[i] = new EnterNode(parent, data[i]);
 	      }
-
-	      // Record that we consumed this key, either to enter or update.
-	      nodeByKeyValue[keyValue] = true;
 	    }
 
-	    // Take any remaining nodes that were not bound to data,
-	    // and place them in the exit selection.
+	    // Add any remaining nodes that were not bound to data to exit.
 	    for (i = 0; i < groupLength; ++i) {
-	      if ((node = group[i]) && (nodeByKeyValue[keyValues[i]] !== true)) {
+	      if ((node = group[i]) && (nodeByKeyValue[keyValues[i]] === node)) {
 	        exit[i] = node;
 	      }
 	    }
@@ -6695,7 +6683,7 @@
 	  }
 
 	  function raise() {
-	    this.parentNode.appendChild(this);
+	    if (this.nextSibling) this.parentNode.appendChild(this);
 	  }
 
 	  function selection_raise() {
@@ -6703,7 +6691,7 @@
 	  }
 
 	  function lower() {
-	    this.parentNode.insertBefore(this, this.parentNode.firstChild);
+	    if (this.previousSibling) this.parentNode.insertBefore(this, this.parentNode.firstChild);
 	  }
 
 	  function selection_lower() {
@@ -6875,6 +6863,7 @@
 	  exports.touch = touch;
 	  exports.touches = touches;
 	  exports.window = defaultView;
+	  exports.customEvent = customEvent;
 
 	}));
 
@@ -6888,7 +6877,7 @@
 	  (factory((global.d3_transition = global.d3_transition || {}),global.d3_selection,global.d3_dispatch,global.d3_timer,global.d3_interpolate,global.d3_color,global.d3_ease));
 	}(this, function (exports,d3Selection,d3Dispatch,d3Timer,d3Interpolate,d3Color,d3Ease) { 'use strict';
 
-	  var version = "0.2.8";
+	  var version = "0.2.10";
 
 	  var emptyOn = d3Dispatch.dispatch("start", "end", "interrupt");
 	  var emptyTween = [];
@@ -7028,27 +7017,32 @@
 	    }
 	  }
 
-	  function selection_interrupt(name) {
+	  function interrupt(node, name) {
+	    var schedules = node.__transition,
+	        schedule,
+	        active,
+	        empty = true,
+	        i;
+
+	    if (!schedules) return;
+
 	    name = name == null ? null : name + "";
+
+	    for (i in schedules) {
+	      if ((schedule = schedules[i]).name !== name) { empty = false; continue; }
+	      active = schedule.state === STARTED;
+	      schedule.state = ENDED;
+	      schedule.timer.stop();
+	      if (active) schedule.on.call("interrupt", node, node.__data__, schedule.index, schedule.group);
+	      delete schedules[i];
+	    }
+
+	    if (empty) delete node.__transition;
+	  }
+
+	  function selection_interrupt(name) {
 	    return this.each(function() {
-	      var schedules = this.__transition,
-	          schedule,
-	          active,
-	          empty = true,
-	          i;
-
-	      if (!schedules) return;
-
-	      for (i in schedules) {
-	        if ((schedule = schedules[i]).name !== name) { empty = false; continue; }
-	        active = schedule.state === STARTED;
-	        schedule.state = ENDED;
-	        schedule.timer.stop();
-	        if (active) schedule.on.call("interrupt", this, this.__data__, schedule.index, schedule.group);
-	        delete schedules[i];
-	      }
-
-	      if (empty) delete this.__transition;
+	      interrupt(this, name);
 	    });
 	  }
 
@@ -7648,6 +7642,7 @@
 	  exports.version = version;
 	  exports.transition = transition;
 	  exports.active = active;
+	  exports.interrupt = interrupt;
 
 	}));
 
@@ -7661,7 +7656,7 @@
 	  (factory((global.d3_timer = global.d3_timer || {})));
 	}(this, function (exports) { 'use strict';
 
-	  var version = "0.4.3";
+	  var version = "0.4.4";
 
 	  var frame = 0;
 	  var timeout = 0;
@@ -7673,7 +7668,9 @@
 	  var clockNow = 0;
 	  var clockSkew = 0;
 	  var clock = typeof performance === "object" ? performance : Date;
-	  var setFrame = typeof requestAnimationFrame === "function" ? requestAnimationFrame : function(callback) { return setTimeout(callback, 17); };
+	  var setFrame = typeof requestAnimationFrame === "function"
+	          ? (clock === Date ? function(f) { requestAnimationFrame(function() { f(clock.now()); }); } : requestAnimationFrame)
+	          : function(f) { setTimeout(f, 17); };
 	  function now() {
 	    return clockNow || (setFrame(clearNow), clockNow = clock.now() + clockSkew);
 	  }
@@ -7813,7 +7810,7 @@
 	  (factory((global.d3_axis = global.d3_axis || {})));
 	}(this, function (exports) { 'use strict';
 
-	  var version = "0.3.1";
+	  var version = "0.3.2";
 
 	  var slice = Array.prototype.slice;
 
@@ -7857,8 +7854,8 @@
 	          spacing = Math.max(tickSizeInner, 0) + tickPadding,
 	          transform = orient === top || orient === bottom ? translateX : translateY,
 	          range = scale.range(),
-	          range0 = range[0],
-	          range1 = range[range.length - 1],
+	          range0 = range[0] + 0.5,
+	          range1 = range[range.length - 1] + 0.5,
 	          position = (scale.bandwidth ? center : identity)(scale.copy()),
 	          selection = context.selection ? context.selection() : context,
 	          path = selection.selectAll(".domain").data([null]),
@@ -7866,54 +7863,67 @@
 	          tickExit = tick.exit(),
 	          tickEnter = tick.enter().append("g", ".domain").attr("class", "tick"),
 	          line = tick.select("line"),
-	          text = tick.select("text");
+	          text = tick.select("text"),
+	          k = orient === top || orient === left ? -1 : 1,
+	          x, y = orient === left || orient === right ? (x = "x", "y") : (x = "y", "x");
 
-	      path = path.merge(path.enter().append("path").attr("class", "domain"));
+	      path = path.merge(path.enter().append("path")
+	          .attr("class", "domain")
+	          .attr("stroke", "#000"));
+
 	      tick = tick.merge(tickEnter);
-	      line = line.merge(tickEnter.append("line"));
-	      text = text.merge(tickEnter.append("text"));
+
+	      line = line.merge(tickEnter.append("line")
+	          .attr("stroke", "#000")
+	          .attr(x + "2", k * tickSizeInner));
+
+	      text = text.merge(tickEnter.append("text")
+	          .attr("fill", "#000")
+	          .attr(x, k * spacing));
 
 	      if (context !== selection) {
 	        path = path.transition(context);
 	        tick = tick.transition(context);
-	        tickExit = tickExit.transition(context).style("opacity", epsilon).attr("transform", function(d) { return transform(position, this.parentNode.__axis || position, d); });
-	        tickEnter.style("opacity", epsilon).attr("transform", function(d) { return transform(this.parentNode.__axis || position, position, d); });
 	        line = line.transition(context);
 	        text = text.transition(context);
+
+	        tickExit = tickExit.transition(context)
+	            .attr("opacity", epsilon)
+	            .attr("transform", function(d) { return transform(position, this.parentNode.__axis || position, d); });
+
+	        tickEnter
+	            .attr("opacity", epsilon)
+	            .attr("transform", function(d) { return transform(this.parentNode.__axis || position, position, d); });
 	      }
 
-	      tick.style("opacity", 1).attr("transform", function(d) { return transform(position, position, d); });
 	      tickExit.remove();
-	      text.text(format);
 
-	      switch (orient) {
-	        case top: {
-	          path.attr("d", "M" + range0 + "," + -tickSizeOuter + "V0H" + range1 + "V" + -tickSizeOuter);
-	          line.attr("x2", 0).attr("y2", -tickSizeInner);
-	          text.attr("x", 0).attr("y", -spacing).attr("dy", "0em").style("text-anchor", "middle");
-	          break;
-	        }
-	        case right: {
-	          path.attr("d", "M" + tickSizeOuter + "," + range0 + "H0V" + range1 + "H" + tickSizeOuter);
-	          line.attr("y2", 0).attr("x2", tickSizeInner);
-	          text.attr("y", 0).attr("x", spacing).attr("dy", ".32em").style("text-anchor", "start");
-	          break;
-	        }
-	        case bottom: {
-	          path.attr("d", "M" + range0 + "," + tickSizeOuter + "V0H" + range1 + "V" + tickSizeOuter);
-	          line.attr("x2", 0).attr("y2", tickSizeInner);
-	          text.attr("x", 0).attr("y", spacing).attr("dy", ".71em").style("text-anchor", "middle");
-	          break;
-	        }
-	        case left: {
-	          path.attr("d", "M" + -tickSizeOuter + "," + range0 + "H0V" + range1 + "H" + -tickSizeOuter);
-	          line.attr("y2", 0).attr("x2", -tickSizeInner);
-	          text.attr("y", 0).attr("x", -spacing).attr("dy", ".32em").style("text-anchor", "end");
-	          break;
-	        }
-	      }
+	      path
+	          .attr("d", orient === left || orient == right
+	              ? "M" + k * tickSizeOuter + "," + range0 + "H0.5V" + range1 + "H" + k * tickSizeOuter
+	              : "M" + range0 + "," + k * tickSizeOuter + "V0.5H" + range1 + "V" + k * tickSizeOuter)
 
-	      selection.each(function() { this.__axis = position; });
+	      tick
+	          .attr("opacity", 1)
+	          .attr("transform", function(d) { return transform(position, position, d); });
+
+	      line
+	          .attr(x + "2", k * tickSizeInner)
+	          .attr(y + "1", 0.5)
+	          .attr(y + "2", 0.5);
+
+	      text
+	          .attr(x, k * spacing)
+	          .attr(y, 0.5)
+	          .attr("dy", orient === top ? "0em" : orient === bottom ? ".71em" : ".32em")
+	          .text(format);
+
+	      selection
+	          .attr("fill", "none")
+	          .attr("font-size", 10)
+	          .attr("font-family", "sans-serif")
+	          .attr("text-anchor", orient === right ? "start" : orient === left ? "end" : "middle")
+	          .each(function() { this.__axis = position; });
 	    }
 
 	    axis.scale = function(_) {
@@ -15913,11 +15923,9 @@
 
 	    d3.json(url, function (e, data) {
 
-	        status.textContent = '(' + dayDiff + ' days)';
+	        status.textContent = '(' + dayDiff + ' day' + (dayDiff > 1 ? 's' : '') + ')';
 
 	        (0, _linecount2.default)(data.linecount);
-
-	        console.log(data);
 	    });
 	}
 
@@ -15931,7 +15939,7 @@
 	    value: true
 	});
 
-	exports.default = function (data) {
+	exports.default = function (data, init) {
 
 	    data = data.map(function (d) {
 	        return { user: d.user, count: d['count(*)'] };
@@ -15941,7 +15949,11 @@
 	        width = 900 - margin.left - margin.right,
 	        height = 500 - margin.top - margin.bottom;
 
-	    var svg = d3.select(".linecount").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	    var svg = d3.select(".linecount").html('').append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	    var xAxisG = svg.append("g").attr("class", "xAxis").attr("transform", 'translate(0,' + height + ')');
+
+	    var yAxisG = svg.append("g").attr("class", "yAxis");
 
 	    var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
 	        return d.count;
@@ -15956,17 +15968,23 @@
 
 	    yAxis.tickSizeInner(-width);
 
-	    svg.append("g").attr("class", "axis").call(yAxis);
+	    yAxisG.transition().duration(100).call(yAxis);
 
-	    svg.append("g").attr("class", "axis").call(xAxis).attr("transform", 'translate(0,' + height + ')').selectAll('text').attr("dx", "-3em").attr("dy", ".5em").attr('transform', function (d) {
-	        return 'rotate(-45)';
+	    xAxisG.transition().duration(1000).call(xAxis).on('start', function () {
+	        xAxisG.selectAll('text').attr("dx", "-3em").attr("dy", ".5em").attr('transform', function (d) {
+	            return 'rotate(-45)';
+	        });
 	    });
 
-	    svg.selectAll('.bar').data(data).enter().append('rect').classed('bar', 1).attr('x', function (d) {
-	        return xScale(d.user);
-	    }).attr('width', xScale.bandwidth()).attr('height', 0).attr('fill', '#0F0').attr('stroke', 'darkgreen').attr('stroke-width', '2').attr('y', height).transition().duration(200).delay(function (d, i) {
+	    var bars = svg.selectAll('.bar').data(data, function (d) {
+	        return d.user;
+	    });
+
+	    bars.enter().append('rect').classed('bar', 1).attr('height', 0).attr('fill', '#0F0').attr('stroke', 'darkgreen').attr('stroke-width', '2').attr('y', height).transition().duration(200).delay(function (d, i) {
 	        return (Math.random() * 30 | 0) * 20;
-	    }).ease(d3.easeElastic).attr('height', function (d) {
+	    }).ease(d3.easeElastic).attr('x', function (d) {
+	        return xScale(d.user);
+	    }).attr('width', xScale.bandwidth()).attr('height', function (d) {
 	        return height - yScale(d.count);
 	    }).attr('y', function (d) {
 	        return yScale(d.count);

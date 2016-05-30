@@ -344,27 +344,30 @@ function api(obj) {
 
         function wordcount(data) {
 
-            let hash = Object.create({});
+            let counts = data.map(d => ({
+                user: d.user,
+                words: d.message.split(" ").length
+            }));
 
-            for(let i=0;i<data.length;i++) {
-                data[i].message
-                    .split(" ")
-                    .forEach(d => {
-                        if(hash[d]) hash[d]++;
-                        else hash[d] = 1;
-                    })
-            }
+            let users = {};
 
-            let freq = [];
+            counts.forEach(d => {
 
-            for(let word in hash) {
-                freq.push({
-                    text: word,
-                    size: hash[word]
-                })
-            }
+                if(users[d.user]) {
+                    users[d.user].push(d.words)
+                }
+                else {
+                    users[d.user] = [d.words];
+                }
 
-            return freq.sort((a,b) => a.size-b.size).splice(-500);
+            })
+
+            let averages = Object.keys(users).map(d => {
+                let cnt = users[d].reduce((a,b) => a+b ) / users[d].length
+                return {user: d, count: cnt|0};
+            }).sort((a,b) => a.count - b.count).splice(-30)
+
+            return averages;
 
         }
 
@@ -377,8 +380,7 @@ function api(obj) {
 
                 res.json({
                     linecount,
-                    // wordcount: wordcount(dump),
-                    // startdate
+                    wordcount: wordcount(dump)
                 });
 
             })

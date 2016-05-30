@@ -2,13 +2,11 @@ import * as d3 from './../d3';
 
 export default function(data) {
 
-    data = data.map(d => ({user:d.user,count:d['count(*)']})).reverse()
-
     let margin = {top: 20, right: 40, bottom: 60, left: 80},
         width = window.innerWidth - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
-    let svg = d3.select(".linecount").html('').append("svg")
+    let svg = d3.select(".wordcount").html('').append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")

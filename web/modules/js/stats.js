@@ -1,5 +1,6 @@
 import * as d3 from './d3';
 import linecount from './stats/linecount';
+import wordcount from './stats/wordcount';
 
 let stats = d3.select('.stats');
 
@@ -52,6 +53,9 @@ function getStats(from, to) {
 
         linecount(data.linecount);
 
+        wordcount(data.wordcount);
+
     });
 
 }
+

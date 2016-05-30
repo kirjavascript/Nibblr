@@ -1,5 +1,3 @@
-@import 'grid.scss';
-
 html {
     font-size:20px;
     background-color:black;
@@ -351,5 +349,20 @@ hr {
     }
     text {
 
+    }
+}
+
+.stats {
+    .daterange {
+        float: right;
+        position: relative;
+        margin-left: 12px;
+
+        .fromLBL, .toLBL {
+            font-size: 12px;
+            position: absolute;
+            right: 12px;
+            top: 7px;
+        }
     }
 }

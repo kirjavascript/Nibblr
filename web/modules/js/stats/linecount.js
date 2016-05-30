@@ -8,7 +8,7 @@ export default function(data) {
         width = 900 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
-    let svg = d3.select("body").append("svg")
+    let svg = d3.select(".linecount").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")

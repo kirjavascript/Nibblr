@@ -74,10 +74,6 @@ function site(obj) {
         res.json({success:true})
     })
 
-    app.get('/about', (req,res) => {
-        res.render('about', conf({}, req))
-    })
-
     app.get('/commands', (req,res) => {
         res.render('commands', conf({}, req))
     })
@@ -103,39 +99,6 @@ function site(obj) {
 
     app.get('/stats', (req,res) => {
         res.render('stats', conf({}, req))
-    })
-
-    app.get('/cloud', (req,res) => {
-
-        obj.log.all('SELECT message from LOG', (e,r) => {
-
-            let hash = Object.create({});
-
-            for(let i=0;i<r.length;i++) {
-                r[i].message
-                    .split(" ")
-                    .forEach(d => {
-                        if(hash[d]) hash[d]++;
-                        else hash[d] = 1;
-                    })
-            }
-
-            let freq = [];
-
-            for(let word in hash) {
-                freq.push({
-                    text: word,
-                    size: hash[word]
-                })
-            }
-
-            let max = freq.sort((a,b) => a.size-b.size).splice(-500);
-
-            res.render('cloud', conf({
-                freq: JSON.stringify(max)
-            }, req))
-        });
-
     })
 }
 
@@ -356,14 +319,53 @@ function api(obj) {
 
     app.get('/api/stats', (req,res) => {
 
+        // default to last month
+
+        var startdate = req.query.from;
+        var enddate = req.query.to;
+
+        if (!startdate || !enddate) return null;
+
         // SQLite seems to fuck with promises, so just wrap them in functions
 
         function freq(callback) {
-            obj.log.all('SELECT USER, count(*) from LOG group by user ORDER by count(*) DESC LIMIT 30',callback)
+            obj.log.all('select user, count(*) from log where time > ? and time < ? group by user order by count(*) desc limit 30 ', 
+                [startdate, enddate],
+                callback
+            );
         }
 
         function dump(callback) {
-            obj.log.all('select message from log where time > \'2016-05-30\'', callback);
+            obj.log.all('select user, message from log where time > ? and time < ?',
+                [startdate, enddate],
+                callback
+            );
+        }
+
+        function wordcount(data) {
+
+            let hash = Object.create({});
+
+            for(let i=0;i<data.length;i++) {
+                data[i].message
+                    .split(" ")
+                    .forEach(d => {
+                        if(hash[d]) hash[d]++;
+                        else hash[d] = 1;
+                    })
+            }
+
+            let freq = [];
+
+            for(let word in hash) {
+                freq.push({
+                    text: word,
+                    size: hash[word]
+                })
+            }
+
+            return freq.sort((a,b) => a.size-b.size).splice(-500);
+
         }
 
         d3q.queue()
@@ -375,7 +377,8 @@ function api(obj) {
 
                 res.json({
                     linecount,
-                    dump
+                    // wordcount: wordcount(dump),
+                    // startdate
                 });
 
             })

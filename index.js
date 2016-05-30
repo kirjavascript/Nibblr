@@ -4,10 +4,6 @@
 // TODO //
 // ~view commands @ -> show builtins
 // rewrite colours to just use c
-// 1 line ascii
-
-// limit by date transition graph
-// activity by hour
 // markov if command not found / randomly
 
 // http://www.df7cb.de/irc/pisg/pisg-month.html

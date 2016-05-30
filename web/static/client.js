@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(75);
+	module.exports = __webpack_require__(76);
 
 
 /***/ },
@@ -68,7 +68,7 @@
 
 	__webpack_require__(70);
 
-	__webpack_require__(72);
+	__webpack_require__(73);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -15865,8 +15865,55 @@
 	var stats = d3.select('.stats');
 
 	if (!stats.empty()) {
+	    (function () {
 
-	    d3.json('/api/stats', function (e, data) {
+	        var dateConf = {
+	            format: date2str
+	        };
+
+	        var fromEl = document.querySelector('.from');
+	        var toEl = document.querySelector('.to');
+
+	        var monthAgo = new Date();
+
+	        monthAgo.setMonth(monthAgo.getMonth() - 1);
+
+	        fromEl.value = date2str(monthAgo);
+	        toEl.value = date2str();
+
+	        getStats(fromEl.value, toEl.value);
+
+	        d3.select('.setRange').on('click', function () {
+	            getStats(fromEl.value, toEl.value);
+	        });
+	    })();
+	}
+
+	function date2str() {
+	    var dt = arguments.length <= 0 || arguments[0] === undefined ? new Date() : arguments[0];
+
+	    return dt.toISOString().slice(0, 10);
+	}
+
+	function getStats(from, to) {
+
+	    // calc range
+
+	    var fromDate = new Date(from);
+	    var toDate = new Date(to);
+
+	    var diff = Math.abs(fromDate.getTime() - toDate.getTime());
+	    var dayDiff = Math.ceil(diff / (1000 * 3600 * 24));
+
+	    var status = document.querySelector('.status');
+
+	    status.textContent = 'loading...';
+
+	    var url = '/api/stats?from=' + from + '&to=' + to;
+
+	    d3.json(url, function (e, data) {
+
+	        status.textContent = '(' + dayDiff + ' days)';
 
 	        (0, _linecount2.default)(data.linecount);
 
@@ -15894,7 +15941,7 @@
 	        width = 900 - margin.left - margin.right,
 	        height = 500 - margin.top - margin.bottom;
 
-	    var svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	    var svg = d3.select(".linecount").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	    var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
 	        return d.count;
@@ -15933,7 +15980,8 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /***/ },
-/* 72 */
+/* 72 */,
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15942,7 +15990,7 @@
 
 	var d3 = _interopRequireWildcard(_d);
 
-	var _d3Cloud = __webpack_require__(73);
+	var _d3Cloud = __webpack_require__(74);
 
 	var _d3Cloud2 = _interopRequireDefault(_d3Cloud);
 
@@ -15979,13 +16027,13 @@
 	}
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Word cloud layout by Jason Davies, https://www.jasondavies.com/wordcloud/
 	// Algorithm due to Jonathan Feinberg, http://static.mrfeinberg.com/bv_ch03.pdf
 
-	var dispatch = __webpack_require__(74).dispatch;
+	var dispatch = __webpack_require__(75).dispatch;
 
 	var cloudRadians = Math.PI / 180,
 	    cw = 1 << 11 >> 5,
@@ -16384,7 +16432,7 @@
 
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -16493,7 +16541,7 @@
 	}));
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

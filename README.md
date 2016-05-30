@@ -19,7 +19,7 @@ For example, to add a command for currency conversion you can type: `~commands.x
 
 Then, calling `~xe 1 GBP USD` will result in an output of `1.00 GBP = 1.44301 USD`
 
-There are a few built in commands, like `~remind(time) message` and `~memo(user [,time]) message`. A full list of commands can be seen with `~commands.list`
+There are a few built in commands, like `~remind(time) message`, `~memo(user [,time]) message` and `~log [message]`. A full list of commands can be seen with `~commands.list`
 
 `npm start` and `npm stop` are set call forever to run the process as a daemon.
 

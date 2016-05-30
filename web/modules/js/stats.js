@@ -1,6 +1,5 @@
 import * as d3 from './d3';
-import linecount from './stats/linecount';
-import wordcount from './stats/wordcount';
+import bar from './stats/bar';
 
 let stats = d3.select('.stats');
 
@@ -51,9 +50,11 @@ function getStats(from, to) {
 
         status.textContent = `(${dayDiff} day${dayDiff>1?'s':''})`
 
-        linecount(data.linecount);
+        let linecount = data.linecount.map(d => ({user:d.user,count:d['count(*)']})).reverse();
 
-        wordcount(data.wordcount);
+        bar(linecount,'.linecount');
+
+        bar(data.wordcount, '.wordcount');
 
     });
 

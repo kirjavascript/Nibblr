@@ -15862,13 +15862,9 @@
 
 	var d3 = _interopRequireWildcard(_d);
 
-	var _linecount = __webpack_require__(71);
+	var _bar = __webpack_require__(77);
 
-	var _linecount2 = _interopRequireDefault(_linecount);
-
-	var _wordcount = __webpack_require__(72);
-
-	var _wordcount2 = _interopRequireDefault(_wordcount);
+	var _bar2 = _interopRequireDefault(_bar);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15927,149 +15923,90 @@
 
 	        status.textContent = '(' + dayDiff + ' day' + (dayDiff > 1 ? 's' : '') + ')';
 
-	        (0, _linecount2.default)(data.linecount);
+	        var linecount = data.linecount.map(function (d) {
+	            return { user: d.user, count: d['count(*)'] };
+	        }).reverse();
 
-	        (0, _wordcount2.default)(data.wordcount);
+	        (0, _bar2.default)(linecount, '.linecount');
+
+	        (0, _bar2.default)(data.wordcount, '.wordcount');
 	    });
 	}
 
 /***/ },
-/* 71 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (data) {
-
-	    data = data.map(function (d) {
-	        return { user: d.user, count: d['count(*)'] };
-	    }).reverse();
-
-	    var margin = { top: 20, right: 40, bottom: 60, left: 80 },
-	        width = window.innerWidth - margin.left - margin.right,
-	        height = 500 - margin.top - margin.bottom;
-
-	    var svg = d3.select(".linecount").html('').append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	    var xAxisG = svg.append("g").attr("class", "xAxis").attr("transform", 'translate(0,' + height + ')');
-
-	    var yAxisG = svg.append("g").attr("class", "yAxis");
-
-	    var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
-	        return d.count;
-	    })]).range([height, 0]);
-
-	    var xScale = d3.scaleBand().range([0, width]).domain(data.map(function (d) {
-	        return d.user;
-	    }));
-
-	    var yAxis = d3.axisLeft(yScale).ticks(10);
-	    var xAxis = d3.axisBottom(xScale);
-
-	    yAxis.tickSizeInner(-width);
-
-	    yAxisG.transition().duration(100).call(yAxis);
-
-	    xAxisG.transition().duration(1000).call(xAxis).on('start', function () {
-	        xAxisG.selectAll('text').attr("dx", "-3em").attr("dy", ".5em").attr('transform', function (d) {
-	            return 'rotate(-45)';
-	        });
-	    });
-
-	    var bars = svg.selectAll('.bar').data(data, function (d) {
-	        return d.user;
-	    });
-
-	    bars.enter().append('rect').classed('bar', 1).attr('height', 0).attr('fill', '#0F0').attr('stroke', 'darkgreen').attr('stroke-width', '2').attr('y', height).transition().duration(200).delay(function (d, i) {
-	        return (Math.random() * 30 | 0) * 20;
-	    }).ease(d3.easeElastic).attr('x', function (d) {
-	        return xScale(d.user);
-	    }).attr('width', xScale.bandwidth()).attr('height', function (d) {
-	        return height - yScale(d.count);
-	    }).attr('y', function (d) {
-	        return yScale(d.count);
-	    });
-	};
-
-	var _d = __webpack_require__(2);
-
-	var d3 = _interopRequireWildcard(_d);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-/***/ },
-/* 72 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	exports.default = function (data) {
-
-	    var margin = { top: 20, right: 40, bottom: 60, left: 80 },
-	        width = window.innerWidth - margin.left - margin.right,
-	        height = 500 - margin.top - margin.bottom;
-
-	    var svg = d3.select(".wordcount").html('').append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-	    var xAxisG = svg.append("g").attr("class", "xAxis").attr("transform", 'translate(0,' + height + ')');
-
-	    var yAxisG = svg.append("g").attr("class", "yAxis");
-
-	    var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
-	        return d.count;
-	    })]).range([height, 0]);
-
-	    var xScale = d3.scaleBand().range([0, width]).domain(data.map(function (d) {
-	        return d.user;
-	    }));
-
-	    var yAxis = d3.axisLeft(yScale).ticks(10);
-	    var xAxis = d3.axisBottom(xScale);
-
-	    yAxis.tickSizeInner(-width);
-
-	    yAxisG.transition().duration(100).call(yAxis);
-
-	    xAxisG.transition().duration(1000).call(xAxis).on('start', function () {
-	        xAxisG.selectAll('text').attr("dx", "-3em").attr("dy", ".5em").attr('transform', function (d) {
-	            return 'rotate(-45)';
-	        });
-	    });
-
-	    var bars = svg.selectAll('.bar').data(data, function (d) {
-	        return d.user;
-	    });
-
-	    bars.enter().append('rect').classed('bar', 1).attr('height', 0).attr('fill', '#0F0').attr('stroke', 'darkgreen').attr('stroke-width', '2').attr('y', height).transition().duration(200).delay(function (d, i) {
-	        return (Math.random() * 30 | 0) * 20;
-	    }).ease(d3.easeElastic).attr('x', function (d) {
-	        return xScale(d.user);
-	    }).attr('width', xScale.bandwidth()).attr('height', function (d) {
-	        return height - yScale(d.count);
-	    }).attr('y', function (d) {
-	        return yScale(d.count);
-	    });
-	};
-
-	var _d = __webpack_require__(2);
-
-	var d3 = _interopRequireWildcard(_d);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-/***/ },
+/* 71 */,
+/* 72 */,
 /* 73 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	exports.default = function (data, target) {
+
+	    var margin = { top: 20, right: 40, bottom: 60, left: 80 },
+	        width = window.innerWidth - margin.left - margin.right,
+	        height = 500 - margin.top - margin.bottom;
+
+	    var svg = d3.select(target).html('').append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	    var xAxisG = svg.append("g").attr("class", "xAxis").attr("transform", 'translate(0,' + height + ')');
+
+	    var yAxisG = svg.append("g").attr("class", "yAxis");
+
+	    var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
+	        return d.count;
+	    })]).range([height, 0]);
+
+	    var xScale = d3.scaleBand().range([0, width]).domain(data.map(function (d) {
+	        return d.user;
+	    }));
+
+	    var yAxis = d3.axisLeft(yScale).ticks(10);
+	    var xAxis = d3.axisBottom(xScale);
+
+	    yAxis.tickSizeInner(-width);
+
+	    yAxisG.transition().duration(100).call(yAxis);
+
+	    xAxisG.transition().duration(1000).call(xAxis).on('start', function () {
+	        xAxisG.selectAll('text').attr("dx", "-3em").attr("dy", ".5em").attr('transform', function (d) {
+	            return 'rotate(-45)';
+	        });
+	    });
+
+	    var bars = svg.selectAll('.bar').data(data, function (d) {
+	        return d.user;
+	    });
+
+	    bars.enter().append('rect').classed('bar', 1).attr('height', 0).attr('fill', '#0F0').attr('stroke', 'darkgreen').attr('stroke-width', '2').attr('y', height).transition().duration(200).delay(function (d, i) {
+	        return (Math.random() * 30 | 0) * 20;
+	    }).ease(d3.easeElastic).attr('x', function (d) {
+	        return xScale(d.user);
+	    }).attr('width', xScale.bandwidth()).attr('height', function (d) {
+	        return height - yScale(d.count);
+	    }).attr('y', function (d) {
+	        return yScale(d.count);
+	    });
+	};
+
+	var _d = __webpack_require__(2);
+
+	var d3 = _interopRequireWildcard(_d);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /***/ }
 /******/ ]);

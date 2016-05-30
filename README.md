@@ -1,11 +1,11 @@
 Nibblr
 ======
 
-Nibblr is a javascript framework for writing IRC bots. 
+Nibblr is a javascript framework for writing IRC bots.
+
+![Screenshot](screenshot.png)
 
 It supports on the fly programming of commands via the web dashboard or directly in channel.
-
-...
 
 It comes with a built in javascript interpreter in the form of `~eval` which exposes a few APIs (which you can find with `~eval Object.keys(this)`).
 
@@ -26,5 +26,3 @@ There are a few built in commands, like `~remind(time) message` and `~memo(user 
 All the code is run in a sandboxed environment with various failsafes.
 
 Before running, rename `config.json.example` to `config.json` and configure your settings.
-
-Nibblr uses node, express, hogan.js, SQLite3, socket.io, webpack, babel and d3.

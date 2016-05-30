@@ -1,7 +1,5 @@
-           __ __    __    __      
-    .-----|__|  |--|  |--|  .----.
-    |     |  |  _  |  _  |  |   _|
-    |__|__|__|_____|_____|__|__|
+Nibblr
+======
 
 Nibblr is a javascript framework for writing IRC bots. 
 

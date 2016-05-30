@@ -25,7 +25,7 @@ export default function(data) {
     let yAxis = d3.axisLeft(yScale).ticks(10);
     let xAxis = d3.axisBottom(xScale);
 
-    yAxis.tickSizeInner(-width)
+    yAxis.tickSizeInner(-width);
 
     svg
         .append("g")

@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(76);
+	module.exports = __webpack_require__(75);
 
 
 /***/ },
@@ -68,7 +68,7 @@
 
 	__webpack_require__(70);
 
-	__webpack_require__(73);
+	__webpack_require__(72);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -15980,8 +15980,7 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /***/ },
-/* 72 */,
-/* 73 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15990,7 +15989,7 @@
 
 	var d3 = _interopRequireWildcard(_d);
 
-	var _d3Cloud = __webpack_require__(74);
+	var _d3Cloud = __webpack_require__(73);
 
 	var _d3Cloud2 = _interopRequireDefault(_d3Cloud);
 
@@ -16027,13 +16026,13 @@
 	}
 
 /***/ },
-/* 74 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Word cloud layout by Jason Davies, https://www.jasondavies.com/wordcloud/
 	// Algorithm due to Jonathan Feinberg, http://static.mrfeinberg.com/bv_ch03.pdf
 
-	var dispatch = __webpack_require__(75).dispatch;
+	var dispatch = __webpack_require__(74).dispatch;
 
 	var cloudRadians = Math.PI / 180,
 	    cw = 1 << 11 >> 5,
@@ -16432,7 +16431,7 @@
 
 
 /***/ },
-/* 75 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -16541,7 +16540,7 @@
 	}));
 
 /***/ },
-/* 76 */
+/* 75 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

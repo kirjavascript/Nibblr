@@ -3,6 +3,8 @@ import bar from './stats/bar';
 
 let stats = d3.select('.stats');
 
+// do time based activity line graph with nodes??
+
 if (!stats.empty()) {
 
     let dateConf = {

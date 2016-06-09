@@ -73,7 +73,6 @@ var cheerio = require('cheerio');
 var weather = require('weather-js');
 var safeEval = require('safe-eval');
 var html2txt = require('html-to-text');
-var youtube = require('youtube-search');
 var loopProtect = require('./lib/loop-protect');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
@@ -84,7 +83,7 @@ var logger = require('./modules/logging')
 // initconf //
 
 var hide = {hide:1};
-var youtube_api = 'AIzaSyDWEWTDKnOqbEOij1ZENrGLpv4FIhtQ2eI';
+var google_api = 'AIzaSyDWEWTDKnOqbEOij1ZENrGLpv4FIhtQ2eI';
 google.resultsPerPage = 3;
 irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400};
 
@@ -361,7 +360,7 @@ client.addListener("message", function(from, to, text, message) {
 
     else if (text.indexOf('~youtube ') == 0) {
 
-        var query = text.substring(7);
+        var query = text.substring(8)+' site:youtube.com';
 
         if(query.length) {
 
@@ -369,16 +368,16 @@ client.addListener("message", function(from, to, text, message) {
 
                 var opts = {
                     maxResults: 3,
-                    key: youtube_api
+                    key: google_api
                 };
 
-                youtube(query, opts, function(err, results) {
+                google(query, function (err, res){
                     if(err) return client.say(to, irc.colors.wrap('light_red', err));
 
-                    results.forEach(d => {
-                        client.say(to, irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('light_green', d.title))
+                    res.links.forEach(d => {
+                        client.say(to, irc.colors.wrap('light_blue','▶ ') + irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('light_green', d.title))
                     })
-                });
+                })
 
             }
             catch (e) {client.say(to, irc.colors.wrap('light_red', e))}
@@ -397,7 +396,7 @@ client.addListener("message", function(from, to, text, message) {
 
                 var opts = {
                     maxResults: 3,
-                    key: youtube_api
+                    key: google_api
                 };
 
                 google(query, function (err, res){

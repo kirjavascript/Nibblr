@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(73);
+	module.exports = __webpack_require__(72);
 
 
 /***/ },
@@ -15862,7 +15862,7 @@
 
 	var d3 = _interopRequireWildcard(_d);
 
-	var _bar = __webpack_require__(77);
+	var _bar = __webpack_require__(71);
 
 	var _bar2 = _interopRequireDefault(_bar);
 
@@ -15871,6 +15871,8 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	var stats = d3.select('.stats');
+
+	// do time based activity line graph with nodes??
 
 	if (!stats.empty()) {
 	    (function () {
@@ -15934,18 +15936,7 @@
 	}
 
 /***/ },
-/* 71 */,
-/* 72 */,
-/* 73 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16007,6 +15998,12 @@
 	var d3 = _interopRequireWildcard(_d);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+/***/ },
+/* 72 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

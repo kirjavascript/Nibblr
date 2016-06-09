@@ -367,14 +367,14 @@ client.addListener("message", function(from, to, text, message) {
             try {
 
                 var opts = {
-                    maxResults: 3,
+                    maxResults: 4,
                     key: google_api
                 };
 
                 google(query, function (err, res){
                     if(err) return client.say(to, irc.colors.wrap('light_red', err));
 
-                    res.links.forEach(d => {
+                    res.links.filter(d => d.link).forEach(d => {
                         client.say(to, irc.colors.wrap('light_blue','▶ ') + irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('light_green', d.title))
                     })
                 })
@@ -395,14 +395,14 @@ client.addListener("message", function(from, to, text, message) {
             try {
 
                 var opts = {
-                    maxResults: 3,
+                    maxResults: 4,
                     key: google_api
                 };
 
                 google(query, function (err, res){
                     if(err) return client.say(to, irc.colors.wrap('light_red', err));
 
-                    res.links.forEach(d => {
+                    res.links.filter(d => d.link).forEach(d => {
                         client.say(to, irc.colors.wrap('light_blue','▶ ') + irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('yellow', d.title))
                     })
                 })

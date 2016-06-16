@@ -677,14 +677,14 @@ client.addListener("message", function(from, to, text, message) {
     // hardcoded commands //
 
     var command = text.match(/~([a-zA-Z]*)/);
+    var params = null;
 
     if (command) {
         command = command[1];
+        params = text.slice(text.indexOf(command)+command.length+1);
     }
 
-    var params = text.slice(text.indexOf(command)+command.length+1);
-
-    if (command && text[0] == '~' && ~Object.keys(commands).indexOf(command)) {
+    if (params && command && text[0] == '~' && ~Object.keys(commands).indexOf(command)) {
         commands[command](params, text, {from, to, text, message});
     }
 

@@ -208,7 +208,7 @@ var commands = {
     },
     // /trivia //
     speak(query, text) {
-        log.all('SELECT message FROM log ORDER BY RANDOM() LIMIT 1000',(e,r) => {
+        log.all('SELECT message FROM log ORDER BY RANDOM() LIMIT 100',(e,r) => {
 
             var words = r.map(d => d.message).join(' ');
             var seed = query || words.split(' ').pop();

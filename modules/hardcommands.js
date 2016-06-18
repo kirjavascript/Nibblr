@@ -45,6 +45,7 @@ var triv = {
     question: {},
     cleanAnswer: null,
     points: {},
+    clueCount: 0,
     toggle() {
         if (triv.timer == null) {
             triv.start();
@@ -69,6 +70,7 @@ var triv = {
     newQuestion() {
         clearInterval(triv.timer);
         triv.timer = null;
+        triv.clueCount = 0;
         request('http://jservice.io/api/random', function (error, response, body) {
             if (!error && response.statusCode == 200) {
 
@@ -125,11 +127,15 @@ var triv = {
     },
     clue() {
         if (triv.timer != null) {
-            request('http://jservice.io/api/clue', function (error, response, body) {
-                if (!error && response.statusCode == 200) {
+            triv.clueCount++;
+            var answer = triv.question[0].answer.replace(/<(?:.|\n)*?>/gm, '');
 
-                }
-            });
+            var parsed = answer.split(' ').map(d => 
+                d.slice(0,triv.clueCount) + 
+                new Array((d.length-triv.clueCount)+1).join('_')
+            ).join(' ');
+
+            client.say(config.channel, parsed);
         }
     },
     attempt(from, text) {
@@ -144,7 +150,7 @@ var triv = {
             if (triv.question.length && cleanAnswer == triv.cleanAnswer) {
             //if (1) {
 
-                var points = 10;
+                var points = 10 - (triv.clueCount*2);
 
                 if (triv.points[from]) {
                     triv.points[from] += points;

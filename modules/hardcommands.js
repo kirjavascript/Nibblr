@@ -443,6 +443,14 @@ var commands = {
             var lines = rgxp[1];
             var srch = rgxp[2];
 
+            if (lines == 'random') {
+                log.get('SELECT time,user,message from LOG ORDER BY RANDOM() DESC LIMIT 1',
+                    (e,r) => {
+                        var resp = c.underline(r.time) + ' <'+r.user+'> '+r.message;
+                        client.say(to, resp);
+                    })
+            }
+
             log.all('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC LIMIT ?',
                 [`%${srch}%`, lines],
                 (e,r) => {
@@ -547,8 +555,6 @@ var commands = {
 
     },
     seen(who, text) {
-
-        console.log(who)
 
         log.get('SELECT time,command,message FROM log where lower(user) = lower(?) ORDER BY time DESC',
             who,

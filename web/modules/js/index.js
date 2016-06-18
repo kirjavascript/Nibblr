@@ -1,7 +1,6 @@
 import * as d3 from './d3';
 import './livechat';
 import './commands';
-import './filesharing';
 import './config';
 import './logs';
 import './stats';

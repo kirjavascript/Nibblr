@@ -3,6 +3,7 @@ var irc = require('irc');
 var urban = require('urban');
 var c = require('irc-colors');
 var google = require('google');
+var markov = require('markov');
 var request = require('request');
 var weather = require('weather-js');
 var safeEval = require('safe-eval');
@@ -192,7 +193,7 @@ var triv = {
 };
 
 var commands = {
-    // trivia stats
+    // trivia //
     trivia(words, text) {
         triv.toggle();
     },
@@ -204,6 +205,19 @@ var commands = {
     },
     triviastats() {
         triv.stats();
+    },
+    // /trivia //
+    speak(query, text) {
+        log.all('SELECT message FROM log ORDER BY RANDOM() LIMIT 1000',(e,r) => {
+
+            var words = r.map(d => d.message).join(' ');
+            var seed = query || words.split(' ').pop();
+            var m = markov(1);
+
+            m.seed(words, () => {
+                client.say(to, m.respond(seed).join(' '))
+            })
+        })
     },
     define(words, text) {
         urban(words).first(function(json) {

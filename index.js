@@ -3,8 +3,7 @@
 
 // TODO //
 
-// global points / points per round
-
+// ~poker
 // trivia stats
 // profanity stats
 

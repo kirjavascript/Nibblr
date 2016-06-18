@@ -19,7 +19,7 @@ var client, from, to, text, message, hide, context, process;
 
 function setContext(arr) {
     [client, from, to, text, message, hide, context] = arr;
-    triv.attempt(from, message);
+    triv.attempt(from, text);
 }
 
 function exists(text) {
@@ -41,57 +41,144 @@ function exists(text) {
 
 var triv = {
     timer: null,
-    scores: {},
+    question: {},
+    cleanAnswer: null,
+    points: {},
     toggle() {
         if (triv.timer == null) {
-            client.say(config.channel, 'Trivia started! Invoke ~trivia to stop, ~clue for clues, and ~skip to skip the question');
             triv.start();
         }
         else {
-            client.say(config.channel, 'rip trivia');
             triv.stop();
-            // local scores, global scores
         }
     },
     start() {
-
+        client.say(config.channel, irc.colors.wrap('light_green', 'Trivia started! Invoke ~trivia to stop, ~clue for clues, and ~skip to skip the question'));
+        triv.newQuestion();
     },
     stop() {
+        client.say(config.channel, irc.colors.wrap('light_red', 'rip trivia'));
 
+        Object.keys(triv.points).length &&
+        client.say(config.channel, irc.colors.wrap('orange', 'points this game: ') + 
+            Object.keys(triv.points)
+                .map(d => `${d}: ${triv.points[d]}`)
+                .join(' '));
+        triv.points = {};
+        // local scores, global scores
+        clearInterval(triv.timer);
+        triv.timer = null;
     },
-    question() {
+    newQuestion() {
+        clearInterval(triv.timer);
+        triv.timer = null;
+        request('http://jservice.io/api/random', function (error, response, body) {
+            if (!error && response.statusCode == 200) {
 
+                triv.question = JSON.parse(body);
+
+                triv.cleanAnswer = triv.question[0].answer
+                    .replace(/<(?:.|\n)*?>/gm, '')
+                    .replace(/[^a-z0-9]/gi,'')
+                    .replace(/^a/gi,'')
+                    .replace(/^the/gi,'')
+                    .toLowerCase();
+
+                console.log(triv.cleanAnswer)
+
+                var q = 
+                irc.colors.wrap('magenta', 'Question: ') +
+                triv.question[0].question + 
+                irc.colors.wrap('yellow', ' ('+triv.question[0].category.title+')');
+
+                client.say(config.channel, q);
+
+                client.say(config.channel, irc.colors.wrap('light_green', '1 minute'));
+
+                var seconds = 60;
+
+                triv.timer = setInterval(d => {
+
+                    seconds -= 10;
+
+                    if (seconds == 30) {
+                        client.say(config.channel, irc.colors.wrap('light_green', '30 Seconds'));
+                    }
+                    else if (seconds == 20) {
+                        client.say(config.channel, irc.colors.wrap('yellow', '20 Seconds'));
+                    }
+                    else if (seconds == 10) {
+                        client.say(config.channel, irc.colors.wrap('light_red', '10 Seconds'));
+                    }
+                    else if (!seconds) {
+                        client.say(config.channel, irc.colors.wrap('light_blue', 'Time\'s up! The answer was: ') + triv.question[0].answer);
+                        triv.newQuestion();
+                    }
+
+                }, 10000)
+            }
+        })
     },
-    attempt(from, message) {
+    skip() {
+        if (triv.timer != null) {
+            client.say(config.channel, irc.colors.wrap('light_magenta', 'Question skipped :( The answer was: ') + triv.question[0].answer);
+            triv.newQuestion();
+        }
+    },
+    clue() {
+        if (triv.timer != null) {
+            request('http://jservice.io/api/clue', function (error, response, body) {
+                if (!error && response.statusCode == 200) {
 
+                }
+            });
+        }
+    },
+    attempt(from, text) {
+        if (triv.timer != null) {
+            var cleanAnswer = text
+                .replace(/[^a-z0-9]/gi,'')
+                .replace(/^a/gi,'')
+                .replace(/^the/gi,'')
+                .toLowerCase();
+
+            if (triv.question.length && cleanAnswer == triv.cleanAnswer) {
+
+                var points = 10;
+
+                if (triv.points[from]) {
+                    triv.points[from] += points;
+                }
+                else {
+                    triv.points[from] = points;
+                }
+
+                client.say(config.channel, irc.colors.wrap('light_green', 'Correct! The answer was: ') + triv.question[0].answer);
+                client.say(config.channel, irc.colors.wrap('light_green', from + ' gets ' + points + ' points for a total of ' + triv.points[from]));
+                triv.newQuestion();
+
+            }
+        }
+    },
+    stats() {
+        // this game / global
     }
 };
 
 var commands = {
-
-    // trivia(words, text) {
-
-        
-
-    //     triv.toggle();
-
-    //     request('http://jservice.io/api/random', function (error, response, body) {
-    //         if (!error && response.statusCode == 200) {
-
-    //             var question = JSON.parse(body);
-
-    //             client.say(config.channel, body);
-    //         }
-    //     })
-
-    // },
-    // clue(words, text) {
-    //     console.log('clue')
-    // },
-
-    // skip(words, text) {
-
-    // },
+    // trivia stats
+    trivia(words, text) {
+        triv.toggle();
+    },
+    clue(words, text) {
+        triv.clue();
+    },
+    skip(words, text) {
+        triv.skip();
+    },
+    triviastats() {
+        triv.stats();
+    },
     define(words, text) {
         urban(words).first(function(json) {
             json && client.say(to, json.definition);

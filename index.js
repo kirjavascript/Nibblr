@@ -3,13 +3,6 @@
 
 // TODO //
 
-// grab trivia in set context
-// green / yellow / red timer
-// 19:25 <@kyva> so many questions
-// 19:25 <@kyva> ok so points
-// 19:25 <@kyva> do something like
-// 19:25 <@kyva> 10 a question, 5 if you use a clue, and drop another point for each additional clue
-
 // global points / points per round
 
 // trivia stats

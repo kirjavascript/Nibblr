@@ -30,6 +30,10 @@ var sandbox = {
         }, time);
         return hide;
     },
+    say(msg) {
+        client.say(to, msg);
+        return hide;
+    },
     randomcolour(str) {
         var colours = ['light_red', 'magenta', 'orange', 'yellow', 'light_green', 'cyan', 'light_cyan', 'light_blue', 'light_magenta', 'light_gray'];
         return irc.colors.wrap(colours[(Math.random()*colours.length)|0], str);

@@ -78,6 +78,7 @@ var triv = {
                     .replace(/[^a-z0-9]/gi,'')
                     .replace(/^a/gi,'')
                     .replace(/^the/gi,'')
+                    .replace(/s$/gi,'')
                     .toLowerCase();
 
                 console.log(triv.cleanAnswer)
@@ -136,6 +137,7 @@ var triv = {
                 .replace(/[^a-z0-9]/gi,'')
                 .replace(/^a/gi,'')
                 .replace(/^the/gi,'')
+                .replace(/s$/gi,'')
                 .toLowerCase();
 
             if (triv.question.length && cleanAnswer == triv.cleanAnswer) {

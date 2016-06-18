@@ -130,10 +130,11 @@ var triv = {
             triv.clueCount++;
             var answer = triv.question[0].answer.replace(/<(?:.|\n)*?>/gm, '');
 
-            var parsed = answer.split(' ').map(d => 
-                d.slice(0,triv.clueCount) + 
-                new Array((d.length-triv.clueCount)+1).join('_')
-            ).join(' ');
+            var parsed = answer.split(' ').map(d => {
+                var strLen = (d.length-triv.clueCount)+1;
+                return d.slice(0,triv.clueCount) + 
+                new Array(strLen > -1?strLen:0).join('_')
+            }).join(' ');
 
             client.say(config.channel, parsed);
         }

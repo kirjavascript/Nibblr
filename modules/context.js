@@ -24,11 +24,17 @@ var sandbox = {
     data: {},
     c: c,
     colour: (a,b) => b.split('\n').map(d => irc.colors.wrap(a,d)).join("\n"),
-    randomcolour: function(str) {
+    delay(msg, time) {
+        setTimeout(function() {
+            client.say(to, msg);
+        }, time);
+        return hide;
+    },
+    randomcolour(str) {
         var colours = ['light_red', 'magenta', 'orange', 'yellow', 'light_green', 'cyan', 'light_cyan', 'light_blue', 'light_magenta', 'light_gray'];
         return irc.colors.wrap(colours[(Math.random()*colours.length)|0], str);
     },
-    wget: function(url, funk) {
+    wget(url, funk) {
 
         if (typeof funk == "function") {
 

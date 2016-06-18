@@ -13,7 +13,7 @@ var commands = require('../modules/hardcommands').commands;
 
 hardCommandArray = Object.keys(commands).map(d => ({
     name: d,
-    command: `\/\/Internal use only\n\n` + commands[d].toString(),
+    command: `\/\/ Internal use only\n\n    ` + commands[d].toString(),
     locked: true,
     hard: true,
 }))
@@ -86,6 +86,10 @@ function site(obj) {
 
     app.get('/commands', (req,res) => {
         res.render('commands', conf({}, req))
+    })
+
+    app.get('/filesharing', (req,res) => {
+        res.render('filesharing', conf({}, req))
     })
 
     app.get('/config', (req,res) => {

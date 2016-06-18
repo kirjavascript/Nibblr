@@ -3,22 +3,20 @@
 
 // TODO //
 
-// add hardcoded to ui
-// check all hard
-// commands ui keep open after saving
-// mode hardcoded to non
-// move ~google to the context and just add the command in the DB
-// move reminds to log and rename log?
-// trivia?
-// profanity stats
-// WebRTC file transfer
-// use module exports for db in webside
+// grab trivia in set context
+// green / yellow / red timer
+// 19:25 <@kyva> so many questions
+// 19:25 <@kyva> ok so points
+// 19:25 <@kyva> do something like
+// 19:25 <@kyva> 10 a question, 5 if you use a clue, and drop another point for each additional clue
 
-// convert modules to data.db / move events to log
+// global points / points per round
+
+// trivia stats
+// profanity stats
 
 // http://www.df7cb.de/irc/pisg/pisg-month.html
 
-// ~view commands @ -> show builtins
 // rewrite colours to just use c
 // markov if command not found / randomly
 
@@ -28,7 +26,6 @@
 
 
 // log / stats / quotes /~speak
-// fulltext indexing on log
 // command use
 // msg qty
 

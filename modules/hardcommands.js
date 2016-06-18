@@ -19,6 +19,7 @@ var client, from, to, text, message, hide, context, process;
 
 function setContext(arr) {
     [client, from, to, text, message, hide, context] = arr;
+    triv.attempt(from, message);
 }
 
 function exists(text) {
@@ -30,7 +31,7 @@ function exists(text) {
         params = text.slice(text.indexOf(command)+command.length+1);
     }
 
-    if (params && command && text[0] == '~' && ~Object.keys(commands).indexOf(command)) {
+    if (command && text[0] == '~' && ~Object.keys(commands).indexOf(command)) {
         return {params, text, command};
     }
     else {
@@ -38,7 +39,59 @@ function exists(text) {
     }
 }
 
+var triv = {
+    timer: null,
+    scores: {},
+    toggle() {
+        if (triv.timer == null) {
+            client.say(config.channel, 'Trivia started! Invoke ~trivia to stop, ~clue for clues, and ~skip to skip the question');
+            triv.start();
+        }
+        else {
+            client.say(config.channel, 'rip trivia');
+            triv.stop();
+            // local scores, global scores
+        }
+    },
+    start() {
+
+    },
+    stop() {
+
+    },
+    question() {
+
+    },
+    attempt(from, message) {
+
+    }
+};
+
 var commands = {
+
+    // trivia(words, text) {
+
+        
+
+    //     triv.toggle();
+
+    //     request('http://jservice.io/api/random', function (error, response, body) {
+    //         if (!error && response.statusCode == 200) {
+
+    //             var question = JSON.parse(body);
+
+    //             client.say(config.channel, body);
+    //         }
+    //     })
+
+    // },
+    // clue(words, text) {
+    //     console.log('clue')
+    // },
+
+    // skip(words, text) {
+
+    // },
     define(words, text) {
         urban(words).first(function(json) {
             json && client.say(to, json.definition);
@@ -384,7 +437,7 @@ var commands = {
 
     "commands": function (query, text) {
 
-        if (text.indexOf('~commands.list') == 0) {
+        if (text.indexOf('~commands.list') == 0 ) {
 
             db.get('SELECT count(name) from commands', (e,r) => {
 

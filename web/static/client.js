@@ -15596,9 +15596,15 @@
 
 	        var out = '~<span class="name">' + d.name + '</span> ';
 
-	        if (d.locked == 'true') out += '<i class="fa fa-lock grey" aria-hidden="true"></i>';
+	        if (d.locked == 'true') {
+	            out += '<i class="fa fa-lock grey" aria-hidden="true"></i>';
+	        }
 
-	        out += '<i data-tooltip="delete" \n                    class="delete fa fa-ban  action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="' + lockState + '" \n                    class="' + lockState + ' fa fa-' + lockState + ' action ' + (admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="rename" \n                    class="rename fa fa-pencil action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="edit" \n                    class="edit fa fa-code action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="view" \n                    class="view fa fa-book action" aria-hidden="true"></i>\n                    ';
+	        if (!d.hard) {
+	            out += '<i data-tooltip="delete" \n                    class="delete fa fa-ban  action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="' + lockState + '" \n                    class="' + lockState + ' fa fa-' + lockState + ' action ' + (admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="rename" \n                    class="rename fa fa-pencil action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>\n                <i data-tooltip="edit" \n                    class="edit fa fa-code action ' + (!locked || admin ? '' : 'action-disabled') + '" aria-hidden="true"></i>';
+	        }
+
+	        out += '<i data-tooltip="view" \n                class="view fa fa-book action" aria-hidden="true"></i>\n                ';
 
 	        out += '<span class="tooltip"></span><hr />';
 

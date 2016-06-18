@@ -5,12 +5,22 @@ var session = require('express-session');
 var favicon = require('serve-favicon');
 var app = express();
 
-var config = require('../config.json');
+var config = require('../index').config;
 var socket = require('./socket');
+var log = require('../index').log;
+var db = require('../index').db;
+var commands = require('../modules/hardcommands').commands;
+
+hardCommandArray = Object.keys(commands).map(d => ({
+    name: d,
+    command: `\/\/Internal use only\n\n` + commands[d].toString(),
+    locked: true,
+    hard: true,
+}))
 
 var d3q = require('d3-queue');
 
-module.exports = function(obj) {
+module.exports = function(client) {
 
     // config
 
@@ -30,9 +40,9 @@ module.exports = function(obj) {
 
     // init
 
-    api(obj);
-    site(obj);
-    socket({server, client: obj.client})
+    api(client);
+    site(client);
+    socket({server, client})
 
     // root
 
@@ -140,7 +150,7 @@ function api(obj) {
 
         var command = req.path.split('/').pop();
 
-        obj.db.all('SELECT * from commands where name = ?', command, (e,r) => {
+        db.all('SELECT * from commands where name = ?', command, (e,r) => {
 
             res.json(r);
         })
@@ -148,8 +158,8 @@ function api(obj) {
 
     app.get('/api/commands', (req,res) => {
 
-        obj.db.all('SELECT * from commands ORDER BY name asc', (e,r) => {
-            res.json(r)
+        db.all('SELECT * from commands ORDER BY name asc', (e,r) => {
+            res.json(r.concat(hardCommandArray).sort((a,b) => (a.name > b.name) ? 1 : (b.name > a.name) ? -1 : 0))
         })
 
     })
@@ -157,7 +167,7 @@ function api(obj) {
     app.get('/api/commands/lock', (req,res) => {
 
         if(checkKey(req) && req.query.name) {
-            obj.db.run('UPDATE commands SET locked = "true" WHERE name = ?',req.query.name, (e,r) => {
+            db.run('UPDATE commands SET locked = "true" WHERE name = ?',req.query.name, (e,r) => {
                 res.json({status:"success"})
             })
         }
@@ -168,7 +178,7 @@ function api(obj) {
     app.get('/api/commands/unlock', (req,res) => {
 
         if(checkKey(req) && req.query.name) {
-            obj.db.run('UPDATE commands SET locked = "false" WHERE name = ?',req.query.name, (e,r) => {
+            db.run('UPDATE commands SET locked = "false" WHERE name = ?',req.query.name, (e,r) => {
                 res.json({status:"success"})
             })
         }
@@ -181,12 +191,12 @@ function api(obj) {
         let sql = 'DELETE FROM commands WHERE name = ?'
 
         if(checkKey(req) && req.query.name) {
-            obj.db.run(sql, req.query.name, (e,r) => {
+            db.run(sql, req.query.name, (e,r) => {
                 res.json({status:"success"})
             })
         }
         else if (req.query.name) {
-            obj.db.run(sql + ' AND locked = "false"',req.query.name, (e,r) => {
+            db.run(sql + ' AND locked = "false"',req.query.name, (e,r) => {
                 res.json({status:"success"})
             })
         }
@@ -199,13 +209,13 @@ function api(obj) {
         let sql = 'UPDATE commands SET name = ? WHERE name = ?';
 
         if(checkKey(req) && req.query.name && req.query.new) {
-            obj.db.run(sql,
+            db.run(sql,
                 [req.query.new, req.query.name],
                 (e,r) => {res.json({status:"success"})
             })
         }
         else if (req.query.name && req.query.new) {
-            obj.db.run(sql + ' AND locked = "false"',
+            db.run(sql + ' AND locked = "false"',
                 [req.query.new, req.query.name],
                 (e,r) => {res.json({status:"success"})}
             )
@@ -219,13 +229,13 @@ function api(obj) {
         let sql = 'UPDATE commands SET command = ? WHERE name = ?';
 
         if(checkKey(req) && req.query.name && req.query.command) {
-            obj.db.run(sql,
+            db.run(sql,
                 [decodeURIComponent(req.query.command), req.query.name],
                 (e,r) => {res.json({status:"success"})
             })
         }
         else if (req.query.name && req.query.command) {
-            obj.db.run(sql + ' AND locked = "false"',
+            db.run(sql + ' AND locked = "false"',
                 [decodeURIComponent(req.query.command), req.query.name],
                 (e,r) => {res.json({status:"success"})}
             )
@@ -237,13 +247,18 @@ function api(obj) {
     app.get('/api/commands/add', (req,res) => {
 
         if(req.query.name && req.query.command) {
-            obj.db.run('INSERT INTO commands(name,command) VALUES (?,?)',
-                [req.query.name, req.query.command], 
-                (e,r) => {
-                    if (e) res.json({status:e})
-                    else res.json({status:"success"})
-                }
-            )
+            if (~Object.keys(commands).indexOf(req.query.name)) {
+                res.json({status:'dupe'})
+            }
+            else {
+                db.run('INSERT INTO commands(name,command) VALUES (?,?)',
+                    [req.query.name, req.query.command], 
+                    (e,r) => {
+                        if (e) res.json({status:e})
+                        else res.json({status:"success"})
+                    }
+                )
+            }
         }
         else { res.json({status:"error"}) }
 
@@ -260,7 +275,7 @@ function api(obj) {
 
             res.json({});
 
-            obj.client.send('KICK', channel, req.query.user, '\u000304(╯°□°）╯︵ ┻━┻');
+            client.send('KICK', channel, req.query.user, '\u000304(╯°□°）╯︵ ┻━┻');
             
         }
         else {
@@ -278,7 +293,7 @@ function api(obj) {
 
             res.json({});
 
-            obj.client.send('MODE', channel, req.query.mode, req.query.user);
+            client.send('MODE', channel, req.query.mode, req.query.user);
             
         }
         else {
@@ -292,21 +307,21 @@ function api(obj) {
     app.get('/api/log', (req,res) => {
 
         if (req.query.text) {
-            obj.log.all('SELECT * from LOG WHERE message like ? ORDER BY id DESC', 
+            log.all('SELECT * from LOG WHERE message like ? ORDER BY id DESC', 
                 [`%${req.query.text}%`],
                 (e,r) => {
                     res.json(r);
                 })
         }
         else if (req.query.id) {
-            obj.log.all('SELECT * from LOG WHERE id < ? ORDER BY id DESC LIMIT ?', 
+            log.all('SELECT * from LOG WHERE id < ? ORDER BY id DESC LIMIT ?', 
                 [req.query.id, req.query.limit],
                 (e,r) => {
                     res.json(r);
                 })
         }
         else {
-            obj.log.all('SELECT * from LOG ORDER BY id DESC LIMIT ?', 
+            log.all('SELECT * from LOG ORDER BY id DESC LIMIT ?', 
                 req.query.limit,
                 (e,r) => {
                     res.json(r);
@@ -329,14 +344,14 @@ function api(obj) {
         // SQLite seems to fuck with promises, so just wrap them in functions
 
         function freq(callback) {
-            obj.log.all('select user, count(*) from log where time > ? and time < ? group by user order by count(*) desc limit 30 ', 
+            log.all('select user, count(*) from log where time > ? and time < ? group by user order by count(*) desc limit 30 ', 
                 [startdate, enddate],
                 callback
             );
         }
 
         function dump(callback) {
-            obj.log.all('select user, message from log where time > ? and time < ?',
+            log.all('select user, message from log where time > ? and time < ?',
                 [startdate, enddate],
                 callback
             );
@@ -406,7 +421,7 @@ function api(obj) {
             });
 
             req.query.user.split(',').forEach(d => {
-                obj.client.say(d, req.query.message);
+                client.say(d, req.query.message);
             })
         }
         else {
@@ -437,7 +452,7 @@ function api(obj) {
             });
 
             req.query.user.split(',').forEach(d => {
-                obj.client.notice(d, req.query.message);
+                client.notice(d, req.query.message);
             })
         }
         else {

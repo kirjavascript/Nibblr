@@ -465,8 +465,8 @@ var commands = {
     nick(query) {
         client.send('NICK', query);
     },
-    reset:null,
-    combobreaker:null,
+    "reset": function() {/* nope */},
+    combobreaker() {/* nope */},
 }
 
 module.exports = {

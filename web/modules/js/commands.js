@@ -115,9 +115,11 @@ function makeList() {
 
             let out = `~<span class="name">${d.name}</span> `;
 
-            if (d.locked=='true')
+            if (d.locked=='true') {
                 out += '<i class="fa fa-lock grey" aria-hidden="true"></i>';
-
+            }
+                
+            if (!d.hard) {
                 out += `<i data-tooltip="delete" 
                     class="delete fa fa-ban  action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
                 <i data-tooltip="${lockState}" 
@@ -125,10 +127,12 @@ function makeList() {
                 <i data-tooltip="rename" 
                     class="rename fa fa-pencil action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
                 <i data-tooltip="edit" 
-                    class="edit fa fa-code action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>
-                <i data-tooltip="view" 
-                    class="view fa fa-book action" aria-hidden="true"></i>
-                    `;
+                    class="edit fa fa-code action ${!locked || admin?'':'action-disabled'}" aria-hidden="true"></i>`
+            }
+
+            out += `<i data-tooltip="view" 
+                class="view fa fa-book action" aria-hidden="true"></i>
+                `;
 
             out += `<span class="tooltip"></span><hr />`;
 

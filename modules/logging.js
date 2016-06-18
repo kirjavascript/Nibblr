@@ -1,6 +1,8 @@
-module.exports = function(obj) {
+var log = require('../index').log;
 
-    obj.client.addListener('raw', msg => {
+module.exports = function(client) {
+
+    client.addListener('raw', msg => {
         if (~("JOIN PART NICK KICK KILL MODE PRIVMSG QUIT TOPIC".split(" ").indexOf(msg.command))) {
 
             let args = msg.args;
@@ -12,7 +14,7 @@ module.exports = function(obj) {
                 args = [msg.nick, msg.command, args.length?args[0]:'', args.splice(1).join(" ")]
             }
 
-            obj.db.run("INSERT INTO log(user,command,target,message) VALUES (?,?,?,?)", args);
+            log.run("INSERT INTO log(user,command,target,message) VALUES (?,?,?,?)", args);
 
         }
     })

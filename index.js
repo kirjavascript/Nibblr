@@ -93,9 +93,8 @@ irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400
 
 function init() {
 
-    logger({client, db:log});
-    webInterface({client, db, log});
-
+    logger(client);
+    webInterface(client);
     schedule();
 }
 

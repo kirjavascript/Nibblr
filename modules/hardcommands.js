@@ -59,11 +59,7 @@ var triv = {
     stop() {
         client.say(config.channel, irc.colors.wrap('light_red', 'rip trivia'));
 
-        Object.keys(triv.points).length &&
-        client.say(config.channel, irc.colors.wrap('orange', 'points this game: ') + 
-            Object.keys(triv.points)
-                .map(d => `${d}: ${triv.points[d]}`)
-                .join(' '));
+        triv.getLocalPoints();
         triv.points = {};
         // local scores, global scores
         clearInterval(triv.timer);
@@ -143,6 +139,7 @@ var triv = {
                 .toLowerCase();
 
             if (triv.question.length && cleanAnswer == triv.cleanAnswer) {
+            //if (1) {
 
                 var points = 10;
 
@@ -153,6 +150,8 @@ var triv = {
                     triv.points[from] = points;
                 }
 
+                triv.addPointsDB(from, points);
+
                 client.say(config.channel, irc.colors.wrap('light_green', 'Correct! The answer was: ') + triv.question[0].answer);
                 client.say(config.channel, irc.colors.wrap('light_green', from + ' gets ' + points + ' points for a total of ' + triv.points[from]));
                 triv.newQuestion();
@@ -160,8 +159,33 @@ var triv = {
             }
         }
     },
+    addPointsDB(from, points) {
+        db.get('select points from triviapoints where username = ?',
+            from,
+            (e,r) => {
+                if (r == undefined) {
+                    db.run("INSERT INTO triviapoints(username,points) VALUES (?,?)", [from, points]);
+                }
+                else {
+                    db.run("UPDATE triviapoints SET points = ? WHERE username = ?", [points + r.points, from]);
+                }
+            })
+    },
+    getLocalPoints() {
+        Object.keys(triv.points).length &&
+        client.say(config.channel, irc.colors.wrap('orange', 'points this game: ') + 
+            Object.keys(triv.points)
+                .map(d => `${d}: ${triv.points[d]}`)
+                .join(' '));
+    },
     stats() {
-        // this game / global
+        if (triv.timer != null) triv.getLocalPoints();
+
+        db.all('select username,points from triviapoints',
+            (e,r) => {
+                client.say(config.channel, irc.colors.wrap('orange', 'global points: ') + 
+                    r.map(d => `${d.username}: ${d.points}`).join(' '));
+            })
     }
 };
 

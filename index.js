@@ -3,50 +3,46 @@
 
 // TODO //
 
+// add hardcoded to ui
+// check all hard
+// commands ui keep open after saving
+// mode hardcoded to non
 // move ~google to the context and just add the command in the DB
+// move reminds to log and rename log?
+// trivia?
+// profanity stats
+// WebRTC file transfer
+// use module exports for db in webside
 
+// convert modules to data.db / move events to log
+
+// http://www.df7cb.de/irc/pisg/pisg-month.html
 
 // ~view commands @ -> show builtins
 // rewrite colours to just use c
 // markov if command not found / randomly
 
-// http://www.df7cb.de/irc/pisg/pisg-month.html
 // add timestamps to memos
 // google2module
 // %20 command input
 
-// infi scroll log + < & >) <-- position fixed
-// copy command ui
-// favicon
-// wordcloud
-
-// for log, check scroll ONCE animation is finished and give it a bigger offset
-
-// 20:12 <&Nibblr> Kirjava, you said https://www.youtube.com/watch?v=MFzDaBzBlL0
-// favicon
-
-// log show x at a time
 
 // log / stats / quotes /~speak
 // fulltext indexing on log
 // command use
 // msg qty
 
-
 // add Colourpicker/API info (write()) to nibblr commands
 // track nick list
-
 
 // document web API / command context
 // event backend
 // about -> github iframe
 
-// convert modules to data.db / move events to log
 
 // rss("item", "description", 3)
 
 // add command wizard
-// admin ui uplaod to imgur
 
 // 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
 
@@ -63,90 +59,39 @@ catch (e) {
     process.exit();
 }
 
-// requires //
-require('sugar-date');
-var fs = require('fs');
-var irc = require('irc');
-var atob = require('atob');
-var urban = require('urban');
-var c = require('irc-colors');
-var google = require('google');
-var request = require('request');
-var tortuga = require('tortuga');
-var cheerio = require('cheerio');
-var weather = require('weather-js');
-var safeEval = require('safe-eval');
-var html2txt = require('html-to-text');
-var loopProtect = require('./lib/loop-protect');
-var Entities = require('html-entities').AllHtmlEntities;
-var entities = new Entities();
-
-var webInterface = require('./web/server');
-var logger = require('./modules/logging')
-
-// initconf //
-
-var hide = {hide:1};
-var google_api = 'AIzaSyDWEWTDKnOqbEOij1ZENrGLpv4FIhtQ2eI';
-google.resultsPerPage = 3;
-irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400};
-
 // db //
 
 var sqlite3 = require("sqlite3");
 var db = new sqlite3.Database(config.commands);
 var log = new sqlite3.Database(config.logging);
 
-// sandbox //
+module.exports = {
+    db, log, config
+}
 
-var context = {
-    Date: Date, // Sugarjs
-    loopProtect: loopProtect,
-    html2txt: (str, lines) => {
-        if (lines) return html2txt.fromString(str).split("\n").splice(0,lines).join("\n");
-        else return html2txt.fromString(str);
-    },
-    br2n: str => str.replace(/<br ?\/?>/g, "\n"),
-    striptags: str => str.replace(/<(?:.|\n)*?>/gm, ''),
-    data: {},
-    c: c,
-    colour: (a,b) => b.split('\n').map(d => irc.colors.wrap(a,d)).join("\n"),
-    randomcolour: function(str) {
-        var colours = ['light_red', 'magenta', 'orange', 'yellow', 'light_green', 'cyan', 'light_cyan', 'light_blue', 'light_magenta', 'light_gray'];
-        return irc.colors.wrap(colours[(Math.random()*colours.length)|0], str);
-    },
-    wget: function(url, funk) {
+// requires //
+require('sugar-date');
+var fs = require('fs');
+var irc = require('irc');
+var request = require('request');
+var safeEval = require('safe-eval');
+var loopProtect = require('./lib/loop-protect');
+var Entities = require('html-entities').AllHtmlEntities;
+var entities = new Entities();
 
-        if (typeof funk == "function") {
+var webInterface = require('./web/server');
+var logger = require('./modules/logging');
+var context = require('./modules/context');
+var hard = require('./modules/hardcommands');
 
-            request(url, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
+// initconf //
 
-                    try {
-                        client.say(config.channel, entities.decode(funk(cheerio.load(body), body)));
-                    }
-                    catch (e) {client.say(config.channel, irc.colors.wrap('light_red', e))}
-
-                }
-                else {client.say(config.channel, irc.colors.wrap('light_red', error))}
-            })
-        }
-
-        return hide;
-    },
-};
-
-[ // make some props immutable
-    'loopProtect', 'wget', 'br2n', 'striptags', 'colour', 'randomcolour', 'html2txt'
-].forEach(d => Object.defineProperty(context, d, {
-    configurable: false,
-    writable:false
-}))
+var hide = {hide:1};
+irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400};
 
 // init //
 
 function init() {
-
 
     logger({client, db:log});
     webInterface({client, db, log});
@@ -193,460 +138,6 @@ function checkMemo(user) {
     });
 }
 
-// hardcoded commands //
-
-var commands = {
-    define(words, text, msg) {
-        urban(words).first(function(json) {
-            json && client.say(config.channel, json.definition);
-        });
-    },
-    example(words, text, msg) {
-        urban(words).first(function(json) {
-            json && client.say(msg.to, json.example);
-        });
-    },
-    imgur(query, text, msg) {
-        if(query.length) {
-            request({
-                url: 'https://api.imgur.com/3/gallery/search/top/0/?q=' + query,
-                headers: {'Authorization': 'Client-ID 40c7a9fdded8139'}
-            }, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-
-                    try {
-
-                        var image = JSON.parse(body).data[0];
-
-                        client.say(msg.to, irc.colors.wrap('light_green', image.title + ': ') + image.link);
-
-                    }
-                    catch (e) {client.say(msg.to, irc.colors.wrap('light_red', e))}
-                }
-            })
-        }
-    },
-    pornhub(query, text, msg) {
-
-        if(query.length) {
-            request("http://www.pornhub.com/webmasters/search?search=" + query, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-
-                    var json = JSON.parse(body);
-
-                    if (json.videos && json.videos.length) {
-                        var video = json.videos;
-
-                        video = video[(Math.random()*video.length)|0];
-
-                        var resp = irc.colors.wrap('yellow', video.title) + ' ' + irc.colors.wrap('orange', video.url) + '\n';
-
-                        var tags = video.tags.map(d => d.tag_name).join(" ");
-
-                        resp += irc.colors.wrap('light_magenta', tags)
-
-                        client.say(msg.to, resp)
-                    }
-
-                }
-            })
-        }
-
-    },
-    drug(query, text, msg) {
-        if(query.length) {
-                request("http://tripbot.tripsit.me/api/tripsit/getDrug?name=" + query, function (error, response, body) {
-                    if (!error && response.statusCode == 200) {
-
-                        var json = JSON.parse(body);
-
-                        if (json.err == null && json.data) {
-
-                            var data = json.data[0];
-
-                            var resp = irc.colors.wrap('light_magenta', data.pretty_name);
-
-                            data.aliases && " (" + data.aliases.join(", ") + ")";
-
-                            resp += "\n";
-
-                            data.properties.dose && (resp += data.properties.dose + "\n");
-
-                            if (data.properties.onset && data.properties.duration && data.properties["after-effects"]) {
-                                resp += "onset: " + data.properties.onset +
-                                    " duration: " + data.properties.duration +
-                                    " after effects: " + data.properties["after-effects"] + "\n";
-                            }
-
-                            data.properties.summary && (resp += data.properties.summary + "\n");
-
-                            data.properties.categories && (resp += "categories: " + data.properties.categories.join(" ") + "\n");
-
-                            data.dose_note && (resp += data.dose_note + "\n");
-
-                            client.say(msg.to, resp)
-                        }
-
-                    }
-                }) 
-        }
-
-    },
-
-    youtube(query, text, msg) {
-
-        query = query+' site:youtube.com';
-
-        if(query.length) {
-            var opts = {
-                maxResults: 4,
-                key: google_api
-            };
-
-            google(query, function (err, res){
-                if(err) return client.say(msg.to, irc.colors.wrap('light_red', err));
-
-                res.links.filter(d => d.link).forEach(d => {
-                    client.say(msg.to, irc.colors.wrap('light_blue','▶ ') + irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('light_green', d.title))
-                })
-            })
-        }
-
-    },
-    google(query, text, msg) {
-
-        if(query.length) {
-
-            var opts = {
-                maxResults: 4,
-                key: google_api
-            };
-
-            google(query, function (err, res){
-                if(err) return client.say(msg.to, irc.colors.wrap('light_red', err));
-
-                res.links.filter(d => d.link).forEach(d => {
-                    client.say(msg.to, irc.colors.wrap('light_blue','▶ ') + irc.colors.wrap('light_cyan', d.link) + ' ' + irc.colors.wrap('yellow', d.title))
-                })
-            })
-
-        }
-
-    },
-    weather(query, text, msg) {
-
-        if(query.length) {
-
-            weather.find({search: query, degreeType: 'C'}, function(err, result) {
-                if(err) return client.say(msg.to, irc.colors.wrap('light_red', err));
-
-                if(result.length) {
-                    result = result[0];
-
-                    var response = irc.colors.wrap('light_green', result.location.name + ' ' + result.current.temperature + ' degrees, ' + result.current.skytext + ' wind ' + result.current.winddisplay + '\n');
-
-                    result.forecast.forEach(d => response += irc.colors.wrap('light_green', d.date + ' ' + d.day + ' ') + d.skytextday + irc.colors.wrap('yellow', ' high: ' + d.high + ' low: ' + d.low) + '\n')
-
-                    client.say(msg.to, response);
-                }
-
-
-            });
-
-        }
-
-    },
-    reddit(query, text, msg) {
-
-        function writePost(post) {
-            var subreddit = "r/" + /\/r\/(.*?)\//g.exec(post.permalink)[1] + ' - ';
-
-            if (post.is_self) {
-                var resp = irc.colors.wrap('yellow', subreddit + post.title + "\n") + post.selftext;
-            }
-
-            else {
-                var resp = irc.colors.wrap('yellow', subreddit + post.title + "; ") + irc.colors.wrap('light_cyan', post.url);
-            }
-
-            client.say(msg.to, entities.decode(resp));
-        }
-
-        if(query.length) {
-
-            request("https://www.reddit.com/r/"+query+"/random/.json", function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-
-                    var json = JSON.parse(body);
-
-                    if (!json.error) {
-
-                        if (!json[0]) {
-                            var post = json.data.children;
-
-                            if(post.length != 0) {
-                                post = post[(Math.random()*post.length)|0].data;
-
-                                writePost(post);
-                            }
-
-
-                        }
-                        else { // array
-
-                            if(json[0].data.children.length != 0) {
-                                var post = json[0].data.children[0].data;
-
-                                writePost(post);
-                            }
-                        }
-                    }
-
-                }
-            })
-
-        }
-
-    },
-    torrent(query, text, msg) {
-
-        if(query.length) {
-
-            tortuga.search(query, function(results) {
-                if(results.length) {
-
-                    var torrent = results[0];
-
-                    var resp = torrent.title + irc.colors.wrap('light_green', ' ('+torrent.seeders+')') + irc.colors.wrap('yellow', ' ('+torrent.leechers+')') + '\n';
-                    resp += irc.colors.wrap('light_cyan', torrent.magnet);
-
-                    client.say(msg.from, resp);
-                }
-            })
-
-        }
-
-    },
-    "log": function(query, text, msg) {
-
-        var rgxp = /~log\((.*?)\) (.*)/.exec(text);
-        var rgxp2 = /~log (.*)/.exec(text);
-
-        if (rgxp && rgxp[1] && rgxp[2]) {
-            var lines = rgxp[1];
-            var srch = rgxp[2];
-
-            log.all('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC LIMIT ?',
-                [`%${srch}%`, lines],
-                (e,r) => {
-                    r && r.forEach(d => {
-                        var resp = c.underline(d.time) + ' <'+d.user+'> '+d.message;
-                        client.say(msg.to, resp);
-                    })
-                })
-        }
-        else if (rgxp2 && rgxp2[1]) {
-            log.get('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC',
-                `%${rgxp2[1]}%`,
-                (e,r) => {
-                    if(r && r.time) {
-                        var resp = c.underline(r.time) + ' <'+r.user+'> '+r.message;
-                        client.say(msg.to, resp);
-                    }
-                })
-        }
-        else {
-            client.say(msg.to, irc.colors.wrap('light_red', 'Syntax: ~log search term OR ~log(qty) search term'));
-        }
-
-    },
-    remind(query, text, msg) {
-
-        var rgxp = /~remind\((.*?)\) (.*)/.exec(text);
-
-        if (rgxp && rgxp[1] && rgxp[2]) {
-            var when = Date.create(rgxp[1]);
-            var _msg = rgxp[2];
-
-            if (when.isBefore('now')) {
-                client.say(msg.to, irc.colors.wrap('light_red', 'Epoch fail'));
-            }
-            else if (when == "Invalid Date") {
-                client.say(msg.to, irc.colors.wrap('light_red', 'Error: Invalid Date'));
-            }
-            else {
-                var resp = "▶ Reminder set for ";
-
-                resp += when.full();
-
-                db.run("INSERT INTO events(timestamp,type,user,message) VALUES (?,?,?,?)", [
-                    when.toISOString(),
-                    'remind',
-                    msg.from,
-                    _msg
-                ]);
-
-                client.say(msg.to, irc.colors.wrap('cyan', resp));
-            }
-        }
-        else {
-            client.say(msg.to, irc.colors.wrap('light_red', 'Syntax: ~remind(when) message'));
-        }
-
-    },
-    memo(query, text, msg) {
-
-        var rgxp = /~memo\((.*?)\) (.*)/.exec(text);
-
-        if (rgxp && rgxp[1] && rgxp[2]) {
-            var user = rgxp[1];
-            var _msg = rgxp[2];
-            var when = 'now';
-
-            if(~user.indexOf(',')) {
-                var when = user.split(',')[1];
-                user = user.split(',')[0];
-            }
-
-            when = Date.create(when);
-
-            if (when == "Invalid Date") {
-                client.say(msg.to, irc.colors.wrap('light_red', 'Error: Invalid Date'));
-            }
-            else if(user.length) {
-                var resp = "▶ Saved message for ";
-
-                resp += user;
-
-                if(when.isAfter('now')) {
-                    resp += " delayed until " + when.full()
-                }
-
-                db.run("INSERT INTO events(timestamp,type,user,target,message) VALUES (?,?,?,?,?)", [
-                    when.toISOString(),
-                    'memo',
-                    msg.from,
-                    user,
-                    _msg
-                ]);
-
-                client.say(msg.to, irc.colors.wrap('cyan', resp));
-            }
-
-        }
-        else {
-            client.say(msg.to, irc.colors.wrap('light_red', 'Syntax: ~memo(who [, when]) message'));
-        }
-
-    },
-    seen(who, text, msg) {
-
-        console.log(who)
-
-        log.get('SELECT time,command,message FROM log where lower(user) = lower(?) ORDER BY time DESC',
-            who,
-            (e,r) => {
-                if(r) {
-                    let _msg = `${who} was last seen ${r.time} using ${r.command} ${r.message}`;
-
-                    client.say(msg.to, irc.colors.wrap('cyan', _msg));
-                }
-                else {
-                    client.say(msg.to, irc.colors.wrap('cyan', '¯\\_(ツ)_/¯'));
-                }
-            })
-
-    },
-
-    "commands": function (query, text, msg) {
-
-        if (text.indexOf('~commands.list') == 0) {
-
-            db.all('SELECT name from commands', (e,r) => {
-
-                try {
-
-                    var response = "~" + Object.keys(commands).join(" ~") + " ~" + r.map(d => d.name).join(" ~");
-
-                    client.say(msg.to, response);
-                }
-                catch (e) {client.say(msg.to, irc.colors.wrap('light_red', e))}
-
-            })
-
-        }
-        else if (text.indexOf('~commands.') == 0) {
-
-            var name = text.substring(10, text.indexOf(' '));
-
-            var command = text.substring(text.indexOf(' ')+1);
-
-            if(~text.indexOf(' ')) {
-
-                db.get('select locked from commands where name = ?', name, (e,r) => {
-
-                    if(r && r.locked == "true") {
-                        client.say(msg.to, irc.colors.wrap('light_red', '~' + name + ' is locked'))
-                    }
-                    else {
-                        if (r) { // exists
-                            db.run("UPDATE commands SET command = ? WHERE name = ?", [command, name]);
-                        }
-                        else {
-                            db.run("INSERT INTO commands(name,command) VALUES (?,?)", [name, command]);
-                        }
-
-                        try {
-                            var response = typeof safeEval(command, context) + ' ~' + name + ' added';
-
-                            client.say(msg.to, irc.colors.wrap('light_magenta', response));
-                        }
-                        catch (e) {client.say(msg.to, irc.colors.wrap('light_red', e))}
-                    }
-
-                });
-            }
-            else {
-                name = text.substring(10);
-                db.get('select command from commands where name = ?', name, (e,r) => {
-                    if(r) {
-                        client.say(msg.to, r.command);
-                    }
-                });
-
-            }
-
-        }
-
-    },
-
-
-    "eval": function(query, text, msg) {
-
-        try {
-            var resp = safeEval(query, context);
-
-            if (resp!==hide)
-                client.say(msg.to,
-                    typeof resp == "string" ? context.colour("yellow", resp) :
-                    typeof resp == "function" ? irc.colors.wrap('light_magenta', resp) :
-                    irc.colors.wrap('light_red', resp)
-                );
-        }
-        catch (e) {client.say(msg.to, irc.colors.wrap('light_red', e))}
-
-    },
-    nick(query) {
-        client.send('NICK', query);
-    },
-    reset() {
-        process.exit();
-    },
-    combobreaker() {
-        process.exit();
-    }
-}
-
 // client //
 
 var client = new irc.Client(config.server, config.username, {
@@ -670,24 +161,24 @@ client.addListener('error', function(message) {
 
 client.addListener("message", function(from, to, text, message) {
 
+    context.setContext([client, from, to, text, message, hide]);
+    hard.setContext([client, from, to, text, message, hide, context]);
+
     checkMemo(from);
 
     var getUrl = text.match(/(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig);
 
     // hardcoded commands //
 
-    var command = text.match(/~([a-zA-Z]*)/);
-    var params = null;
-
-    if (command) {
-        command = command[1];
-        params = text.slice(text.indexOf(command)+command.length+1);
+    if (text == '~reset' || text == '~combobreaker') {
+        process.exit();
     }
 
-    if (params && command && text[0] == '~' && ~Object.keys(commands).indexOf(command)) {
-        commands[command](params, text, {from, to, text, message});
-    }
+    var hardObj = hard.exists(text);
 
+    if (hardObj) {
+        hard.commands[hardObj.command](hardObj.params, hardObj.text);
+    }
 
     // database commands //
 
@@ -711,10 +202,10 @@ client.addListener("message", function(from, to, text, message) {
 
                     var loopNuke = loopProtect(r.command);
 
-                    var response, command = safeEval(loopNuke, context)
+                    var response, command = safeEval(loopNuke, context.sandbox)
 
                     if(typeof command == "function"){
-                        response = command.call(context, input, params, {from, to, text, message});
+                        response = command.call(context.sandbox, input, params, {from, to, text, message});
                     }
                     else {
                         response = command;

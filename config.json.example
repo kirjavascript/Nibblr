@@ -6,6 +6,7 @@
     "commands": "data.db",
     "logging": "log.db",
     "webInterface": {
+        "domain": "localhost",
         "port": 8888,
         "password": "changeme",
         "secretKey": "changeme"

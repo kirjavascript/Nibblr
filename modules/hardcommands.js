@@ -213,7 +213,7 @@ var commands = {
             var words = r.map(d => d.message).join(' ');
             var seed = query || words.split(' ').pop();
             var m = markov(1);
-            var qty = ((Math.random()*10)|0)+10;
+            var qty = ((Math.random()*20)|0);
 
             m.seed(words, () => {
                 var resp = m.respond(seed);
@@ -439,14 +439,7 @@ var commands = {
         var rgxp = /~log\((.*?)\) (.*)/.exec(text);
         var rgxp2 = /~log (.*)/.exec(text);
 
-        if (rgxp && rgxp[1] == 'random') {
-            log.get('SELECT time,user,message from LOG ORDER BY RANDOM() DESC LIMIT 1',
-                (e,r) => {
-                    var resp = c.underline(r.time) + ' <'+r.user+'> '+r.message;
-                    client.say(to, resp);
-                })
-        }
-        else if (rgxp && rgxp[1] && rgxp[2]) {
+        if (rgxp && rgxp[1] && rgxp[2]) {
             var lines = rgxp[1];
             var srch = rgxp[2];
 

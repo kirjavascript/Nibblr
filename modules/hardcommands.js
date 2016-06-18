@@ -153,6 +153,8 @@ var triv = {
 
                 var points = 10 - (triv.clueCount*2);
 
+                points = points < 0 ? 0 : points;
+
                 if (triv.points[from]) {
                     triv.points[from] += points;
                 }

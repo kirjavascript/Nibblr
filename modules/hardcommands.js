@@ -439,17 +439,16 @@ var commands = {
         var rgxp = /~log\((.*?)\) (.*)/.exec(text);
         var rgxp2 = /~log (.*)/.exec(text);
 
-        if (rgxp && rgxp[1] && rgxp[2]) {
+        if (rgxp && rgxp[1] == 'random') {
+            log.get('SELECT time,user,message from LOG ORDER BY RANDOM() DESC LIMIT 1',
+                (e,r) => {
+                    var resp = c.underline(r.time) + ' <'+r.user+'> '+r.message;
+                    client.say(to, resp);
+                })
+        }
+        else if (rgxp && rgxp[1] && rgxp[2]) {
             var lines = rgxp[1];
             var srch = rgxp[2];
-
-            if (lines == 'random') {
-                log.get('SELECT time,user,message from LOG ORDER BY RANDOM() DESC LIMIT 1',
-                    (e,r) => {
-                        var resp = c.underline(r.time) + ' <'+r.user+'> '+r.message;
-                        client.say(to, resp);
-                    })
-            }
 
             log.all('SELECT time,user,message from LOG WHERE message like ? ORDER BY id DESC LIMIT ?',
                 [`%${srch}%`, lines],

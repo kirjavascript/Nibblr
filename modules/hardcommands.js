@@ -208,14 +208,17 @@ var commands = {
     },
     // /trivia //
     speak(query, text) {
-        log.all('SELECT message FROM log ORDER BY RANDOM() LIMIT 100',(e,r) => {
+        log.all('SELECT message FROM log ORDER BY RANDOM() LIMIT 1000',(e,r) => {
 
             var words = r.map(d => d.message).join(' ');
             var seed = query || words.split(' ').pop();
             var m = markov(1);
+            var qty = ((Math.random()*10)|0)+10;
 
             m.seed(words, () => {
-                client.say(to, m.respond(seed).join(' '))
+                var resp = m.respond(seed);
+                resp.splice(qty);
+                client.say(to, resp.join(' '))
             })
         })
     },

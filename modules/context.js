@@ -9,8 +9,12 @@ var entities = new Entities();
 
 var client, from, to, text, message, hide;
 
-function setContext(arr) {
-    [client, from, to, text, message, hide] = arr;
+function init(_client) {
+    client = _client;
+}
+
+function getMessage(arr) {
+    [from, to, text, message, hide] = arr;
 }
 
 var sandbox = {
@@ -68,5 +72,6 @@ var sandbox = {
 
 module.exports = {
     sandbox,
-    setContext
+    getMessage,
+    init
 }

@@ -144,6 +144,7 @@ client.addListener("message", function(from, to, text, message) {
     // hardcoded commands //
 
     if (text == '~reset' || text == '~combobreaker') {
+        client.send('QUIT', 'brb');
         process.exit();
     }
 

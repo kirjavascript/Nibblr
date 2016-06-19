@@ -9,6 +9,7 @@ var weather = require('weather-js');
 var safeEval = require('safe-eval');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
+
 var log = require('../index').log;
 var db = require('../index').db;
 var config = require('../index').config;
@@ -80,6 +81,7 @@ var triv = {
                     .replace(/<(?:.|\n)*?>/gm, '')
                     .replace(/[^a-z0-9]/gi,'')
                     .replace(/^a/gi,'')
+                    .replace(/^an/gi,'')
                     .replace(/^the/gi,'')
                     .replace(/s$/gi,'')
                     .toLowerCase();
@@ -145,6 +147,7 @@ var triv = {
                 .replace(/[^a-z0-9]/gi,'')
                 .replace(/^a/gi,'')
                 .replace(/^the/gi,'')
+                .replace(/^an/gi,'')
                 .replace(/s$/gi,'')
                 .toLowerCase();
 

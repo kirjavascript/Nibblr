@@ -3,23 +3,14 @@
 
 // TODO //
 
+// split trivia
 // ~poker
+// command piping
+
 // trivia stats
 // profanity stats
 
 // http://www.df7cb.de/irc/pisg/pisg-month.html
-
-// rewrite colours to just use c
-// markov if command not found / randomly
-
-// add timestamps to memos
-// google2module
-// %20 command input
-
-
-// log / stats / quotes /~speak
-// command use
-// msg qty
 
 // add Colourpicker/API info (write()) to nibblr commands
 // track nick list
@@ -28,15 +19,9 @@
 // event backend
 // about -> github iframe
 
-
 // rss("item", "description", 3)
 
 // add command wizard
-
-// 19:23 <&Nibblr> Kirjava: add ~speak w/ https://www.npmjs.com/package/markovchain
-
-// wolfram
-
 
 process.env.TZ = 'Europe/London';
 

@@ -3,13 +3,13 @@
 
 // TODO //
 
-// split trivia
 // ~poker
 // command piping
 
 // trivia stats
 // profanity stats
 
+// write colour lib that can copy the functionality of wrap but also accepts numbers, etc. slow migration to better colour managements, -1 = rainbow, -2 = bold etc
 // http://www.df7cb.de/irc/pisg/pisg-month.html
 
 // add Colourpicker/API info (write()) to nibblr commands

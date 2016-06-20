@@ -28,7 +28,6 @@ var triv = {
 
         triv.getLocalPoints();
         triv.points = {};
-        // local scores, global scores
         clearInterval(triv.timer);
         triv.timer = null;
     },

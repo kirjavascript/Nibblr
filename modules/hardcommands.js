@@ -11,6 +11,7 @@ var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
 var triv = require('./trivia');
+var poker = require('./poker');
 
 var log = require('../index').log;
 var db = require('../index').db;
@@ -24,11 +25,13 @@ var client, from, to, text, message, hide, context;
 function init(_client) {
     client = _client;
     triv.init(client);
+    poker.init(client);
 }
 
 function getMessage(arr) {
     [from, to, text, message, hide, context] = arr;
     triv.attempt(from, text);
+    poker.message(from, text);
 }
 
 function exists(text) {
@@ -49,20 +52,23 @@ function exists(text) {
 }
 
 var commands = {
-    // trivia //
-    trivia(words, text) {
+    // games //
+    poker(query, text) {
+        poker.toggle(query);
+    },
+    trivia() {
         triv.toggle();
     },
-    clue(words, text) {
+    clue() {
         triv.clue();
     },
-    skip(words, text) {
+    skip() {
         triv.skip();
     },
     triviastats() {
         triv.stats();
     },
-    // /trivia //
+    // /games //
     speak(query, text) {
         log.all('SELECT message FROM log ORDER BY RANDOM() LIMIT 1000',(e,r) => {
 

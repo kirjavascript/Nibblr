@@ -53,9 +53,9 @@ function exists(text) {
 
 var commands = {
     // games //
-    poker(query, text) {
-        poker.toggle(query);
-    },
+    // poker(query, text) {
+    //     poker.toggle(query);
+    // },
     trivia() {
         triv.toggle();
     },

@@ -1,9 +1,9 @@
-var c = require('irc-colors');
-var config = require('../index').config;
-var db = require('../index').db;
-var client;
+let c = require('irc-colors');
+let config = require('../index').config;
+let db = require('../index').db;
+let client;
 
-var deck = {
+let deck = {
     cards: [],
     clean() {
         this.cards = [];
@@ -39,16 +39,18 @@ function pm(user, msg) {
     client.say(user, msg);
 }
 
-
 // avoid use of timer
 // 21:45 < cr0sis> 5/10 blinds 1000 stack?!
 // round counter
 // double every 5 rounds
+// ASCII flop
+// http://2013.jsconf.eu/speakers/martin-kleppe-1024-seconds-of-js-wizardry.html
+// https://www.youtube.com/watch?v=YRo2GStE3Qg
 
-var running = false;
-var players, round, blinds;
+let running = false;
+let players, round, blinds;
 
-var poker = {
+let poker = {
     init(_client) { client = _client },
     toggle(stack) {
 
@@ -62,7 +64,7 @@ var poker = {
             round = 1;
             blinds = { small: 5, big: 10 };
 
-            var [h, d, s, k] = [c.red('♥'),c.red('♦'),'♠','♣'];
+            let [h, d, s, k] = [c.red('♥'),c.red('♦'),'♠','♣'];
 
             say(`${d}${s}${h}${k} ¡poker! ${k}${d}${s}${h}`);
 
@@ -79,11 +81,14 @@ var poker = {
         else if (running == 'join' && text == 'start') {
             this.start();
         }
+        else if (running == 'query' && players[0].name == who) {
+            this.command(from, text);
+        }
 
     },
     join(who) {
         if (!players[who]) {
-            var card = deck.draw();
+            let card = deck.draw();
             players[who] = {};
             players[who].order = card.number;
             say(`${c.green(who)} joined and drew the ${card.glyph}`);
@@ -100,7 +105,7 @@ var poker = {
             order: players[d].order,
             stack: 1000,
             bet: 0,
-            fold: false,
+            state: false,
             cards: [],
         })).sort((a,b) => a.order < b.order);
 
@@ -114,12 +119,14 @@ var poker = {
         // reset players
         say(`Round ${round}: ${c.red(players[0].name)} is small blind, ${c.red(players[1].name)} is big blind`);
         this.deal();
-        this.addBet(blinds.small);
-        this.addBet(blinds.big);
+        this.addBet(blinds.small, true);
+        this.addBet(blinds.big, true);
         this.showStats();
         this.queryPlayer();
 
     },
+    // ascii flop
+    // river
     deal() {
         players.forEach(d => {
             d.cards = deck.draw(2);
@@ -129,21 +136,55 @@ var poker = {
             }
         })
     },
-    addBet(qty) {
-        var player = players.shift();
+    addBet(qty, isBlind = false) {
+        let player = players.shift();
         player.stack -= qty;
         player.bet += qty;
+        if (isBlind == false) {
+            player.state = 'bet';
+        }
         players.push(player);
     },
     queryPlayer() {
+        // if players = 1, if all bet & bets are equal or fold (mark out)
+
+        running = 'query';
+
+        let bet = players[0].bet;
+
+        say(`${players[0].name}; ${c.yellow('check')}, ${c.green('raise')}, or ${c.red('fold')}`);
+
+        
+
+        if (!state && bet < this.highestBet()) {
+            say(`${players[0].name}; ${c.yellow('call')}, ${c.green('raise')}, or ${c.red('fold')}`);
+        }
+        
         // call/check bet fold
     },
+    // do condition check
+    command(who, what) {
+
+    },
+    check (who, what) {},
+    call (who, what) {},
+    bet (who, what) {},
+    raise (who, what) {},
+    fold (who, what) {},
+    allin (who, what) {},
     showStats() {
-        var pot = players.reduce((a,b) => a.bet + b.bet);
-        var bets = players.filter(d => d.bet).map(d => `${c.yellow(d.name)} ${c.green.bold('$'+d.bet)}`).join(' ');
+        let pot = this.pot();
+        let bets = players.filter(d => d.bet).map(d => `${c.yellow(d.name)} ${c.green.bold('$'+d.bet)}`).join(' ');
 
         say(`Pot: ${c.green.bold('$'+pot)} Bets: ${bets}`);
     },
+    pot() {
+        return players.reduce((a,b) => a.bet + b.bet);
+    },
+    highestBet() {
+        return Math.max(...players.map(d => d.bet));
+    }
+    // more
 };
 
 module.exports = poker;

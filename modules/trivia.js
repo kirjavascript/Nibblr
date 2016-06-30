@@ -161,8 +161,12 @@ var triv = {
 
         db.all('select username,trivia from points',
             (e,r) => {
-                client.say(config.channel, irc.colors.wrap('orange', 'global points: ') + 
-                    r.map(d => `${d.username}: ${d['trivia']}`).join(' '));
+                var msg = r.filter(d => d['trivia'])
+                    .sort((a,b) => a['trivia'] < b['trivia'])
+                    .map(d => `${d.username}: ${d['trivia']}`)
+                    .join(' ');
+                    
+                client.say(config.channel, irc.colors.wrap('orange', 'trivia points: ') + msg);
             })
     }
 };

@@ -1,7 +1,3 @@
-// ~slotstats
-// delete old
-// change db
-
 var irc = require('irc');
 var config = require('../index').config;
 var db = require('../index').db;
@@ -33,7 +29,7 @@ var slots = {
             jackpot = 100;
         }
         else if (rslt[0]==rslt[1]||rslt[1]==rslt[2]) {
-            var win = (Math.random()*6)|0;
+            var win = (Math.random()*4)|0;
             msg += `!!! ${user} just won €${win+1} !\n`
             addPoints(user, win);
         }
@@ -43,6 +39,17 @@ var slots = {
         }
 
         client.say(config.channel, msg);
+    },
+    stats() {
+        db.all('select username,slots from points',
+            (e,r) => {
+                var msg = r.filter(d => d['slots'])
+                    .sort((a,b) => a['slots'] < b['slots'])
+                    .map(d => `${d.username}: ${d['slots']}`)
+                    .join(' ');
+
+                client.say(config.channel, msg);
+            })
     }
 };
 
@@ -50,16 +57,17 @@ function addPoints(from, points) {
     db.get('select slots from points where username = ?',
         from,
         (e,r) => {
-            if (r == undefined || (r && !r.slots)) {
+            if (r == undefined) {
                 db.run('INSERT INTO points(username,slots) VALUES (?,?)', [from, 100 + points]);
                 client.say(config.channel, `${from} has €${100 + points} `);
             }
             else {
-                db.run('UPDATE points SET slots = ? WHERE username = ?', [points + r.slots, from]);
-                client.say(config.channel, `${from} has €${points + r.slots} `);
+                var pts = r['slots']?points + r['slots']:points+100;
+                db.run('UPDATE points SET slots = ? WHERE username = ?', [pts, from]);
+                client.say(config.channel, `${from} has €${pts} `);
             }
 
-        })
+        });
 }
 
 module.exports = slots;

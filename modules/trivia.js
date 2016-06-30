@@ -138,14 +138,14 @@ var triv = {
         }
     },
     addPointsDB(from, points) {
-        db.get('select points from triviapoints where username = ?',
+        db.get('select trivia from points where username = ?',
             from,
             (e,r) => {
                 if (r == undefined) {
-                    db.run("INSERT INTO triviapoints(username,points) VALUES (?,?)", [from, points]);
+                    db.run("INSERT INTO points(username,trivia) VALUES (?,?)", [from, points]);
                 }
                 else {
-                    db.run("UPDATE triviapoints SET points = ? WHERE username = ?", [points + r.points, from]);
+                    db.run("UPDATE points SET trivia = ? WHERE username = ?", [points + r['trivia'], from]);
                 }
             })
     },
@@ -159,10 +159,10 @@ var triv = {
     stats() {
         if (triv.timer != null) triv.getLocalPoints();
 
-        db.all('select username,points from triviapoints',
+        db.all('select username,trivia from points',
             (e,r) => {
                 client.say(config.channel, irc.colors.wrap('orange', 'global points: ') + 
-                    r.map(d => `${d.username}: ${d.points}`).join(' '));
+                    r.map(d => `${d.username}: ${d['trivia']}`).join(' '));
             })
     }
 };

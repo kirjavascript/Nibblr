@@ -3,9 +3,11 @@
 
 // TODO //
 
+
 // ~poker
 // command piping
 
+// points stats, command use stats
 // trivia stats
 // profanity stats
 

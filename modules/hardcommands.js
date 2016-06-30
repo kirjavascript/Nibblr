@@ -12,6 +12,7 @@ var entities = new Entities();
 
 var triv = require('./trivia');
 var poker = require('./poker');
+var slots = require('./slots');
 
 var log = require('../index').log;
 var db = require('../index').db;
@@ -26,6 +27,7 @@ function init(_client) {
     client = _client;
     triv.init(client);
     poker.init(client);
+    slots.init(client);
 }
 
 function getMessage(arr) {
@@ -67,6 +69,12 @@ var commands = {
     },
     triviastats() {
         triv.stats();
+    },
+    slots() {
+        slots.go(from);
+    },
+    slotstats() {
+        slots.stats();
     },
     // /games //
     speak(query, text) {

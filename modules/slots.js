@@ -48,7 +48,7 @@ var slots = {
                     .map(d => `${d.username}: ${d['slots']}`)
                     .join(' ');
 
-                client.say(config.channel, msg);
+                client.say(config.channel, irc.colors.wrap('orange', 'slots points: ') + msg);
             })
     }
 };

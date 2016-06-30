@@ -3,13 +3,13 @@
 
 // TODO //
 
-// split trivia
 // ~poker
 // command piping
 
 // trivia stats
 // profanity stats
 
+// write colour lib that can copy the functionality of wrap but also accepts numbers, etc. slow migration to better colour managements, -1 = rainbow, -2 = bold etc
 // http://www.df7cb.de/irc/pisg/pisg-month.html
 
 // add Colourpicker/API info (write()) to nibblr commands
@@ -40,7 +40,7 @@ var db = new sqlite3.Database(config.commands);
 var log = new sqlite3.Database(config.logging);
 
 module.exports = {
-    db, log, config
+    db, log, config, client
 }
 
 // requires //
@@ -67,6 +67,8 @@ irc.Client.prototype._updateMaxLineLength = function() {this.maxLineLength = 400
 
 function init() {
 
+    context.init(client);
+    hard.init(client);
     logger(client);
     webInterface(client);
     schedule();
@@ -134,8 +136,8 @@ client.addListener('error', function(message) {
 
 client.addListener("message", function(from, to, text, message) {
 
-    context.setContext([client, from, to, text, message, hide]);
-    hard.setContext([client, from, to, text, message, hide, context]);
+    context.getMessage([from, to, text, message, hide]);
+    hard.getMessage([from, to, text, message, hide, context]);
 
     checkMemo(from);
 
@@ -144,7 +146,6 @@ client.addListener("message", function(from, to, text, message) {
     // hardcoded commands //
 
     if (text == '~reset' || text == '~combobreaker') {
-        client.send('QUIT', 'brb');
         process.exit();
     }
 

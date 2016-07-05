@@ -20,14 +20,14 @@ db.get('select slots from points where username = "$jackpot"',
     });
 
 var timers = {};
-var delay = 15000;
+var delay = 5000;
 
 var slots = {
     init(_client) { client = _client },
     go(user) {
 
         if (timers[user]) {
-            client.say(config.channel, 'Rolling the wheels...');
+            client.say(config.channel, 'please wait');
             return;
         }
 

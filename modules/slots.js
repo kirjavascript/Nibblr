@@ -27,7 +27,7 @@ var slots = {
     go(user) {
 
         if (timers[user]) {
-            client.say(config.channel, 'please wait');
+            client.notice(user, 'please wait');
             return;
         }
 

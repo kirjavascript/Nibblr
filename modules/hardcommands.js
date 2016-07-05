@@ -1,5 +1,6 @@
 require('sugar-date');
 var irc = require('irc');
+var ping = require('ping');
 var urban = require('urban');
 var c = require('irc-colors');
 var google = require('google');
@@ -53,6 +54,8 @@ function exists(text) {
     }
 }
 
+
+
 var commands = {
     // games //
     // poker(query, text) {
@@ -77,6 +80,20 @@ var commands = {
         slots.stats();
     },
     // /games //
+    ping(query) {
+
+        ping.promise.probe(query)
+            .then(function (res) {
+                if (res.alive) {
+                    client.say(to, res.output);
+                }
+                else {
+                    client.say(to, irc.colors.wrap('light_red', query + ' is down :('));
+                }
+                
+            });
+
+    },
     speak(query, text) {
         log.all('SELECT message FROM log ORDER BY RANDOM() LIMIT 1000',(e,r) => {
 

@@ -19,13 +19,11 @@ db.get('select slots from points where username = "$jackpot"',
 
     });
 
-
-
 var timers = {};
-var delay = 10000;
+var delay = 15000;
 
 var slots = {
-    init(_client) { client = _client;},
+    init(_client) { client = _client },
     go(user) {
 
         if (timers[user]) {
@@ -60,9 +58,9 @@ var slots = {
         else {
             addPoints(user, -1);
             jackpot += 2;
-                db.run('UPDATE points SET slots = ? WHERE username = ?',
-                    [+jackpot, '$jackpot']
-                );
+            db.run('UPDATE points SET slots = ? WHERE username = ?',
+                [+jackpot, '$jackpot']
+            );
         }
 
         client.say(config.channel, msg);
@@ -70,7 +68,6 @@ var slots = {
         timers[user] = setTimeout(() => {
             timers[user] = void 0;
         }, delay);
-
     },
     stats() {
         db.all('select username,slots from points',
@@ -95,7 +92,7 @@ function addPoints(from, points) {
             }
             else {
                 var pts = r['slots']?points + r['slots']:points+100;
-                
+                db.run('UPDATE points SET slots = ? WHERE username = ?', [pts, from]);
                 client.say(config.channel, `${from} has €${pts} `);
             }
 

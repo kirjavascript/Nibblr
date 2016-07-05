@@ -61,7 +61,7 @@ var slots = {
             addPoints(user, -1);
             jackpot += 2;
                 db.run('UPDATE points SET slots = ? WHERE username = ?',
-                    [jackpot, '$jackpot']
+                    [+jackpot, '$jackpot']
                 );
         }
 

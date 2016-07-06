@@ -31,13 +31,13 @@ var slots = {
             return;
         }
 
-        var sym = ['1,8 BELL ','1,4 CHERRY ','1,6 PLUM ','1,9 WEED ','0,4 STRAWBERRY ','0,1 COAL ','1,11 BLUEBERRY ','1,7 ORANGE ','4,3 APPLE '];
+        var sym = ['1,8 BELL ','1,4 CHERRY ','1,6 PLUM ','1,9 WEED ','0,4 STRAWBERRY ','0,1 COAL ','1,11 BLUEBERRY ','1,7 ORANGE ','4,3 APPLE ','4,1 BLOOD '];
 
 
         var msg = `[7SLOT-MACHINE] Current Jackpot: €${jackpot}  :::  Rolling the wheels.\n`;
 
         function get() {
-            return sym[(Math.random()*9)|0];
+            return sym[(Math.random()*10)|0];
         }
 
         var rslt = [get(),get(),get()];

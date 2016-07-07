@@ -92,7 +92,7 @@ function addPoints(from, points) {
                 client.say(config.channel, `${from} has €${100 + points} `);
             }
             else {
-                var pts = points + +r['slots'];
+                var pts = points + (+r['slots']);
                 db.run('UPDATE points SET slots = ? WHERE username = ?', [pts, from]);
                 client.say(config.channel, `${from} has €${pts} `);
             }

@@ -38,7 +38,7 @@ var slots = {
         var msg = `[7SLOT-MACHINE] Current Jackpot: €${jackpot}  :::  Rolling the wheels.\n`;
 
         function get() {
-            return sym[(Math.random()*14)|0];
+            return sym[(Math.random()*15)|0];
         }
 
         var rslt = [get(),get(),get()];

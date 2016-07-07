@@ -31,7 +31,7 @@ var slots = {
             return;
         }
 
-        var sym = ['1,8 BELL ','1,4 CHERRY ','1,6 PLUM ','1,9 WEED ','0,4 STRAWBERRY ','0,1 COAL ','1,11 BLUEBERRY ','1,7 ORANGE ','4,3 APPLE ','0,7 WOOD ','0,8 LEMON ','1,8 BANANA '];
+        var sym = ['1,8 BELL ','1,4 CHERRY ','1,6 PLUM ','1,9 WEED ','0,4 STRAWBERRY ','0,1 COAL ','1,11 BLUEBERRY ','1,7 ORANGE ','4,3 APPLE ','0,7 WOOD ','0,9 LEMON ','1,9 BANANA '];
 
 
         var msg = `[7SLOT-MACHINE] Current Jackpot: €${jackpot}  :::  Rolling the wheels.\n`;

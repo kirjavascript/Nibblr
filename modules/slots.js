@@ -21,7 +21,7 @@ db.get('select slots from points where username = "$jackpot"',
     });
 
 var timers = {};
-var delay = 1000;
+var delay = 10000;
 
 var slots = {
     init(_client) { client = _client },

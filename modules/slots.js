@@ -13,7 +13,7 @@ db.get('select slots from points where username = "$jackpot"',
             jackpot = r.slots;
         }
         else {
-            db.run('INSERT INTO points(username,slots) VALUES (?,?)', 
+            db.run('INSERT INTO points(username,slots) VALUES (?,?)',
                 ['$jackpot', 100]
             );
         }
@@ -21,7 +21,7 @@ db.get('select slots from points where username = "$jackpot"',
     });
 
 var timers = {};
-var delay = 1000;
+var delay = 1500;
 
 var slots = {
     init(_client) { client = _client },
@@ -48,8 +48,10 @@ var slots = {
         if (rslt[0]==rslt[1]&&rslt[0]==rslt[2]) {
             addPoints(user, jackpot);
             msg += `0 1,8 J 1,4 A 1,9 C 1,7 K 1,13 P 1,11 O 1,5 T    !!! ${user} just won €${jackpot} !\n`
-
             jackpot = 100;
+            db.run('UPDATE points SET slots = ? WHERE username = ?',
+                [+jackpot, '$jackpot']
+            );
         }
         else if (rslt[0]==rslt[1]||rslt[1]==rslt[2]) {
             var win = (Math.random()*4)|0;

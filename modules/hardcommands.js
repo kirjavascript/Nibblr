@@ -76,6 +76,9 @@ var commands = {
     slots() {
         slots.go(from);
     },
+    megaslots() {
+        slots.mega(from);
+    },
     slotstats() {
         slots.stats();
     },

@@ -118,7 +118,7 @@ var slots = {
                         addPoints(user, win);
                     }
                     else if (rslt[0]==rslt[1]||rslt[1]==rslt[2]||rslt[2]==rslt[3]) {
-                        var win = (Math.random()*5)|0;
+                        var win = (Math.random()*3)|0;
                         win++;
                         win *= 5;
                         msg += `!!! ${user} just won €${win} !\n`

@@ -7,9 +7,6 @@ var client;
 var jackpot = 100;
 var megapot = 1000;
 
-db.run('UPDATE points SET slots = ? WHERE username = ?', [1000, '$megapot']);
-process.exit();
-
 db.get('select slots from points where username = "$jackpot"',
     (e,r) => {
         if (r != undefined) {
@@ -33,8 +30,6 @@ db.get('select slots from points where username = "$megapot"',
             );
         }
     });
-
-if (megapot < 1000) megapot = 1000;
 
 var timers = {};
 var delay = 1500;

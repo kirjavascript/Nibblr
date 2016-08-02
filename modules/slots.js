@@ -31,6 +31,8 @@ db.get('select slots from points where username = "$megapot"',
         }
     });
 
+if (megapot < 1000) megapot = 1000;
+
 var timers = {};
 var delay = 1500;
 
@@ -109,15 +111,15 @@ var slots = {
                         );
                     }
                     else if ((rslt[0]==rslt[1]&&rslt[0]==rslt[2])||(rslt[3]==rslt[1]&&rslt[3]==rslt[2])) {
-                        var win = (Math.random()*4)|0;
-                        win *= 100;
-                        msg += `!!! ${user} just won €${win+1} !\n`
+                        var win = 1000;
+                        msg += `!!! ${user} just won €${win} !\n`
                         addPoints(user, win);
                     }
                     else if (rslt[0]==rslt[1]||rslt[1]==rslt[2]||rslt[2]==rslt[3]) {
-                        var win = (Math.random()*4)|0;
+                        var win = (Math.random()*8)|0;
+                        win++;
                         win *= 10;
-                        msg += `!!! ${user} just won €${win+1} !\n`
+                        msg += `!!! ${user} just won €${win} !\n`
                         addPoints(user, win);
                     }
                     else {

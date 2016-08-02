@@ -90,7 +90,7 @@ var commands = {
                 else {
                     client.say(to, irc.colors.wrap('light_red', query + ' is down :('));
                 }
-                
+
             });
 
     },
@@ -201,7 +201,7 @@ var commands = {
                         }
 
                     }
-                }) 
+                })
         }
 
     },
@@ -502,11 +502,19 @@ var commands = {
             }
             else {
                 name = text.substring(10);
-                db.get('select command from commands where name = ?', name, (e,r) => {
-                    if(r) {
-                        client.say(to, r.command);
-                    }
-                });
+
+                if (commands[name]) {
+
+                    client.say(to, commands[name].toString());
+
+                }
+                else {
+                    db.get('select command from commands where name = ?', name, (e,r) => {
+                        if(r) {
+                            client.say(to, r.command);
+                        }
+                    });
+                }
 
             }
 

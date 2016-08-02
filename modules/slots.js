@@ -111,12 +111,14 @@ var slots = {
                         );
                     }
                     else if ((rslt[0]==rslt[1]&&rslt[0]==rslt[2])||(rslt[3]==rslt[1]&&rslt[3]==rslt[2])) {
-                        var win = 1000;
+                        var win = (Math.random()*4)|0;
+                        win += 4;
+                        win *= 100;
                         msg += `!!! ${user} just won €${win} !\n`
                         addPoints(user, win);
                     }
                     else if (rslt[0]==rslt[1]||rslt[1]==rslt[2]||rslt[2]==rslt[3]) {
-                        var win = (Math.random()*8)|0;
+                        var win = (Math.random()*4)|0;
                         win++;
                         win *= 10;
                         msg += `!!! ${user} just won €${win} !\n`

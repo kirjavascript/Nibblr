@@ -475,8 +475,8 @@ var commands = {
 
             var command = text.substring(text.indexOf(' ')+1);
 
-            if(~text.indexOf(' ') && commands[command]) {
-                client.say(to, irc.colors.wrap('light_red', '~' + commands[command] + ' is researved for internal use'))
+            if(~text.indexOf(' ') && name) {
+                client.say(to, irc.colors.wrap('light_red', '~' + name + ' is researved for internal use'))
             }
             else if(~text.indexOf(' ')) {
 

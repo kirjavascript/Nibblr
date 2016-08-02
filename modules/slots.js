@@ -107,7 +107,7 @@ var slots = {
                         msg += `0 1,8 J 1,4 A 1,9 C 1,7 K 1,13 P 1,11 O 1,5 T    !!! ${user} just won €${megapot} !\n`
                         megapot = 1000;
                         db.run('UPDATE points SET slots = ? WHERE username = ?',
-                            [+jackpot, '$megapot']
+                            [+megapot, '$megapot']
                         );
                     }
                     else if ((rslt[0]==rslt[1]&&rslt[0]==rslt[2])||(rslt[3]==rslt[1]&&rslt[3]==rslt[2])) {

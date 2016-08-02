@@ -95,6 +95,8 @@ var slots = {
                 }
                 else {
 
+                    if (+megapot < 1000) megapot = 1000;
+
                     var msg = `[7MEGA-SLOT-MACHINE] Current Megapot: €${megapot}  :::  Rolling the wheels.\n`;
                     var rslt = [get(),get(),get(),get()];
 

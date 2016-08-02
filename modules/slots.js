@@ -90,6 +90,8 @@ var slots = {
 
         db.get('select slots from points where username = "?',[user],
             (e,r) => {
+                console.log(r)
+
                 if (r == undefined || r.slots < 1000) {
                     client.say(config.channel, 'You need at least €1000 to play megaslots');
                 }

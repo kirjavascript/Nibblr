@@ -475,7 +475,10 @@ var commands = {
 
             var command = text.substring(text.indexOf(' ')+1);
 
-            if(~text.indexOf(' ')) {
+            if(~text.indexOf(' ') && commands[command]) {
+                client.say(to, irc.colors.wrap('light_red', '~' + commands[command] + ' is researved for internal use'))
+            }
+            else if(~text.indexOf(' ')) {
 
                 db.get('select locked from commands where name = ?', name, (e,r) => {
 

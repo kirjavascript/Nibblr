@@ -76,7 +76,7 @@ var slots = {
         db.all('select username,slots from points',
             (e,r) => {
                 var msg = r.filter(d => d['slots'])
-                    .sort((a,b) => +a['slots'] < +b['slots'])
+                    .sort((a,b) => +a['slots'] - +b['slots'])
                     .map(d => `${d.username}: ${d['slots']}`)
                     .join(' ');
 

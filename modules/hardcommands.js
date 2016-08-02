@@ -246,6 +246,7 @@ var commands = {
         }
 
     },
+
     weather(query, text) {
 
         if(query.length) {
@@ -269,6 +270,7 @@ var commands = {
         }
 
     },
+
     reddit(query, text) {
 
         function writePost(post) {
@@ -476,7 +478,7 @@ var commands = {
             var command = text.substring(text.indexOf(' ')+1);
 
             if(~text.indexOf(' ') && name) {
-                client.say(to, irc.colors.wrap('light_red', '~' + name + ' is researved for internal use'))
+                client.say(to, irc.colors.wrap('light_red', '~' + name + ' is reserved for internal use'))
             }
             else if(~text.indexOf(' ')) {
 

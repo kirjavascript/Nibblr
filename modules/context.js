@@ -1,3 +1,4 @@
+require('sugar-date');
 var irc = require('irc');
 var c = require('irc-colors');
 var cheerio = require('cheerio');
@@ -18,7 +19,8 @@ function getMessage(arr) {
 }
 
 var sandbox = {
-    loopProtect: loopProtect,
+    Date,
+    loopProtect,
     html2txt: (str, lines) => {
         if (lines) return html2txt.fromString(str).split("\n").splice(0,lines).join("\n");
         else return html2txt.fromString(str);

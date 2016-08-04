@@ -480,7 +480,7 @@ var commands = {
 
             var command = text.substring(text.indexOf(' ')+1);
 
-            if(~text.indexOf(' ') && name) {
+            if(~text.indexOf(' ') && commands[name]) {
                 client.say(to, irc.colors.wrap('light_red', '~' + name + ' is reserved for internal use'))
             }
             else if(~text.indexOf(' ')) {

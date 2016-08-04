@@ -117,6 +117,12 @@ var slots = {
                         msg += `!!! ${user} just won €${win} !\n`
                         addPoints(user, win);
                     }
+                    else if (rslt[0]==rslt[1]&&rslt[2]==rslt[3]) {
+                        var win = (Math.random()*150)|0;
+                        win++;
+                        msg += `!!! ${user} just won €${win} !\n`
+                        addPoints(user, win);
+                    }
                     else if (rslt[0]==rslt[1]||rslt[1]==rslt[2]||rslt[2]==rslt[3]) {
                         var win = (Math.random()*5)|0;
                         win++;

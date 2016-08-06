@@ -277,7 +277,8 @@ var commands = {
     reddit(query, text) {
 
         function writePost(post) {
-            var subreddit = "r/" + /\/r\/(.*?)\//g.exec(post.permalink)[1] + ' - ';
+
+            var subreddit = post.permalink ? "r/" + /\/r\/(.*?)\//g.exec(post.permalink)[1] + ' - ' : '';
 
             if (post.is_self) {
                 var resp = irc.colors.wrap('yellow', subreddit + post.title + "\n") + post.selftext;

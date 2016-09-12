@@ -74,13 +74,13 @@ var commands = {
         triv.stats();
     },
     slots() {
-        slots.go(from);
+        //slots.go(from);
     },
     megaslots() {
-        slots.mega(from);
+        //slots.mega(from);
     },
     slotstats() {
-        slots.stats();
+        //slots.stats();
     },
     // /games //
     ping(query) {

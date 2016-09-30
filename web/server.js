@@ -279,7 +279,9 @@ function api(obj) {
 
             res.json({});
 
-            client.send('KICK', channel, req.query.user, '\u000304(╯°□°）╯︵ ┻━┻');
+            let kickMessage = req.query.message || '(╯°□°）╯︵ ┻━┻';
+
+            obj.send('KICK', channel, req.query.user, '\u000304' + kickMessage);
             
         }
         else {
@@ -297,7 +299,7 @@ function api(obj) {
 
             res.json({});
 
-            client.send('MODE', channel, req.query.mode, req.query.user);
+            obj.send('MODE', channel, req.query.mode, req.query.user);
             
         }
         else {
@@ -425,7 +427,7 @@ function api(obj) {
             });
 
             req.query.user.split(',').forEach(d => {
-                client.say(d, req.query.message);
+                obj.say(d, req.query.message);
             })
         }
         else {
@@ -456,7 +458,7 @@ function api(obj) {
             });
 
             req.query.user.split(',').forEach(d => {
-                client.notice(d, req.query.message);
+                obj.notice(d, req.query.message);
             })
         }
         else {

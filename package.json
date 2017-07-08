@@ -4,8 +4,7 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-    "start": "forever start --uid \"nibblr\" index.js -e err.log",
-    "stop": "forever stop index.js",
+    "start": "pm2 start --name \"nibblr\" index.js",
     "daemon": "nodemon index.js --ignore web/modules/scss/* --ignore web/modules/js/* --ignore web/static/* --ignore web/templates/*",
     "push": "git add . --all && git commit -m \"`date`\" && git push origin master",
     "pull": "git pull origin master"

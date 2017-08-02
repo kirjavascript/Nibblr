@@ -51,9 +51,9 @@ var triv = {
 
                 console.log(triv.cleanAnswer)
 
-                var q = 
+                var q =
                 irc.colors.wrap('magenta', 'Question: ') +
-                triv.question[0].question + 
+                triv.question[0].question +
                 irc.colors.wrap('yellow', ' ('+triv.question[0].category.title+')');
 
                 client.say(config.channel, q);
@@ -97,7 +97,7 @@ var triv = {
 
             var parsed = answer.split(' ').map(d => {
                 var strLen = (d.length-triv.clueCount)+1;
-                return d.slice(0,triv.clueCount) + 
+                return d.slice(0,triv.clueCount) +
                 new Array(strLen > -1?strLen:0).join('_')
             }).join(' ');
 
@@ -151,7 +151,7 @@ var triv = {
     },
     getLocalPoints() {
         Object.keys(triv.points).length &&
-        client.say(config.channel, irc.colors.wrap('orange', 'points this game: ') + 
+        client.say(config.channel, irc.colors.wrap('orange', 'points this game: ') +
             Object.keys(triv.points)
                 .map(d => `${d}: ${triv.points[d]}`)
                 .join(' '));
@@ -165,7 +165,7 @@ var triv = {
                     .sort((a,b) => a['trivia'] < b['trivia'])
                     .map(d => `${d.username}: ${d['trivia']}`)
                     .join(' ');
-                    
+
                 client.say(config.channel, irc.colors.wrap('orange', 'trivia points: ') + msg);
             })
     }

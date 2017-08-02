@@ -4,8 +4,12 @@
 // TODO //
 
 
+// REFACTOR
+// create API - nick() etc command params ~()
 // ~poker
 // command piping
+// special simple syntax parsed for colours
+// ~ == ~eval
 
 // points stats, command use stats
 // trivia stats
@@ -206,17 +210,19 @@ client.addListener("message", function(from, to, text, message) {
 
                 try {
 
-                    var title = /<title>(.+)<\/title>/ig.exec(body);
+                    var title = /<title>(.*?)<\/title>/ig.exec(body);
 
                     if(title && title[1]) {
 
-
                         var data =
-                            irc.colors.wrap('light_blue', '▂▃▅▇█▓▒░ ') +
-                            entities.decode(title[1]) +
-                            irc.colors.wrap('light_blue', ' ░▒▓█▇▅▃▂');
+                            irc.colors.wrap('light_blue', '>>') +
+                            entities.decode(title[1]);
 
-                        client.say(to, data);
+                        if (data.length < 400) {
+
+                            client.say(to, data);
+
+                        }
 
                     }
 

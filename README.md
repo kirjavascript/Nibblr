@@ -1,7 +1,7 @@
 Nibblr
 ======
 
-## this project is deprecated, see (http://www.github.com/kirjavascript/nibblrjr)[http://www.github.com/kirjavascript/nibblrjr]
+## this project is deprecated, see http://www.github.com/kirjavascript/nibblrjr
 
 Nibblr is a javascript framework for writing IRC bots.
 

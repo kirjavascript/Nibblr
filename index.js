@@ -3,13 +3,23 @@
 
 // TODO //
 
-
+// new api, print(), commands can be multiple statements, command types
+// ## hide url
+// multiple servers, channels
+// reply in PM
+// 2d3h time
 // REFACTOR
 // create API - nick() etc command params ~()
 // ~poker
 // command piping
-// special simple syntax parsed for colours
-// ~ == ~eval
+// special simple syntax parsed for colours {blue} or something
+// ~> == ~eval
+// url scraper -> status code
+// truncate url
+// command whitelist
+// vim code input easier interface +test?
+// help command
+//https://www.npmjs.com/package/ms
 
 // points stats, command use stats
 // trivia stats
@@ -26,8 +36,6 @@
 // about -> github iframe
 
 // rss("item", "description", 3)
-
-// add command wizard
 
 process.env.TZ = 'Europe/London';
 

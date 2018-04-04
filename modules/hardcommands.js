@@ -233,11 +233,6 @@ var commands = {
 
         if(query.length) {
 
-            duck.search(query, {maxPage: 3})
-                .then(res => {
-                    console.log(res);
-                });
-
             var opts = {
                 maxResults: 4,
                 key: google_api
